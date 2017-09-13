@@ -1,14 +1,12 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.Attendance;
-import com.example.demo.models.Authority;
-import com.example.demo.models.Course;
-import com.example.demo.models.Person;
+import com.example.demo.models.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -95,8 +93,7 @@ public class MainController
         courseJava.setDateEnd(new Date());// for testing, set end date to be the same
         courseJava.setNumEvaluationsCompleted(10);
         courseJava.setCourseRegistrationNum(1000);
-
-        // attach a teacher to this course
+        // attach teacher Sue to this course
         courseJava.addPerson(teacherPerson); // this is teacher Sue
         courseRepo.save(courseJava);
 
@@ -107,7 +104,53 @@ public class MainController
         coursePython.setDateEnd(new Date());// for testing, set end date to be the same
         coursePython.setNumEvaluationsCompleted(20);
         coursePython.setCourseRegistrationNum(2000);
+        // attach teacher Bob to this course
+        coursePython.addPerson(teacherPerson2);
         courseRepo.save(coursePython);
+
+       // create an evaluation
+        Evaluation evaluation1 = new Evaluation();
+        evaluation1.setClassroomEnvironment("Excellent");
+        evaluation1.setCourseContentRating("Average");
+        evaluation1.setEquipmentRating("Good");
+        evaluation1.setHowDidYouFindOut("internet");
+        evaluation1.setInstructionQualityRating("Poor");
+        evaluation1.setTraningExperienceRating("Fair");
+        evaluation1.setTextBookRating("Average");
+        evaluation1.setWhatDidntYouLike("slow computers");
+        // attach a course to this evaluation
+        evaluation1.setCourse(courseJava);
+        evaluationRepo.save(evaluation1);
+
+
+
+        // create an bunch of Attendance
+        Date d = new Date();
+        // create as student
+        Person studentJoe = new Person();
+        studentJoe.setNameFirst("Joe");
+        studentJoe.setNameLast("Dimaggio");
+        studentJoe.setEmail("abc@def.ghi");
+        studentJoe.setContactNum("1723894836");
+        personRepo.save(studentJoe);
+        for(int i = 0; i < 20; i++) {
+            Attendance att = new Attendance();
+            att.setDate(d);
+            att.setCourse(coursePython);
+            att.setPerson(studentJoe);
+            att.setAstatus("Present");
+            attendanceRepo.save(att);
+        }
+
+
+        // create a new registration timestamp
+        RegistrationTimestamp timestamp = new RegistrationTimestamp();
+        timestamp.setTimestamp(new Date());
+        timestamp.setPerson(studentJoe);
+        timestamp.setCourse(courseJava);
+        registrationTimestampRepo.save(timestamp);
+
+
 
 
 

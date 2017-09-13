@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -11,6 +12,7 @@ public class RegistrationTimestamp {
     private long id;
 
     private Date timestamp;
+//    private Date timestamp;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
