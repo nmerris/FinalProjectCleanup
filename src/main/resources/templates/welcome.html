@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="base::FinalHead"></th:block>
+
+</head>
+<body>
+
+<th:block th:replace="base::FinalNavTeacher"></th:block>
+
+<br />
+<br />
+<br />
+<h1>Welcome!</h1>
+<br />
+<h3>Buttons:</h3>
+(Not signed in)<br />
+<a href="login">Login</a><br />
+<a href="signup">Sign up</a><br />
+<a href="evaluation">Complete student evaluation</a><br />
+
+<br />
+(signed in as Admin)<br />
+<a href="addcourse">Add course</a><br />
+<a href="allcourses">All courses</a><br />
+<a href="register">Register a student</a><br />
+
+<br />
+(signed in as Teacher)<br />
+<a href="mycourses">My courses</a><br />
+
+
+
+<th:block th:replace="base::FinalJS"></th:block>
+
+</body>
+</html>

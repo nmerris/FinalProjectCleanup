@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="base::FinalHead"></th:block>
+
+</head>
+<body>
+
+<th:block th:replace="base::FinalNav"></th:block>
+<br />
+<br />
+<br />
+<h2>Admin items</h2>
+<br />
+<a href="editcourse">Edit course</a><br/>
+<a href="deletecourse">Delete course</a><br/>
+<a href="allevaluations">View course evals</a><br/>
+<br />
+<br />
+<h2>Teacher items</h2>
+<br />
+<a href="takeattendance">Take attendance</a><br/>
+<a href="endcourse">End course</a><br/>
+
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>
