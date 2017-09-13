@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 
 @Entity
 public class Person {
@@ -36,6 +37,23 @@ public class Person {
     private String username;
 
     private boolean enabled;
+
+
+
+    // Authority is owner of Person
+    // MUST use EAGER here, or you can't log in at all!!
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "person_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
+    private Collection<Authority> authorities;
+
+    // Person is owner of Course
+    @ManyToMany(mappedBy = "persons", fetch = FetchType.LAZY)
+    private Collection<Course> courses;
+
+    // Person is owner of Evaluation
+    @ManyToMany(mappedBy = "persons", fetch = FetchType.LAZY)
+    private Collection<Evaluation> evaluations;
+
 
 
 

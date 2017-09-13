@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -28,6 +29,14 @@ public class Course {
 
     @NotEmpty
     private String title;
+
+
+
+
+    // Person owns Course
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private Collection<Person> persons;
 
 
 

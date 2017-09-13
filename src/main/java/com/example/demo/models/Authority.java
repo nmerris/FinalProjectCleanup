@@ -14,7 +14,7 @@ public class Authority {
     @Column(unique = true)
     private String role;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.EAGER)
     private Collection<Person> persons;
 
 

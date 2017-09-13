@@ -1,9 +1,7 @@
 package com.example.demo.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Rating {
@@ -12,8 +10,15 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    // descriptions need to be seeded before deployment: need 5 rows: Excellent, Above Average, Average, Fair, Poor
+    // descriptions need to be seeded before deploymen
+    // need 5 rows: Excellent, Above Average, Average, Fair, Poor
     private String description;
+
+    @OneToMany(mappedBy = "courseContentRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    private Set<Evaluation> courseContentEvaluations;
+
+    @OneToMany(mappedBy = "instructorQualityRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    private Set<Evaluation> instructorQualityEvaluations;
 
 
     public long getId() {
