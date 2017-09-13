@@ -10,43 +10,126 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = @JoinColumn(name = "evaluation_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
-    private Collection<Person> persons;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private Course course;
 
+    private String courseContentRating;
+    private String instructionQualityRating;
+    private String traningExperienceRating;
+    private String textBookRating;
+    private String classroomEnvironment;
+    private String equipmentRating;
 
-    // Rating owns Evaluation
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_content_rating_id")
-    private Rating courseContentRating;
+    private String whatDidYouLike;
+    private String whatDidntYouLike;
+    private String whatImprovements;
+    private String whatOtherClasses;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instructor_quality_rating_id")
-    private Rating instructorQualityRating;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "training_experience_rating_id")
-    private Rating trainingExperienceRating;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "textbook_rating_id")
-    private Rating textbookRating;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "classroom_environment_id")
-    private Rating classroomEnvironmentRating;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "classroom_equipment_id")
-    private Rating classroomEquipmentRating;
+    private String howDidYouFindOut;
 
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
+    public Course getCourse() {
+        return course;
+    }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public String getCourseContentRating() {
+        return courseContentRating;
+    }
+
+    public void setCourseContentRating(String courseContentRating) {
+        this.courseContentRating = courseContentRating;
+    }
+
+    public String getInstructionQualityRating() {
+        return instructionQualityRating;
+    }
+
+    public void setInstructionQualityRating(String instructionQualityRating) {
+        this.instructionQualityRating = instructionQualityRating;
+    }
+
+    public String getTraningExperienceRating() {
+        return traningExperienceRating;
+    }
+
+    public void setTraningExperienceRating(String traningExperienceRating) {
+        this.traningExperienceRating = traningExperienceRating;
+    }
+
+    public String getTextBookRating() {
+        return textBookRating;
+    }
+
+    public void setTextBookRating(String textBookRating) {
+        this.textBookRating = textBookRating;
+    }
+
+    public String getClassroomEnvironment() {
+        return classroomEnvironment;
+    }
+
+    public void setClassroomEnvironment(String classroomEnvironment) {
+        this.classroomEnvironment = classroomEnvironment;
+    }
+
+    public String getEquipmentRating() {
+        return equipmentRating;
+    }
+
+    public void setEquipmentRating(String equipmentRating) {
+        this.equipmentRating = equipmentRating;
+    }
+
+    public String getWhatDidYouLike() {
+        return whatDidYouLike;
+    }
+
+    public void setWhatDidYouLike(String whatDidYouLike) {
+        this.whatDidYouLike = whatDidYouLike;
+    }
+
+    public String getWhatDidntYouLike() {
+        return whatDidntYouLike;
+    }
+
+    public void setWhatDidntYouLike(String whatDidntYouLike) {
+        this.whatDidntYouLike = whatDidntYouLike;
+    }
+
+    public String getWhatImprovements() {
+        return whatImprovements;
+    }
+
+    public void setWhatImprovements(String whatImprovements) {
+        this.whatImprovements = whatImprovements;
+    }
+
+    public String getWhatOtherClasses() {
+        return whatOtherClasses;
+    }
+
+    public void setWhatOtherClasses(String whatOtherClasses) {
+        this.whatOtherClasses = whatOtherClasses;
+    }
+
+    public String getHowDidYouFindOut() {
+        return howDidYouFindOut;
+    }
+
+    public void setHowDidYouFindOut(String howDidYouFindOut) {
+        this.howDidYouFindOut = howDidYouFindOut;
+    }
 }
