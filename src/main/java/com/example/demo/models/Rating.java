@@ -20,6 +20,19 @@ public class Rating {
     @OneToMany(mappedBy = "instructorQualityRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
     private Set<Evaluation> instructorQualityEvaluations;
 
+    @OneToMany(mappedBy = "trainingExperienceRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    private Set<Evaluation> trainingExperienceRatings;
+
+    @OneToMany(mappedBy = "textbookRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    private Set<Evaluation> textBookRatings;
+
+    @OneToMany(mappedBy = "classroomEnvironmentRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    private Set<Evaluation> classroomEnvironmentRatings;
+
+    @OneToMany(mappedBy = "classroomEquipmentRating", cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+    private Set<Evaluation> classroomEquipmentRatings;
+
+
 
     public long getId() {
         return id;

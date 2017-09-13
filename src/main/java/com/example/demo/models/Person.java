@@ -31,9 +31,11 @@ public class Person {
     @NotEmpty
     private String password;
 
+    private String contactNum;
+
     // all usernames must be unique
-    @NotEmpty
-    @Column(unique = true)
+//    @NotEmpty
+//    @Column(unique = true)
     private String username;
 
     private boolean enabled;
@@ -49,10 +51,6 @@ public class Person {
     // Person is owner of Course
     @ManyToMany(mappedBy = "persons", fetch = FetchType.LAZY)
     private Collection<Course> courses;
-
-    // Person is owner of Evaluation
-    @ManyToMany(mappedBy = "persons", fetch = FetchType.LAZY)
-    private Collection<Evaluation> evaluations;
 
 
 

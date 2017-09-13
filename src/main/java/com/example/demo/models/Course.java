@@ -31,6 +31,8 @@ public class Course {
     private String title;
 
 
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    private Collection<Evaluation> evaluations;
 
 
     // Person owns Course
