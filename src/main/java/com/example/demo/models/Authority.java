@@ -19,7 +19,7 @@ public class Authority {
 
 
     // constructor
-    private Authority() {
+    public Authority() {
         persons = new HashSet<>();
     }
 

@@ -29,14 +29,14 @@ public class Person {
     @Size(max = 50)
     private String email;
 
-    @NotEmpty
+//    @NotEmpty
     private String password;
 
     private String contactNum;
 
     // all usernames must be unique
 //    @NotEmpty
-//    @Column(unique = true)
+    @Column(unique = true)
     private String username;
 
     private boolean enabled;
@@ -60,13 +60,20 @@ public class Person {
     private Collection<Attendance> attendances;
 
 
-    public Person(Collection<Authority> authorities, Collection<Course> courses, Collection<RegistrationTimestamp> timeStamps, Collection<Attendance> attendances) {
+    public Person() {
         this.authorities = new HashSet<>();
         this.courses = new HashSet<>();
         this.timeStamps = new HashSet<>();
         this.attendances = new HashSet<>();
     }
 
+    // helper methods ==================================================================================
+    public void addAuthority(Authority authority) {
+        authorities.add(authority);
+    }
+
+
+    // normal getters/setters ==================================================================================
     public long getId() {
         return id;
     }

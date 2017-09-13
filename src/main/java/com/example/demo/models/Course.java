@@ -17,8 +17,6 @@ public class Course {
     private long id;
 
     // @Temporal required for validation
-    // @DateTimeFormat will show the date as given, but ONLY when being pulled out of db, will still be stored
-    // as full java.util.Date, which is what I want, for consistency
     @NotNull
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "MMM d, yyyy")
@@ -49,12 +47,21 @@ public class Course {
     private Collection<Person> persons;
 
 
-    public Course(Collection<RegistrationTimestamp> timeStamps, Collection<Evaluation> evaluations, Collection<Attendance> attendances, Collection<Person> persons) {
+    public Course() {
         this.timeStamps = new HashSet<>();
         this.evaluations = new HashSet<>();
         this.attendances = new HashSet<>();
         this.persons = new HashSet<>();
     }
+
+    // helper methods ==================================================================================
+    public void addPerson(Person person) {
+        persons.add(person);
+    }
+
+
+
+    // normal getter/setter methods ==================================================================================
 
     public long getId() {
         return id;
