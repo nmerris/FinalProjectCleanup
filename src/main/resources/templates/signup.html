@@ -20,12 +20,16 @@
                     </select>
                     <!-- Text input-->
                     First Name:<input  th:field="*{nameFirst}" name="nameFirst" placeholder="Enter First Name" class="form-control"  type="text">
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('nameFirst')}" th:errors="*{nameFirst}"></p>
                     <!-- Text input-->
                     Last Name:<input  th:field="*{nameLast}" name="nameLast" placeholder="Enter Last Name" class="form-control"  type="text">
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('nameLast')}" th:errors="*{nameLast}"></p>
                     <!-- Text input-->
                     Email:<input  th:field="*{email}" name="email" placeholder="Enter E-Mail" class="form-control"  type="text">
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
                     <!-- Text input-->
                     Contact Number:<input  th:field="*{contactNum}" name="contactNum" placeholder="Enter Contact Number" class="form-control"  type="text">
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('contactNum')}" th:errors="*{contactNum}"></p>
                     <!-- Text input-->
                     UserName:<input  th:field="*{username}" name="username" placeholder="Enter Username" class="form-control"  type="text">
                     <!-- Text input-->
