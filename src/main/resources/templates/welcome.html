@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="base:: FinalHead"></head>
 
@@ -7,27 +7,37 @@
 
 <th:block th:replace="base::FinalNav"></th:block>
 
-<br />
-<br />
-<br />
-<h1>Welcome!</h1>
-<br />
-<h3>Buttons:</h3>
-(Not signed in)<br />
-<a href="login">Login</a><br />
-<a href="signup">Sign up</a><br />
-<a href="evaluation">Complete student evaluation</a><br />
 
-<br />
-(signed in as Admin)<br />
-<a href="addcourse">Add course</a><br />
-<a href="allcourses">All courses</a><br />
-<a href="register">Register a student</a><br />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col col-sm-10 justify-content-center">
+            <h1>Welcome!</h1>
 
-<br />
-(signed in as Teacher)<br />
-<a href="mycourses">My courses</a><br />
+            <div sec:authorize!="isAuthenticated()">
+                <a class="btn btn-primary" th:href="@{/login}" role="button">Login</a><br />
+                <a class="btn btn-primary" th:href="@{/signup}" role="button">Sign up</a> (Teachers only)<br />
+                <a class="btn btn-primary" th:href="@{/evaluation}" role="button">Complete student evaluation</a><br />
+            </div>
+            <br />
+            <br />
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <a class="btn btn-primary" th:href="@{/addcourse}" role="button">Add course</a><br />
+                <a class="btn btn-primary" th:href="@{/allcourses}" role="button">All courses</a><br />
+            </div>
+            <br />
+            <br />
+            <div sec:authorize="hasAuthority('TEACHER')">
+                <a class="btn btn-primary" th:href="@{/mycourses}" role="button">My courses</a>  This needs to somehow get the specific teacher<br />
+            </div>
+            <br />
+            <br />
+            <div sec:authorize="isAuthenticated()">
+                <a class="btn btn-primary" th:href="@{/logout}" role="button">Log out</a><br />
+            </div>
 
+        </div>
+    </div>
+</div>
 
 
 <th:block th:replace="base::FinalJS"></th:block>

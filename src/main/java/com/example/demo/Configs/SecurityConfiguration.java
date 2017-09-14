@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/","/signup","/css/**","/js/**", "/databasetesting").permitAll()
+                .antMatchers("/","/signup","/css/**","/js/**", "/databasetesting","/welcome", "/evaluation").permitAll()
 //                .antMatchers( ).access("hasAuthority('ADMIN')")
 //                .antMatchers().access("hasAuthority('TEACHER')")
                 .anyRequest().authenticated()
@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login").permitAll().permitAll()
+                .logoutSuccessUrl("/welcome").permitAll().permitAll()
                 .and()
                 .httpBasic();
         http

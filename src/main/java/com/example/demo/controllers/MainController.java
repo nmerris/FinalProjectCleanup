@@ -240,6 +240,7 @@ public class MainController
     public String eval(Model model)
     {
     	model.addAttribute("evaluation", new Evaluation());
+    	model.addAttribute("course", new Course());//Just for fields for CRN, course name, and course start date
         return "evaluation";
     }
     @PostMapping("/evaluation")
