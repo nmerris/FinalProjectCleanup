@@ -7,10 +7,57 @@
 
 
 <th:block th:replace="base::FinalNav"></th:block>
-<br />
-<br />
-<br />
-<h1>Add a class</h1>
+
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                <!--<div class="text-center feedback">-->
+                    <!--<h2 th:text="'Resume for ' + ${firstAndLastName}"></h2>-->
+                    <!--<span class="glyphicon glyphicon-apple"></span>-->
+                    <!--<span th:text="${currentNumRecords} + ' of 10 educational achievements entered'"></span>-->
+                <!--</div>-->
+
+                <form action="#" th:action="@{/addcourse}" th:object="${}" method="post">
+
+                    <!-- need this or ed id is zero every time and keep getting additional records when updating -->
+                    <input type="hidden" th:field="*{id}" />
+                    <!-- need this or person_id attached to ed id is null every time -->
+                    <input type="hidden" th:field="*{myPerson.id}"/>
+
+                    <div class="form-group">
+                        <label class="section-heading" for="school">School</label>
+                        <input id="school" class="form-control" type="text" th:field="*{school}" autofocus/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('school')}" th:errors="*{school}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="major">Major</label>
+                        <input id="major" class="form-control" type="text" th:field="*{major}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('major')}" th:errors="*{major}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="graduationYear">Graduation Year</label>
+                        <select id="graduationYear" class="form-control" th:field="*{graduationYear}">
+                            <!-- create a list of years, starting with next year, in descending order, using Joda time and thymeleaf -->
+                            <option th:each="i : ${#numbers.sequence(-1, 100)}"
+                                    th:value="${(new org.joda.time.DateTime()).getYear() - i}"
+                                    th:text="${(new org.joda.time.DateTime()).getYear() - i}"></option>
+                        </select>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('graduationYear')}" th:errors="*{graduationYear}"></p>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <input class="btn btn-primary bold-input" type="submit" value="Submit" th:disabled="${disableSubmit}"/>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
 <th:block th:replace="base::FinalJS"></th:block>
+
 </body>
+
 </html>
