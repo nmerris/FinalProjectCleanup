@@ -2,10 +2,17 @@ package com.example.demo.controllers;
 
 import com.example.demo.models.*;
 import com.example.demo.repositories.*;
+import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,6 +24,8 @@ public class MainController
 {
     @Autowired
     AuthorityRepo authorityRepo;
+    @Autowired
+    private UserService userService;
     @Autowired
     PersonRepo personRepo;
     @Autowired
@@ -165,16 +174,24 @@ public class MainController
      *  Welcome/login pages
      *
      ************************/
-    @RequestMapping({"/","/welcome"})
+    @RequestMapping("/")
     public String welcomePage()
     {
+        if(authorityRepo.count()==0) {
+            Authority adminAuth = new Authority();
+            adminAuth.setRole("ADMIN");
+            authorityRepo.save(adminAuth);
+
+            Authority teacherAuth = new Authority();
+            teacherAuth.setRole("TEACHER");
+            authorityRepo.save(teacherAuth);
+        }
         return "welcome";
     }
 
-    @RequestMapping("/signup")
-    public String signup()
-    {
-        return "signup";
+    @GetMapping("/welcome")
+    public String showHomePage() {
+        return "welcome";
     }
 
     @RequestMapping("/login")
@@ -182,6 +199,32 @@ public class MainController
     {
         return "login";
     }
+
+
+    @RequestMapping("/signup")
+    public String addUserInfo(Model model) {
+        model.addAttribute("newPerson", new Person());
+        model.addAttribute("listRoles", authorityRepo.findAll());
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String addUserInfo(@ModelAttribute("newPerson") Person person, Model model){
+        model.addAttribute("newPerson",person);
+        if(person.getSelectVal().equalsIgnoreCase("TEACHER")  )      {
+
+            userService.saveTeacher(person);
+            model.addAttribute("message","Teacher Account Successfully Created");
+        }
+        else{
+
+            userService.saveAdmin(person);
+            model.addAttribute("message","Admin Account Successfully Created");
+        }
+
+        return "redirect:/login;";
+    }
+
 
     /**************************
      *

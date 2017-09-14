@@ -1,16 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <th:block th:replace="base::FinalHead"></th:block>
 
 </head>
 <body>
-
 <th:block th:replace="base::FinalNav"></th:block>
-<br />
-<br />
-<br />
-<h1>Log in</h1>
+        <div th:if="${param.error}" class="well alert alert-danger" role="alert">
+            Invalid Username and Password!
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <div class="login">
+            <form autocomplete="off" th:action="@{/login}" method="post">
+                <div><input type="text" placeholder="Username"  class="email" name="username"/></div>
+                <div><input type="password" placeholder="Password"  class="pass" name="password"/></div>
+                <div><input type="submit" value="LogIn"/></div>
+            </form>
+        </div>
+
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>
+
