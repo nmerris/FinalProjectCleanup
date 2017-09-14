@@ -28,6 +28,8 @@ public class Course {
 
     private long courseRegistrationNum;
 
+    private boolean hasBeenDeleted;
+
     @NotEmpty
     private String name;
 
@@ -62,6 +64,15 @@ public class Course {
 
 
     // normal getter/setter methods ==================================================================================
+
+
+    public boolean isHasBeenDeleted() {
+        return hasBeenDeleted;
+    }
+
+    public void setHasBeenDeleted(boolean hasBeenDeleted) {
+        this.hasBeenDeleted = hasBeenDeleted;
+    }
 
     public long getId() {
         return id;
