@@ -4,7 +4,8 @@ import com.example.demo.models.*;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -188,21 +189,32 @@ public class MainController
      * Admin pages
      *
      **************************/
-    @RequestMapping("/addcourse")
-    public String addCourse()
+    @GetMapping("/addcourse")
+    public String addCourse(Model model)
     {
+        model.addAttribute("course", new Course());
         return "addcourse";
     }
 
-    @RequestMapping("/editcourse")
-    public String editCourse()
+    @PostMapping("/addcourse")
+    public String submitCourse(@ModelAttribute("course") Course course)
     {
+        courseRepo.save(course);
+        return "coursedetail";
+    }
+
+    @RequestMapping("/editcourse/{courseid}")
+    public String editCourse(@PathVariable ("courseid") long id, Model model)
+    {
+        model.addAttribute("course", courseRepo.findOne(id));
         return "addcourse";
     }
 
-    @RequestMapping("/deletecourse")
-    public String deleteCourse()
+    @RequestMapping("/deletecourse/{courseid}")
+    public String deleteCourse(@PathVariable ("courseid") long id)
     {
+        Course course = courseRepo.findOne(id);
+
         return "allcourses";
     }
 
