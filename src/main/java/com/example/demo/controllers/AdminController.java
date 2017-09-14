@@ -32,9 +32,7 @@ public class AdminController
 	public String addCourse(Model model)
 	{
 		model.addAttribute("course", new Course());
-//		Person person = new Person();
-//		person.getAuthorities()
-		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER"))); //needs to send only teachers-query by role
+		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addcourse";
 	}
 
@@ -50,6 +48,7 @@ public class AdminController
 		// and set them as the teacher to this course, then save the course
 		course.addPerson(personRepo.findOne(teacherId));
 		courseRepo.save(course);
+		model.addAttribute("teacher", personRepo.findOne(teacherId));
 
 		return "coursedetail";
 	}
@@ -59,15 +58,16 @@ public class AdminController
 	public String editCourse(@PathVariable ("courseid") long id, Model model)
 	{
 		model.addAttribute("course", courseRepo.findOne(id));
+		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addcourse";
 	}
 
 	@RequestMapping("/deletecourse/{courseid}")
 	public String deleteCourse(@PathVariable ("courseid") long id)
 	{
-		Course course = courseRepo.findOne(id);
-		//need more here
-		return "allcourses";
+//		Course course = courseRepo.findOne(id);
+		courseRepo.delete(id);
+		return "redirect:/allcourses";
 	}
 
 	@RequestMapping("/allcourses")
