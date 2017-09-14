@@ -74,4 +74,5 @@ public class AdminController
 		return "allcourses";
 	}
 
+
 }

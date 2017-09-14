@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+
+<th:block th:replace="base::FinalNav"></th:block>
+
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                <caption> <h4><b> Registered Student List: </b></h4></caption>
+                <table class="table table-striped" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+
+                    </tr>
+                    </thead>
+                    <tbody align="left">
+                    <tr th:each="list: ${liststudent}">
+                        <td th:text="*{list.nameFirst}"></td>
+                        <td th:text="*{list.nameLast}"></td>
+                        <td th:text="*{list.email}"></td>
+                        <td th:text="*{list.contactNum}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+<th:block th:replace="base::FinalJS"></th:block>
+
+</body>
+
+</html>
