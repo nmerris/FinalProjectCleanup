@@ -19,33 +19,51 @@
                     <!--<span th:text="${currentNumRecords} + ' of 10 educational achievements entered'"></span>-->
                 <!--</div>-->
 
-                <form action="#" th:action="@{/addcourse}" th:object="${}" method="post">
+                <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
 
                     <!-- need this or ed id is zero every time and keep getting additional records when updating -->
-                    <input type="hidden" th:field="*{id}" />
-                    <!-- need this or person_id attached to ed id is null every time -->
-                    <input type="hidden" th:field="*{myPerson.id}"/>
+                    <!--<input type="hidden" th:field="*{id}" />-->
+                    <!--&lt;!&ndash; need this or person_id attached to ed id is null every time &ndash;&gt;-->
+                    <!--<input type="hidden" th:field="*{myPerson.id}"/>-->
 
                     <div class="form-group">
-                        <label class="section-heading" for="school">School</label>
-                        <input id="school" class="form-control" type="text" th:field="*{school}" autofocus/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('school')}" th:errors="*{school}"></p>
+                        <label class="section-heading" for="courseRegistrationN">CRN</label>
+                        <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('courseRegistrationNum')}" th:errors="*{courseRegistrationNum}"></p>
                     </div>
                     <div class="form-group">
-                        <label class="section-heading" for="major">Major</label>
-                        <input id="major" class="form-control" type="text" th:field="*{major}"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('major')}" th:errors="*{major}"></p>
+                        <label class="section-heading" for="name">Name</label>
+                        <input id="name" class="form-control" type="text" th:field="*{name}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                     </div>
+                    <!--<div class="form-group">-->
+                        <!--<label class="section-heading" for="name">Evaluation Completed</label>-->
+                        <!--<input id="numEvaluationsCompleted" class="form-control" type="text" th:field="*{numEvaluationsCompleted}"/>-->
+                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('numEvaluationsCompleted')}" th:errors="*{numEvaluationsCompleted}"></p>-->
+                    <!--</div>-->
+
                     <div class="form-group">
-                        <label class="section-heading" for="graduationYear">Graduation Year</label>
-                        <select id="graduationYear" class="form-control" th:field="*{graduationYear}">
-                            <!-- create a list of years, starting with next year, in descending order, using Joda time and thymeleaf -->
-                            <option th:each="i : ${#numbers.sequence(-1, 100)}"
-                                    th:value="${(new org.joda.time.DateTime()).getYear() - i}"
-                                    th:text="${(new org.joda.time.DateTime()).getYear() - i}"></option>
+                        <label class="section-heading" for="dateStart">Start Date</label>
+                        <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}"></p>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="section-heading" for="dateEnd">End Date</label>
+                    <input id="dateEnd" class="form-control" type="text" th:field="*{dateEnd}"/>
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('dateEnd')}" th:errors="*{dateEnd}"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="section-heading" for="selectaTeacher">Select a Teacher</label>
+                        <select id="selectaTeacher" class="form-control" name="selectedTeacher">
+                            <option th:each="item : ${teachers}"
+                                    th:value="${item.id}"
+                                    th:text="${item.nameFirst}"></option>
                         </select>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('graduationYear')}" th:errors="*{graduationYear}"></p>
+                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('skill')}" th:errors="*{skill}"></p>-->
                     </div>
+
 
                     <div class="clearfix"></div>
                     <input class="btn btn-primary bold-input" type="submit" value="Submit" th:disabled="${disableSubmit}"/>
