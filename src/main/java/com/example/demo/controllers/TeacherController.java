@@ -62,12 +62,13 @@ public class TeacherController
 		model.addAttribute("dispEval", evaluationRepo.findAll());
 		return "dispevaluation";
 	}
+
 	//Send attendance for admin
-	@RequestMapping("/viewattendance/{id}")
-	public String sendAdmin(@PathVariable("id") long id, Model model) {
-		model.addAttribute("listattendance", attendanceRepo.findAll());
-		return "viewstudentattendance";
-	}
+//	@RequestMapping("/viewattendance/{id}")
+//	public String sendAdmin(@PathVariable("id") long id, Model model) {
+//		model.addAttribute("listattendance", attendanceRepo.findAll());
+//		return "viewstudentattendance";
+//	}
 
 
 	@GetMapping("/addstudent/{courseid}")
@@ -171,12 +172,6 @@ public class TeacherController
 		return "redirect:/mycoursesdetail/" + courseId;
 	}
 
-
-	@RequestMapping("/viewattendance")
-	public String viewAttendance()
-	{
-		return "viewattendance";
-	}
 
 	@RequestMapping("/endcourse/{courseid}")
 	public String endClass()
