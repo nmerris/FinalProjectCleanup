@@ -150,10 +150,6 @@ public class MainController
         timestamp.setCourse(courseJava);
         registrationTimestampRepo.save(timestamp);
 
-
-
-
-
         return "dbtest";
     }
 
