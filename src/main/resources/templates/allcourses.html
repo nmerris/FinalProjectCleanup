@@ -11,7 +11,28 @@
 <br />
 <h1>Table of all courses</h1>
 <br/>
-<a href="coursedetail">Link course title to course detail page</a>
+<table>
+    <tr>
+        <td>CRN Number:</td>
+        <td>Name:</td>
+        <td>Start Date:</td>
+        <td>End Date:</td>
+        <!--<td>Teacher:</td>-->
+        <td>Action:</td>
+
+    </tr>
+    <th:block th:each="singlecourse:${allcourses}">
+    <tr>
+        <td><p th:text="${singlecourse.courseRegistrationNum}"></p></td>
+        <td><p th:text="${singlecourse.name}"></p></td>
+        <td><p th:text="${singlecourse.dateStart}"></p></td>
+        <td><p th:text="${singlecourse.dateEnd}"></p></td>
+        <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><button class="btn btn-link">Detail</button></a></td>
+        <!--<td><p th:text="${singlecourse.dateEnd}"></p></td>-->
+    </tr>
+    </th:block>
+</table>
+
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>

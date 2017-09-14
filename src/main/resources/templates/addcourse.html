@@ -26,6 +26,8 @@
                     <!--&lt;!&ndash; need this or person_id attached to ed id is null every time &ndash;&gt;-->
                     <!--<input type="hidden" th:field="*{myPerson.id}"/>-->
 
+                    <input type="hidden" th:field="*{id}" />
+
                     <div class="form-group">
                         <label class="section-heading" for="courseRegistrationN">CRN</label>
                         <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
