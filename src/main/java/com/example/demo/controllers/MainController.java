@@ -5,8 +5,10 @@ import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.*;
@@ -197,11 +199,21 @@ public class MainController
     }
 
     @PostMapping("/addcourse")
-    public String submitCourse(@ModelAttribute("course") Course course)
-    {
+    public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
+                               Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
+
+        if(result.hasErrors()) {
+            return "addcourse";
+        }
+
+        // find out what Person was just selected (by the admin) from the drop down list for this course
+        // and set them as the teacher to this course, then save the course
+        course.addPerson(personRepo.findOne(teacherId));
         courseRepo.save(course);
+
         return "coursedetail";
     }
+
 
     @GetMapping("/editcourse/{courseid}")
     public String editCourse(@PathVariable ("courseid") long id, Model model)
