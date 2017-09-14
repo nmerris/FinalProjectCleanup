@@ -48,6 +48,8 @@ public class MainController
     @RequestMapping("/databasetesting")
     public String dbTest() {
 
+
+
         // create two authorities/roles
         Authority adminAuth = new Authority();
         adminAuth.setRole("ADMIN");
@@ -164,11 +166,8 @@ public class MainController
         timestamp.setCourse(courseJava);
         registrationTimestampRepo.save(timestamp);
 
-
-
-
-
-        return "dbtest";
+//        return "dbtest";
+        return "welcome";
     }
 
 
@@ -182,15 +181,15 @@ public class MainController
     @RequestMapping("/")
     public String welcomePage()
     {
-        if(authorityRepo.count()==0) {
-            Authority adminAuth = new Authority();
-            adminAuth.setRole("ADMIN");
-            authorityRepo.save(adminAuth);
-
-            Authority teacherAuth = new Authority();
-            teacherAuth.setRole("TEACHER");
-            authorityRepo.save(teacherAuth);
-        }
+//        if(authorityRepo.count()==0) {
+//            Authority adminAuth = new Authority();
+//            adminAuth.setRole("ADMIN");
+//            authorityRepo.save(adminAuth);
+//
+//            Authority teacherAuth = new Authority();
+//            teacherAuth.setRole("TEACHER");
+//            authorityRepo.save(teacherAuth);
+//        }
         return "welcome";
     }
 
