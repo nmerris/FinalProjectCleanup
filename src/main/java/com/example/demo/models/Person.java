@@ -29,6 +29,8 @@ public class Person {
     @Size(max = 50)
     private String email;
 
+    private String selectVal;
+
 //    @NotEmpty
     private String password;
 
@@ -138,6 +140,14 @@ public class Person {
         this.enabled = enabled;
     }
 
+    public String getSelectVal() {
+        return selectVal;
+    }
+
+    public void setSelectVal(String selectVal) {
+        this.selectVal = selectVal;
+    }
+
     public Collection<Authority> getAuthorities() {
         return authorities;
     }
@@ -169,4 +179,5 @@ public class Person {
     public void setAttendances(Collection<Attendance> attendances) {
         this.attendances = attendances;
     }
+
 }

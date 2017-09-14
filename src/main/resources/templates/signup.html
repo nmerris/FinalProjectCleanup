@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <th:block th:replace="base::FinalHead"></th:block>
 
-</head>
+<head th:replace="base:: FinalHead"></head>
+
 <body>
-
 <th:block th:replace="base::FinalNav"></th:block>
+
+        <form autocomplete="off" class="well form-horizontal" th:action="@{/signup}" th:object="${newPerson}" method="post">
+            <fieldset>
+                <legend align="Center">Please Enter Your Information</legend>
+                <input type="hidden" th:field="*{id}" />
+
+                    <label>Role Type</label>
+                    <select th:name="selectVal" class="form-control">
+                        <th:block th:each="uRole:${listRoles}">
+                            <option th:value="${uRole.role}"
+                                    th:text="${uRole.role}"></option>
+                        </th:block>
+                    </select>
+                    <!-- Text input-->
+                    First Name:<input  th:field="*{nameFirst}" name="nameFirst" placeholder="Enter First Name" class="form-control"  type="text">
+                    <!-- Text input-->
+                    Last Name:<input  th:field="*{nameLast}" name="nameLast" placeholder="Enter Last Name" class="form-control"  type="text">
+                    <!-- Text input-->
+                    Email:<input  th:field="*{email}" name="email" placeholder="Enter E-Mail" class="form-control"  type="text">
+                    <!-- Text input-->
+                    Contact Number:<input  th:field="*{contactNum}" name="contactNum" placeholder="Enter Contact Number" class="form-control"  type="text">
+                    <!-- Text input-->
+                    UserName:<input  th:field="*{username}" name="username" placeholder="Enter Username" class="form-control"  type="text">
+                    <!-- Text input-->
+                    Password:<input  th:field="*{password}" name="password" placeholder="Enter Password" class="form-control"  type=password>
+                    <!-- Button -->
+                    <p><button type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-user"></span>SignUp</button>
+
+                        <button type="reset" class="btn btn-warning" ><span class="glyphicon glyphicon-remove"></span>Reset</button></p>
+
+        </fieldset>
+        </form>
 
 <th:block th:replace="base::FinalJS"></th:block>
 </body>

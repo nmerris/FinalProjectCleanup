@@ -16,13 +16,10 @@ public class Authority {
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.EAGER)
     private Collection<Person> persons;
-
-
     // constructor
     public Authority() {
         persons = new HashSet<>();
     }
-
 
     @Override
     public String toString() {
