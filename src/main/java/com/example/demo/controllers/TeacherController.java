@@ -32,18 +32,41 @@ public class TeacherController
 	@Autowired
 	EvaluationRepo evaluationRepo;
 
+	//List of courses for a particular Teacher
+	@RequestMapping("/mycoursesdetail/{id}")
+	public String listTeacherCourses(@PathVariable("id") long id,Principal principal, Model model) {
+		Person teacher = personRepo.findByUsername(principal.getName());
+		model.addAttribute("teachercourse", teacher);
+		model.addAttribute("courselist",courseRepo.findByPersons(teacher));
+		return "teachercoursedetail";
+	}
 
-	@RequestMapping("/mycourses")
-	public String myCourses(Principal principal, Model model)
-	{
-		//Person teacher = personRepo.findOne(principal.getName());
-		//
-			//last column shows detail, take attendance, view evals (for this course only), end class, register students (start class)
-		//
-		//something like-NOT RIGHT!!!!
+	//List of Students for a particular Course
+	@RequestMapping("/viewregisteredstudent/{id}")
+	public String listRegisteredStud(@PathVariable("id") long id, Model model) {
+		model.addAttribute("liststudent", personRepo.findAll());
+		// something to do here
+		return "listregisteredstudent";
+	}
 
-		model.addAttribute("teachercourses", courseRepo.findAll());//needs to return only logged-in teacher's classes
-		return "mycourses";
+	//List of Student attendance for a particular course
+	@RequestMapping("/viewattendance/{id}")
+	public String listStudAttendance(@PathVariable("id") long id, Model model) {
+		model.addAttribute("listattendance", attendanceRepo.findAll());
+		return "viewstudentattendance";
+	}
+
+	//Display course evealuation
+	@RequestMapping("/dispevaluation/{id}")
+	public String dipCourseEvaluation(@PathVariable("id") long id, Model model) {
+		model.addAttribute("dispEval", evaluationRepo.findAll());
+		return "dispevaluation";
+	}
+	//Send attendance for admin
+	@RequestMapping("/viewattendance/{id}")
+	public String sendAdmin(@PathVariable("id") long id, Model model) {
+		model.addAttribute("listattendance", attendanceRepo.findAll());
+		return "viewstudentattendance";
 	}
 
 

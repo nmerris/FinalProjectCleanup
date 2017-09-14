@@ -49,11 +49,7 @@ public class MainController
     public String dbTest() {
 
 
-
-
-
-
-        if(authorityRepo.count() == 0) {
+        if(authorityRepo.count()==0) {
             // create two authorities/roles
             Authority adminAuth = new Authority();
             adminAuth.setRole("ADMIN");
@@ -135,7 +131,7 @@ public class MainController
             evaluation1.setEquipmentRating("Good");
             evaluation1.setHowDidYouFindOut("internet");
             evaluation1.setInstructionQualityRating("Poor");
-            evaluation1.setTraningExperienceRating("Fair");
+            evaluation1.setTrainingExperienceRating("Fair");
             evaluation1.setTextBookRating("Average");
             evaluation1.setWhatDidntYouLike("slow computers");
             // attach a course to this evaluation
@@ -168,9 +164,7 @@ public class MainController
             timestamp.setPerson(studentJoe);
             timestamp.setCourse(courseJava);
             registrationTimestampRepo.save(timestamp);
-
         }
-
 //        return "dbtest";
         return "welcome";
     }

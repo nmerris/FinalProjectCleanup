@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+
+
+<th:block th:replace="base::FinalNav"></th:block>
+
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                    <div class="form-group">
+
+                        <div class="col-sm-10">
+
+                            <p th:text="${teachercourse.nameFirst}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="col-sm-10">
+
+                            <p th:text="${teachercourse.nameLast}" />
+                        </div>
+                    </div>
+                    <caption> <h4><b>Course List: </b></h4></caption>
+                    <table class="table table-striped" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Course Name</th>
+                            <th>CR Number</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody align="left">
+                        <tr th:each="list: ${courselist}">
+                            <td th:text="*{list.name}"></td>
+                            <td th:text="*{list.courseRegistrationNum}"></td>
+                            <td th:text="*{list.dateStart}"></td>
+                            <td th:text="*{list.dateEnd}"></td>
+                            <td th:text="*{list.numEvaluationsCompleted}"></td>
+                            <td>
+                                <a th:href="@{/addstudent/{courseid}(id=${list.id})}"> Register New Student</a>
+                                <a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}">View Registered Student</a>
+                                <a th:href="@{/viewattendance/{id}(id=${list.id})}">View Student Attendance</a>
+                                <a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Student Evaluation</a>
+                                <a th:href="@{//{id}(id=${list.id})}">Send Student Attendance</a>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+             </div>
+             </div>
+        </div><!-- container -->
+
+    <th:block th:replace="base::FinalJS"></th:block>
+
+</body>
+
+</html>
