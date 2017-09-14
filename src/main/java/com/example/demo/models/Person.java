@@ -74,6 +74,9 @@ public class Person {
         authorities.add(authority);
     }
 
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
 
     // normal getters/setters ==================================================================================
     public long getId() {

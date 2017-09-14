@@ -142,4 +142,5 @@ public class Course {
     public void setPersons(Collection<Person> persons) {
         this.persons = persons;
     }
+
 }

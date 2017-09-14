@@ -81,11 +81,10 @@ public class TeacherController
 	{
 		System.out.println("CourseId: "+ courseId);
 		System.out.println("Name: "+student.getNameFirst());
-		//Course course = courseRepo.findOne(courseId);
-		Course course=new Course();
-		//add course to person
+		Course course = courseRepo.findOne(courseId);
+		student.addCourse(course);
+		personRepo.save(student);
 
-		//save person
 
 		return "redirect:/addstudent/"+courseId;//PROBLEM:addstudent is not a route
 	}
