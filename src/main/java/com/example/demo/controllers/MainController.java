@@ -7,16 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.security.Principal;
+
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Controller
@@ -231,39 +236,64 @@ public class MainController
      * Admin pages
      *
      **************************/
-    @RequestMapping("/addcourse")
-    public String addCourse()
+    @GetMapping("/addcourse")
+    public String addCourse(Model model)
     {
+        model.addAttribute("course", new Course());
+        model.addAttribute("teachers", personRepo.findAll()); //needs to send only teachers-query by role
         return "addcourse";
     }
 
-    @RequestMapping("/editcourse")
-    public String editCourse()
+    @PostMapping("/addcourse")
+    public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
+                               Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
+
+        if(result.hasErrors()) {
+            return "addcourse";
+        }
+
+        // find out what Person was just selected (by the admin) from the drop down list for this course
+        // and set them as the teacher to this course, then save the course
+        course.addPerson(personRepo.findOne(teacherId));
+        courseRepo.save(course);
+
+        return "coursedetail";
+    }
+
+
+    @GetMapping("/editcourse/{courseid}")
+    public String editCourse(@PathVariable ("courseid") long id, Model model)
     {
+        model.addAttribute("course", courseRepo.findOne(id));
         return "addcourse";
     }
 
-    @RequestMapping("/deletecourse")
-    public String deleteCourse()
+    @RequestMapping("/deletecourse/{courseid}")
+    public String deleteCourse(@PathVariable ("courseid") long id)
     {
+        Course course = courseRepo.findOne(id);
+		//need more here
         return "allcourses";
     }
 
     @RequestMapping("/allcourses")
-    public String allCourses()
+    public String allCourses(Model model)
     {
+    	model.addAttribute("allcourses", courseRepo.findAll());
         return "allcourses";
     }
 
-    @RequestMapping("/coursedetail")
-    public String courseDetail()
+    @RequestMapping("/coursedetail/{courseid}")
+    public String courseDetail(@PathVariable ("courseid") long id, Model model)
     {
-        return "coursedetail";
+	    model.addAttribute("course", courseRepo.findOne(id));
+	    return "coursedetail";
     }
 
     @RequestMapping("/allevaluations")
-    public String allEvals()
+    public String allEvals(Model model)
     {
+    	model.addAttribute("allevaluations", evaluationRepo.findAll());
         return "allevaluations";
     }
     /**************************
@@ -275,15 +305,50 @@ public class MainController
     //Course detail-in admin
 
     @RequestMapping("/mycourses")
-    public String myCourses()
+    public String myCourses(Principal principal, Model model)
     {
+    	//something like-NOT RIGHT!!!!
+	    //Person teacher = personRepo.findOne(principal.getName());
         //can actually return "allcourses" html, but only send teacher's courses
+	    model.addAttribute("teachercourses", courseRepo.findAll());
         return "mycourses";
     }
 
-    @RequestMapping("/takeattendance")
-    public String takeAttendance()
+	@GetMapping("/addstudent/{courseid}")
+	public String registerStudent(@PathVariable("courseid")long courseId, Model model)
+	{
+		model.addAttribute("newstudent", new Person());
+		//Course course = courseRepo.findOne(courseId);
+		Course course=new Course();
+		System.out.println(course.getId());
+		model.addAttribute("course", course);
+		return "addstudenttocourse";
+	}
+
+	@PostMapping("/addstudent/{courseid}")
+	public String addStudentToCourse(@PathVariable("courseid")long courseId, @ModelAttribute("newstudent")Person student, Model model)
+	{
+		System.out.println("CourseId: "+ courseId);
+		System.out.println("Name: "+student.getNameFirst());
+		//Course course = courseRepo.findOne(courseId);
+		//add course to person OR add person to course
+		//save course AND/OR person
+
+		//Course course = courseRepo.findOne(courseId);
+		Course course=new Course();
+		model.addAttribute("course", course);
+
+
+		return "addstudent";
+	}
+
+    @RequestMapping("/takeattendance/{courseid}")
+    public String takeAttendance(@PathVariable("courseid") long courseId, Model model)
     {
+    	Course course = courseRepo.findOne(courseId);
+	    Collection<Person> students = course.getPersons();
+	    model.addAttribute("students", students);
+	    //Something more here
         return "takeattendance";
     }
 
@@ -293,10 +358,17 @@ public class MainController
         return "viewattendance";
     }
 
-    @RequestMapping("/evaluation")
-    public String eval()
+    @GetMapping("/evaluation")
+    public String eval(Model model)
     {
+    	model.addAttribute("evaluation", new Evaluation());
         return "evaluation";
+    }
+    @PostMapping("/evaluation")
+    public String submitEvaluation(@ModelAttribute("evaluation") Evaluation eval)
+    {
+    	evaluationRepo.save(eval);
+    	return "welcome";
     }
 
     @RequestMapping("/endcourse")

@@ -1,0 +1,291 @@
+html {
+    height: 100%;
+}
+
+body {
+    padding-top: 70px;
+    /*height: 100%;*/
+}
+
+footer {
+    margin-bottom: 40px;
+}
+
+.login-page {
+    background: url("../img/01login.jpg") no-repeat center center;
+    min-height: 100%;
+    background-size: cover;
+}
+
+.person-page {
+    background: url("../img/02personal.jpg") no-repeat center center;
+    min-height: 100%;
+    background-size: cover;
+}
+
+.education-page {
+    background: url("../img/03education.jpg") no-repeat center center;
+    min-height: 100%;
+    background-size: cover;
+}
+
+.work-page {
+    background: url("../img/04work.jpg") no-repeat center center;
+    min-height: 100%;
+    background-size: cover;
+}
+
+.skill-page {
+    background: url("../img/05skills.jpg") no-repeat center center;
+    min-height: 100%;
+    background-size: cover;
+}
+
+.edit-page {
+    /*background: url("../img/06edit.jpg") no-repeat center center;*/
+    /*min-height: 100%;*/
+    /*background-size: cover;*/
+}
+
+.final-panel {
+    background: url("../img/07final-panel.jpg") repeat center center;
+    padding-left: 40px;
+    padding-right:40px;
+}
+
+.final-section-header {
+    width: 100%;
+    padding: 10px 0px 5px 0px;
+    color: #52a3db;
+    font-size: large;
+    font-weight: bold;
+    margin-top: 30px;
+    border-bottom: 1px solid black;
+}
+
+.item-skill {
+    margin-bottom: 20px;
+}
+
+.final-header {
+    margin-bottom: 50px;
+}
+
+.final-header h1 {
+    font-weight: bold;
+}
+
+.final-item-title {
+    font-weight: bold;
+}
+
+.align-right {
+    float: right;()
+}
+
+
+.feedback {
+    margin-bottom: 20px;
+}
+
+.disable-click {
+    pointer-events: none;
+    cursor: default;
+}
+
+.bold-input {
+    font-weight:bold;
+}
+
+.glyphicon {
+    color: #428BCA;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.glyphicon-user {
+    color: #777;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.glyphicon-lock {
+    color: #777;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.glyphicon-menu-hamburger {
+    color: #777;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.alert {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.panel-primary {
+    margin-top: 10px;
+}
+
+input[type="radio"] {
+    margin-top: 4px;
+    margin-left: 3px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+}
+
+.btn-danger {
+    margin-top: 50px;
+}
+
+table {
+    width:100%;
+    box-sizing: border-box;
+}
+
+td a {
+    display: block;
+    /*border: 1px solid black;*/
+    /*padding: 16px;*/
+}
+
+thead {
+    color: white;
+    background-color: #428bca;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+
+}
+
+
+
+/* can end up with really wide tables if you don't truncate the cells contents */
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    /*max-height: 50px;*/
+}
+
+/* changing the background color makes the border-radius go away, so need to add it back in here */
+#viewFinalModal .modal-header {
+    background-color: #5bc0de;
+    color: white;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#deleteAllWarningModal .modal-header {
+    background-color: #d9534f;
+    color: white;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#deleteAllWarningModal a {
+    float: left;
+}
+
+/* material design shadow classes */
+.card {
+    background: #fff;
+    border-radius: 2px;
+    margin: 1rem;
+}
+
+.card-1 {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+/* add hover! */
+.card-1:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-2 {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.card-3 {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.card-4 {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-5 {
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+
+/* add a glyphicon inside an input element */
+.inner-addon {
+    position: relative;
+}
+
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+}
+
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+
+/* change the navbar collapse breakpoint from default of 768px to 1000px */
+/* necessary because my navbar was jumping to two lines before it collapsed to the mobile hamburger button */
+/* NOTE: 992px is the default bootstrap breakpoint between medium/large devices, I am using that here because I want a
+   slightly different navbar menu after the navbar collapses, setting it to 992 here allows me to use built-in
+   boostrap classes: .hidden-lg to ONLY show the mobile friendly menu if screen size is less than 992px */
+@media (max-width: 992px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display:block !important;
+    }
+}
