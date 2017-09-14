@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.Course;
+import com.example.demo.models.Person;
 import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,9 @@ public class AdminController
 	public String addCourse(Model model)
 	{
 		model.addAttribute("course", new Course());
-		model.addAttribute("teachers", personRepo.findAll()); //needs to send only teachers-query by role
+//		Person person = new Person();
+//		person.getAuthorities()
+		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER"))); //needs to send only teachers-query by role
 		return "addcourse";
 	}
 
