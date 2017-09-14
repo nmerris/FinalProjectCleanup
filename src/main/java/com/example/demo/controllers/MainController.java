@@ -131,7 +131,7 @@ public class MainController
         evaluation1.setEquipmentRating("Good");
         evaluation1.setHowDidYouFindOut("internet");
         evaluation1.setInstructionQualityRating("Poor");
-        evaluation1.setTraningExperienceRating("Fair");
+        evaluation1.setTrainingExperienceRating("Fair");
         evaluation1.setTextBookRating("Average");
         evaluation1.setWhatDidntYouLike("slow computers");
         // attach a course to this evaluation

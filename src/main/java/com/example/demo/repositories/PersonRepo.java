@@ -13,4 +13,5 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     Long countByUsername(String username);
 
     Set<Person> findByAuthoritiesIs(Authority authority);
+
 }
