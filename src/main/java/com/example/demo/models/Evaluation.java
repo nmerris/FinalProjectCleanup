@@ -16,7 +16,7 @@ public class Evaluation {
 
     private String courseContentRating;
     private String instructionQualityRating;
-    private String traningExperienceRating;
+    private String trainingExperienceRating;
     private String textBookRating;
     private String classroomEnvironment;
     private String equipmentRating;
@@ -61,12 +61,12 @@ public class Evaluation {
         this.instructionQualityRating = instructionQualityRating;
     }
 
-    public String getTraningExperienceRating() {
-        return traningExperienceRating;
+    public String getTrainingExperienceRating() {
+        return trainingExperienceRating;
     }
 
-    public void setTraningExperienceRating(String traningExperienceRating) {
-        this.traningExperienceRating = traningExperienceRating;
+    public void setTrainingExperienceRating(String trainingExperienceRating) {
+        this.trainingExperienceRating = trainingExperienceRating;
     }
 
     public String getTextBookRating() {

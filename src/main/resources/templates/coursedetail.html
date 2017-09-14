@@ -12,15 +12,22 @@
 <br />
 <h2>Admin items</h2>
 <br />
-<a href="editcourse">Edit course</a><br/>
-<a href="deletecourse">Delete course</a><br/>
-<a href="allevaluations">View course evals</a><br/>
+CRN Number: <p th:text="${course.courseRegistrationNum}"></p>
+Name: <p th:text="${course.name}"></p>
+Start Date: <p th:text="${course.dateStart}"></p>
+End Date: <p th:text="${course.dateEnd}"></p>
+<!--Teacher: <p th:text="${teacher.nameFirst}+' '+${teacher.nameLast}"></p>-->
+
+<a th:href="@{/editcourse/{id}(id=${course.id})}">Edit course</a> -
+<a th:href="@{/deletecourse/{id}(id=${course.id})}">Delete course</a> -
+<a href="allevaluations">View course evals</a>
+
 <br />
 <br />
-<h2>Teacher items</h2>
-<br />
-<a href="takeattendance">Take attendance</a><br/>
-<a href="endcourse">End course</a><br/>
+<!--<h2>Teacher items</h2>-->
+<!--<br />-->
+<!--<a href="takeattendance">Take attendance</a><br/>-->
+<!--<a href="endcourse">End course</a><br/>-->
 
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
