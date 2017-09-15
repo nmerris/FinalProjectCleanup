@@ -5,16 +5,17 @@ import com.example.demo.models.Attendance;
 import java.util.ArrayList;
 import java.util.List;
 
+// this class is necessary to get a list of objects through a form
 public class AttendanceWrapper {
 
+    private List<Attendance> attendanceList = new ArrayList<>();
 
-    private List<Attendance> stringList = new ArrayList<>();
 
-    public List<Attendance> getStringList() {
-        return stringList;
+    public List<Attendance> getAttendanceList() {
+        return attendanceList;
     }
 
-    public void setStringList(List<Attendance> stringList) {
-        this.stringList = stringList;
+    public void setAttendanceList(List<Attendance> attendanceList) {
+        this.attendanceList = attendanceList;
     }
 }

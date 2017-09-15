@@ -115,6 +115,7 @@ public class TeacherController {
 	}
 
 
+
 	@GetMapping("/takeattendance/{courseid}")
 	public String takeAttendance(@PathVariable("courseid") long courseId, Model model) {
 		Course course = courseRepo.findOne(courseId);
@@ -174,30 +175,15 @@ public class TeacherController {
 			// add it to the list
 			attendanceArrayList.add(attendance);
 
-
-
 		}
 
-		System.out.println("========================== attendanceArrayList.size: " + attendanceArrayList.size());
 
-
-//		model.addAttribute("attendanceArrayList", attArray);
-
-//		model.addAttribute("attArray", attArray);
-
-
-		wrapper.setStringList(attendanceArrayList);
+		wrapper.setAttendanceList(attendanceArrayList);
 
 		model.addAttribute("attendanceWrapper", wrapper);
-//		model.addAttribute("attendanceArrayList", attendanceArrayList);
 		model.addAttribute("studentName", someStudent.getNameFirst() + ' ' + someStudent.getNameLast());
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
-
-//		List<String> strings = new ArrayList<>(attendanceArrayList.size());
-//		model.addAttribute("stringList", strings);
-
-
 
 		return "takeattendance";
 	}
@@ -205,13 +191,17 @@ public class TeacherController {
 
 	@PostMapping("/takeattendance/{courseid}")
 	public String takeAttendancePost(
-//			@RequestParam(value = "attendanceWrapper", required = false) ArrayList<Attendance> attArrList,
 			@ModelAttribute("attendanceWrapper") AttendanceWrapper attWrapper,
 			@PathVariable("courseid") long courseId, Model model) {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
-		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getStringList().size());
+		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
+		for (Attendance att : attWrapper.getAttendanceList()) {
+			System.out.println("========= attWrapper.getAttendanceList element: " + att.getDate() + "..... " + att.getAstatus());
+		}
 
+		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
+		attendanceRepo.save(attWrapper.getAttendanceList());
 
 
 		return "redirect:/mycoursesdetail/" + courseId;

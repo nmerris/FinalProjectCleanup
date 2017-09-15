@@ -5,50 +5,42 @@
 
 <body>
 
-<h3 th:text="${studentName}"></h3>
-<h3 th:text="${courseName}"></h3>
+<h3 th:text="'Student: ' + ${studentName}"></h3>
+<h3 th:text="'Course: ' + ${courseName}"></h3>
 
 <form action="#" th:action="@{~/takeattendance/{id}(id=${courseId})}" th:object="${attendanceWrapper}" method="post">
 
-<!--<table class="table table-hover">-->
-    <!--&lt;!&ndash;<caption><h3><b></b></h3></caption>&ndash;&gt;-->
-    <!--<thead>-->
-        <!--<tr>-->
-            <!--<th>Date</th>-->
-            <!--<th>Status</th>-->
-        <!--</tr>-->
-    <!--</thead>-->
+<table class="table table-hover">
+    <!--<caption><h3><b></b></h3></caption>-->
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
 
-    <!--<tbody>-->
+    <tbody>
 
-    <!--th:object="${attendanceArrayList}"-->
-
-        <th:block th:each="item, iter : *{stringList}">
-            <!--<tr>-->
-                <!--&lt;!&ndash;<td>Some date 1</td>&ndash;&gt;-->
-                <!--&lt;!&ndash;<td><p th:text="${attendanceArrayList}"></p></td>&ndash;&gt;-->
-                <!--<td><p th:text="${item.date}"></p></td>-->
-                <!--<td>-->
-
-                    <!--<input type="text" name="landingPageModels[0].landingPage.url" class="form-control" />-->
-
-                    <!--<div th:object="${item}"></div>-->
-                    <input type="text" th:field="*{stringList[__${iter.index}__].astatus}"> Present
-                    <!--<input type="radio" th:field="*{attendanceArrayList[__${iter.index}__].astatus}" value="Late"> Late-->
-                    <!--<input type="radio" th:field="*{attendanceArrayList[__${iter.index}__].astatus}" value="Absent"> Absent-->
-
-                    <!--<input type="radio" name="attendanceArrayList[0].astatus" value="PresentXX"> Present-->
-                    <!--<input type="radio" name="attendanceArrayList[0].astatus" value="LateXX"> Late-->
-                    <!--<input type="radio" name="attendanceArrayList[0].astatus" value="AbsentXX"> Absent<br>-->
-
-                <!--</td>-->
-            <!--</tr>-->
+        <th:block th:each="item, iter : *{attendanceList}">
+            <tr>
+                <td th:text="${#dates.format(item.date, 'MMM-dd-yyyy')}"></td>
+                <td>
+                    <input checked="checked" type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
+                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
+                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item.date}">
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].id}" th:value="${item.id}">
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${item.course.id}">
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${item.person.id}">
+                </td>
+            </tr>
         </th:block>
 
-    <!--</tbody>-->
-<!--</table>-->
+    </tbody>
+</table>
 
 
+    <br/>
     <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
 </form>
 
