@@ -26,7 +26,7 @@
                 <td th:text="${#dates.format(item.date, 'MMM-dd-yyyy')}"></td>
                 <td>
                     <!-- checked is not working, not sure why -->
-                    <input checked type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
+                    <input selected type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
                     <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
                     <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
                     <input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item.date}">
