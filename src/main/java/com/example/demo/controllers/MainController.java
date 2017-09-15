@@ -74,6 +74,7 @@ public class MainController
             teacherPerson.setNameLast("TeacherSueLN");
             teacherPerson.setPassword("pass");
             teacherPerson.setUsername("teacher");
+            teacherPerson.setSelectVal("some value");
             personRepo.save(teacherPerson);
             System.out.println("================================== created teacher Sue");
 
@@ -87,6 +88,7 @@ public class MainController
             teacherPerson2.setNameLast("TeacherBobLN");
             teacherPerson2.setPassword("pass");
             teacherPerson2.setUsername("teacher2");
+            teacherPerson2.setSelectVal("some value");
             personRepo.save(teacherPerson2);
             System.out.println("================================== created teacher Bob");
 
@@ -100,6 +102,7 @@ public class MainController
             adminPerson.setNameLast("AdminSueLN");
             adminPerson.setPassword("pass");
             adminPerson.setUsername("admin");
+            adminPerson.setSelectVal("some value");
             personRepo.save(adminPerson);
             System.out.println("================================== created admin Person");
 
@@ -148,6 +151,7 @@ public class MainController
             studentJoe.setNameLast("Dimaggio");
             studentJoe.setEmail("abc@def.ghi");
             studentJoe.setContactNum("1723894836");
+            studentJoe.setSelectVal("some value");
             personRepo.save(studentJoe);
             for (int i = 0; i < 20; i++) {
                 Attendance att = new Attendance();

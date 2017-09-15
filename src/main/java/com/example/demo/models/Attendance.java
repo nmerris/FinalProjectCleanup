@@ -3,7 +3,9 @@ package com.example.demo.models;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Attendance {
@@ -25,6 +27,7 @@ public class Attendance {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
+
 
 
     public long getId() {

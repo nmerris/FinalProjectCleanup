@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.AttendanceWrapper;
 import com.example.demo.models.Attendance;
 import com.example.demo.models.Course;
 import com.example.demo.models.Person;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.internet.InternetAddress;
 import java.io.UnsupportedEncodingException;
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class TeacherController {
@@ -154,8 +157,11 @@ public class TeacherController {
 		System.out.printf("======================= Difference: %d day(s)", diffInDays);
 
 
+
+		AttendanceWrapper wrapper = new AttendanceWrapper();
+
 		// create an empty list of attendance
-		ArrayList<Attendance> attendanceArrayList = new ArrayList<>();
+		List<Attendance> attendanceArrayList = new ArrayList<>();
 		// now create diffInDays Attendance objects to send to view
 		for (int i = 0; i < diffInDays; i++) {
 			Attendance attendance = new Attendance();
@@ -167,23 +173,30 @@ public class TeacherController {
 			attendance.setDate(new Date());
 			// add it to the list
 			attendanceArrayList.add(attendance);
+
+
+
 		}
 
 		System.out.println("========================== attendanceArrayList.size: " + attendanceArrayList.size());
 
-		Attendance[] attArray = new Attendance[3];
-		attArray[0] = new Attendance();
-		attArray[1] = new Attendance();
-		attArray[2] = new Attendance();
 
 //		model.addAttribute("attendanceArrayList", attArray);
 
 //		model.addAttribute("attArray", attArray);
 
-		model.addAttribute("attendanceArrayList", attendanceArrayList);
+
+		wrapper.setStringList(attendanceArrayList);
+
+		model.addAttribute("attendanceWrapper", wrapper);
+//		model.addAttribute("attendanceArrayList", attendanceArrayList);
 		model.addAttribute("studentName", someStudent.getNameFirst() + ' ' + someStudent.getNameLast());
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
+
+//		List<String> strings = new ArrayList<>(attendanceArrayList.size());
+//		model.addAttribute("stringList", strings);
+
 
 
 		return "takeattendance";
@@ -192,12 +205,12 @@ public class TeacherController {
 
 	@PostMapping("/takeattendance/{courseid}")
 	public String takeAttendancePost(
-//			@RequestParam(value = "attendanceArrayList", required = false) ArrayList<Attendance> attArrList,
-			@ModelAttribute("attendanceArrayList") ArrayList<Attendance> attArrList,
+//			@RequestParam(value = "attendanceWrapper", required = false) ArrayList<Attendance> attArrList,
+			@ModelAttribute("attendanceWrapper") AttendanceWrapper attWrapper,
 			@PathVariable("courseid") long courseId, Model model) {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
-		System.out.println("=================== attArrList.size: " + attArrList.size());
+		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getStringList().size());
 
 
 
