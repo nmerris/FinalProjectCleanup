@@ -48,6 +48,9 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private Collection<Attendance> attendances;
 
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private Collection<CourseInfoRequestLog> courseInfoRequestLogs;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
     private Collection<Person> persons;
@@ -158,4 +161,11 @@ public class Course {
         this.persons = persons;
     }
 
+    public Collection<CourseInfoRequestLog> getCourseInfoRequestLogs() {
+        return courseInfoRequestLogs;
+    }
+
+    public void setCourseInfoRequestLogs(Collection<CourseInfoRequestLog> courseInfoRequestLogs) {
+        this.courseInfoRequestLogs = courseInfoRequestLogs;
+    }
 }

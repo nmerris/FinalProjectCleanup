@@ -229,4 +229,17 @@ public class TeacherController {
 
 		return "redirect:/allcourses";
 	}
+
+	// builds a String that has all the attendance info for a single course
+	private String buildAttendanceEmail(Course course) {
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+//		ArrayList<Person> students = courseRepo.f
+
+
+
+
+
+		return "";
+	}
+
 }

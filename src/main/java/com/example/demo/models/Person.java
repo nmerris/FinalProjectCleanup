@@ -29,7 +29,7 @@ public class Person {
     @Size(max = 50)
     private String email;
 
-    @NotEmpty
+//    @NotEmpty
     private String selectVal;
 
 //    @NotEmpty
@@ -41,6 +41,10 @@ public class Person {
 //    @NotEmpty
     @Column(unique = true)
     private String username;
+
+    @NotEmpty
+    @Column(unique = true)
+    private String mNumber;
 
     private boolean enabled;
 
@@ -62,6 +66,8 @@ public class Person {
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private Collection<Attendance> attendances;
 
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    private Collection<CourseInfoRequestLog> courseInfoRequestLogs;
 
     public Person() {
         this.authorities = new HashSet<>();
@@ -80,6 +86,16 @@ public class Person {
     }
 
     // normal getters/setters ==================================================================================
+
+
+    public String getmNumber() {
+        return mNumber;
+    }
+
+    public void setmNumber(String mNumber) {
+        this.mNumber = mNumber;
+    }
+
     public long getId() {
         return id;
     }
@@ -184,4 +200,11 @@ public class Person {
         this.attendances = attendances;
     }
 
+    public Collection<CourseInfoRequestLog> getCourseInfoRequestLogs() {
+        return courseInfoRequestLogs;
+    }
+
+    public void setCourseInfoRequestLogs(Collection<CourseInfoRequestLog> courseInfoRequestLogs) {
+        this.courseInfoRequestLogs = courseInfoRequestLogs;
+    }
 }

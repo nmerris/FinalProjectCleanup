@@ -17,4 +17,6 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
     Set<Person> findByCoursesIsAndUsernameIsOrderByNameLastAsc(Course course, String username);
 
+//    Set<Person> findByCoursesIsAndAuthoritiesIsNotAndAuthoritiesIsNot
+
 }
