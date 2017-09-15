@@ -12,8 +12,8 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "MMM d, yyyy")
+//    @Temporal(TemporalType.DATE)
+//    @DateTimeFormat(pattern = "MMM d, yyyy")
     private Date date;
 
     private String astatus;

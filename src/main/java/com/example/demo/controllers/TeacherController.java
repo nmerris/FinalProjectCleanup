@@ -148,16 +148,27 @@ public class TeacherController
 			attendance.setPerson(someStudent);
 			// set the course
 			attendance.setCourse(course);
+			// set the date
+			attendance.setDate(new Date());
 			// add it to the list
 			attendanceArrayList.add(attendance);
 		}
 
 		System.out.println("========================== attendanceArrayList.size: " + attendanceArrayList.size());
 
+		Attendance[] attArray = new Attendance[3];
+		attArray[0] = new Attendance();
+		attArray[1] = new Attendance();
+		attArray[2] = new Attendance();
+
+//		model.addAttribute("attendanceArrayList", attArray);
+
+//		model.addAttribute("attArray", attArray);
 
 		model.addAttribute("attendanceArrayList", attendanceArrayList);
 		model.addAttribute("studentName", someStudent.getNameFirst() + ' ' + someStudent.getNameLast());
 		model.addAttribute("courseName", course.getName());
+		model.addAttribute("courseId", courseId);
 
 
 		return "takeattendance";
@@ -165,7 +176,14 @@ public class TeacherController
 
 
 	@PostMapping("/takeattendance/{courseid}")
-	public String takeAttendancePost(@PathVariable("courseid") long courseId, Model model) {
+	public String takeAttendancePost(
+//			@RequestParam(value = "attendanceArrayList", required = false) ArrayList<Attendance> attArrList,
+			@ModelAttribute("attendanceArrayList") ArrayList<Attendance> attArrList,
+			@PathVariable("courseid") long courseId, Model model) {
+
+		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
+		System.out.println("=================== attArrList.size: " + attArrList.size());
+
 
 
 

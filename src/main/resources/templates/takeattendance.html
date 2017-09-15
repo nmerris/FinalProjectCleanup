@@ -8,8 +8,9 @@
 <h3 th:text="${studentName}"></h3>
 <h3 th:text="${courseName}"></h3>
 
+<form action="#" th:action="@{~/takeattendance/{id}(id=${courseId})}" method="post">
 
-<table class="table table-hover">
+    <table class="table table-hover">
     <!--<caption><h3><b></b></h3></caption>-->
     <thead>
         <tr>
@@ -19,31 +20,37 @@
     </thead>
 
     <tbody>
-        <!--<th:block th:each="item:${attendanceArrayList}">-->
+
+    <!--th:object="${attendanceArrayList}"-->
+
+        <th:block th:each="item:${attendanceArrayList}">
             <tr>
-                <td>Some date</td>
+                <!--<td>Some date 1</td>-->
                 <!--<td><p th:text="${attendanceArrayList}"></p></td>-->
-                <!--<td><p th:text="${item.date}"></p></td>-->
+                <td><p th:text="${item.date}"></p></td>
                 <td>
 
                     <!--<input type="text" name="landingPageModels[0].landingPage.url" class="form-control" />-->
 
-                    <!--<input type="radio" name="item.astatus" value="Present"> Present<br>-->
-                    <!--<input type="radio" name="item.astatus" value="Late"> Late<br>-->
-                    <!--<input type="radio" name="item.astatus" value="Absent"> Absent<br>-->
+                    <!--<div th:object="${item}"></div>-->
+                    <!--<input type="radio" th:field="*{astatus}" value="Present"> Present-->
+                    <!--<input type="radio" th:field="*{astatus}" value="Late"> Late-->
+                    <!--<input type="radio" th:field="*{astatus}" value="Absent"> Absent-->
 
-                    <input type="radio" name="attendanceArrayList[0].astatus" value="PresentXX"> Present
-                    <input type="radio" name="attendanceArrayList[0].astatus" value="LateXX"> Late
-                    <input type="radio" name="attendanceArrayList[0].astatus" value="AbsentXX"> Absent<br>
+                    <!--<input type="radio" name="attendanceArrayList[0].astatus" value="PresentXX"> Present-->
+                    <!--<input type="radio" name="attendanceArrayList[0].astatus" value="LateXX"> Late-->
+                    <!--<input type="radio" name="attendanceArrayList[0].astatus" value="AbsentXX"> Absent<br>-->
 
                 </td>
             </tr>
-        <!--</th:block>-->
+        </th:block>
+
     </tbody>
 </table>
 
 
-
+    <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
+</form>
 
 <th:block th:replace="base::FinalNav"></th:block>
 
