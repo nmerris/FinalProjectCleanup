@@ -116,6 +116,7 @@ public class TeacherController {
 
 
 
+	// UNDER CONSTRUCTION BUT IS SAVING A LIST OF ATTENDANCE OBJECTS TO DB!
 	@GetMapping("/takeattendance/{courseid}")
 	public String takeAttendance(@PathVariable("courseid") long courseId, Model model) {
 		Course course = courseRepo.findOne(courseId);
@@ -173,7 +174,7 @@ public class TeacherController {
 			// set the course
 			attendance.setCourse(course);
 			// set the date
-			attendance.setDate(course.getDateStart().);
+			attendance.setDate(new Date());
 			// add it to the list
 			attendanceArrayList.add(attendance);
 
