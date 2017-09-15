@@ -4,7 +4,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,10 +24,12 @@ public class Course {
     @DateTimeFormat(pattern = "MMM d, yyyy")
     private Date dateStart;
 
+    @NotNull
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "MMM d, yyyy")
     private Date dateEnd;
 
+    @Min(6)
     private long courseRegistrationNum;
 
     private boolean hasBeenDeleted;
@@ -153,4 +157,5 @@ public class Course {
     public void setPersons(Collection<Person> persons) {
         this.persons = persons;
     }
+
 }

@@ -29,11 +29,12 @@ public class Person {
     @Size(max = 50)
     private String email;
 
+    @NotEmpty
     private String selectVal;
 
 //    @NotEmpty
     private String password;
-
+    @NotEmpty
     private String contactNum;
 
     // all usernames must be unique
@@ -74,6 +75,9 @@ public class Person {
         authorities.add(authority);
     }
 
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
 
     // normal getters/setters ==================================================================================
     public long getId() {
