@@ -62,6 +62,7 @@ public class TeacherController {
 				personRepo.findByCoursesIsAndUsernameIsOrderByNameLastAsc(courseRepo.findOne(id),
 						personRepo.findByUsername(principal.getName()).getUsername()));
 
+		model.addAttribute("courseId", id);
 		return "listregisteredstudent";
 	}
 

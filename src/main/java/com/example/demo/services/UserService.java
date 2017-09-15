@@ -6,6 +6,8 @@ import com.example.demo.repositories.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class UserService {
@@ -32,12 +34,42 @@ public class UserService {
     public void saveAdmin(Person person){
         person.setAuthorities(Arrays.asList(authorityRepo.findByRole("ADMIN")));
         person.setEnabled(true);
+
+        setPersonMnumber(person);
+
         personRepo.save(person);
     }
+
+    // returns 0 if there is a problem (ie if randomly generated mnum happened to already exist)
+    // returns 1 if no problems
     public void saveTeacher(Person  person){
         person.setAuthorities(Arrays.asList(authorityRepo.findByRole("TEACHER")));
         person.setEnabled(true);
+
+        setPersonMnumber(person);
+
         personRepo.save(person);
+
+    }
+
+    private void setPersonMnumber(Person p) {
+        // check to make sure the randomly generated mnumber is not already in the db
+        // there is a 1 in 10 million chance of this happening
+        boolean generateAnotherRandomNum = true;
+        while(generateAnotherRandomNum == true) {
+            int randomNum = ThreadLocalRandom.current().nextInt(1000000, 9999999 + 1);
+            String mNum = "M" + Integer.valueOf(randomNum);
+
+            if(personRepo.countByMNumberIs(mNum) > 0) {
+                // the randomly generated number alreayd exists!
+                generateAnotherRandomNum = true;
+            }
+            else {
+                generateAnotherRandomNum = false;
+            }
+
+            p.setmNumber(mNum);
+        }
     }
 
 }

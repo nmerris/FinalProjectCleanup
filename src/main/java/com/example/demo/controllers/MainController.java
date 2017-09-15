@@ -222,7 +222,7 @@ public class MainController
         if(person.getSelectVal().equalsIgnoreCase("TEACHER")  )      {
 
             userService.saveTeacher(person);
-            model.addAttribute("message","Teacher Account Successfully Created");
+            model.addAttribute("message", "Teacher Account Successfully Created");
         }
         else{
 

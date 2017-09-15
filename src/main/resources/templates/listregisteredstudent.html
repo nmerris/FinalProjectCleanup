@@ -21,6 +21,7 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Contact Number</th>
+                        <th>Time Arrived</th>
 
                     </tr>
                     </thead>
@@ -30,13 +31,7 @@
                         <td th:text="*{student.nameLast}"></td>
                         <td th:text="*{student.email}"></td>
                         <td th:text="*{student.contactNum}"></td>
-
-                        <!--<th:block th:each="item : *{}student.timeStamps">-->
-                            <!--<td th:text="*{timestamp}"></td>-->
-                            <!---->
-                        <!--</th:block>-->
-                        
-                        
+                        <td th:text="${student.getTimeStampByCourseId(__${id}__)}"></td>
                     </tr>
                     </tbody>
                 </table>

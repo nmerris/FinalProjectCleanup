@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 @Entity
@@ -42,7 +43,6 @@ public class Person {
     @Column(unique = true)
     private String username;
 
-    @NotEmpty
     @Column(unique = true)
     private String mNumber;
 
@@ -84,6 +84,18 @@ public class Person {
     public void addCourse(Course course) {
         courses.add(course);
     }
+
+    public Date getTimeStampByCourseId(long courseId) {
+        for (RegistrationTimestamp rts : timeStamps) {
+            if(rts.getCourse().getId() == courseId) {
+                return rts.getTimestamp();
+            }
+        }
+        // should never happen
+        return new Date();
+    }
+
+
 
     // normal getters/setters ==================================================================================
 
