@@ -124,36 +124,38 @@ public class TeacherController {
 		// convert students Collection to ArrayList
 		ArrayList<Person> studsArray = new ArrayList<>(students);
 
+		// testing for now....
 		Person someStudent = studsArray.get(0);
 		System.out.println("===================== number of students in studsArray: " + studsArray.size());
 		System.out.println("=================== fist name of student picked out for testing (index 0): " + someStudent.getNameFirst());
 
-		// create a test start and end date
-		Date date1 = new Date();
-		Date date2 = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-		int diffInDays;
-
-//		System.out.print("Enter first date (MM/DD/YY): ");
-		try {
-			date1 = dateFormat.parse("01/01/2000");
-		} catch (ParseException e) {
-			System.out.println("Date parse error");
-		}
-
-//		System.out.print("Enter second date (MM/DD/YY): ");
-		try {
-			date2 = dateFormat.parse("01/10/2000");
-		} catch (ParseException e) {
-			System.out.println("Date parse error");
-		}
+//		// create a test start and end date
+//		Date date1 = new Date();
+//		Date date2 = new Date();
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+//		int diffInDays;
+//
+////		System.out.print("Enter first date (MM/DD/YY): ");
+//		try {
+//			date1 = dateFormat.parse("01/01/2000");
+//		} catch (ParseException e) {
+//			System.out.println("Date parse error");
+//		}
+//
+////		System.out.print("Enter second date (MM/DD/YY): ");
+//		try {
+//			date2 = dateFormat.parse("01/10/2000");
+//		} catch (ParseException e) {
+//			System.out.println("Date parse error");
+//		}
 
 		// * 1000 to convert to seconds
 		// * 60 to convert to minutes
 		// * 60 to convert to hours
 		// * 24 to convert to days
 		// absolute value in case user entered later date first
-		diffInDays = (int) (Math.abs((date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24)));
+		int dayInSeconds = 1000 * 60 * 60 * 24;
+		int diffInDays = (int) (Math.abs((course.getDateStart().getTime() - course.getDateEnd().getTime()) / dayInSeconds));
 
 		System.out.printf("======================= Difference: %d day(s)", diffInDays);
 
@@ -171,7 +173,7 @@ public class TeacherController {
 			// set the course
 			attendance.setCourse(course);
 			// set the date
-			attendance.setDate(new Date());
+			attendance.setDate(course.getDateStart().);
 			// add it to the list
 			attendanceArrayList.add(attendance);
 
