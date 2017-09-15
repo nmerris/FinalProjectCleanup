@@ -1,8 +1,10 @@
 package com.example.demo.models;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,10 +16,12 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-//    @Temporal(TemporalType.DATE)
-//    @DateTimeFormat(pattern = "MMM d, yyyy")
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "MMM d, yyyy")
     private Date date;
 
+    @NotEmpty
     private String astatus;
 
     @ManyToOne(fetch = FetchType.LAZY)

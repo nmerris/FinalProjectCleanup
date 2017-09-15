@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -11,6 +12,7 @@ public class RegistrationTimestamp {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+//    @NotNull
     private Date timestamp;
 //    private Date timestamp;
 

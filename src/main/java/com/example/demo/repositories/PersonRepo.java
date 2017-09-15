@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.models.Authority;
+import com.example.demo.models.Course;
 import com.example.demo.models.Person;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,5 +14,8 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     Long countByUsername(String username);
 
     Set<Person> findByAuthoritiesIs(Authority authority);
+
+    //Added by Yun on 09/15,find person according to course id
+    Set<Person> findByCoursesIs (Course course);
 
 }
