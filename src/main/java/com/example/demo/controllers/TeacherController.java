@@ -46,8 +46,8 @@ public class TeacherController {
 	public EmailService emailService;
 
 	//List of courses for a particular Teacher
-	@RequestMapping("/mycoursesdetail/{id}")
-	public String listTeacherCourses(@PathVariable("id") long id, Principal principal, Model model) {
+	@RequestMapping("/mycoursesdetail")
+	public String listTeacherCourses(Principal principal, Model model) {
 		Person teacher = personRepo.findByUsername(principal.getName());
 		model.addAttribute("teachercourse", teacher);
 		model.addAttribute("courselist", courseRepo.findByPersons(teacher));
@@ -55,10 +55,13 @@ public class TeacherController {
 	}
 
 	//List of Students for a particular Course
+	// path variable is the course id
 	@RequestMapping("/viewregisteredstudent/{id}")
-	public String listRegisteredStud(@PathVariable("id") long id, Model model) {
-		model.addAttribute("liststudent", personRepo.findAll());
-		// something to do here
+	public String listRegisteredStud(@PathVariable("id") long id, Model model, Principal principal) {
+		model.addAttribute("liststudent",
+				personRepo.findByCoursesIsAndUsernameIsOrderByNameLastAsc(courseRepo.findOne(id),
+						personRepo.findByUsername(principal.getName()).getUsername()));
+
 		return "listregisteredstudent";
 	}
 
@@ -132,8 +135,7 @@ public class TeacherController {
 		System.out.println("=================== id of student who we are taking attendance for (person.getId): " + student.getId());
 
 		// get the difference in days between course start and end dates
-		int dayInSeconds = 1000 * 60 * 60 * 24;
-		int diffInDays = (int) (Math.abs((course.getDateStart().getTime() - course.getDateEnd().getTime()) / dayInSeconds));
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
 		System.out.printf("======================= Difference between course start and end dates: %d day(s)", diffInDays);
 
 		// need this to be able to process a list of objects in a single form

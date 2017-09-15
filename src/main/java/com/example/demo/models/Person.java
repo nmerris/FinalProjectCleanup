@@ -56,7 +56,7 @@ public class Person {
     @ManyToMany(mappedBy = "persons", fetch = FetchType.LAZY)
     private Collection<Course> courses;
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<RegistrationTimestamp> timeStamps;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)

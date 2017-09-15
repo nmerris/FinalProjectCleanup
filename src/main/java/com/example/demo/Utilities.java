@@ -15,4 +15,9 @@ public class Utilities {
         return cal.getTime();
     }
 
+    public static int getDiffInDays(Date startDate, Date endDate) {
+        int dayInSeconds = 1000 * 60 * 60 * 24;
+        return (int) (Math.abs(startDate.getTime() - endDate.getTime()) / dayInSeconds);
+    }
+
 }

@@ -25,11 +25,18 @@
                     </tr>
                     </thead>
                     <tbody align="left">
-                    <tr th:each="list: ${liststudent}">
-                        <td th:text="*{list.nameFirst}"></td>
-                        <td th:text="*{list.nameLast}"></td>
-                        <td th:text="*{list.email}"></td>
-                        <td th:text="*{list.contactNum}"></td>
+                    <tr th:each="student : ${liststudent}">
+                        <td th:text="*{student.nameFirst}"></td>
+                        <td th:text="*{student.nameLast}"></td>
+                        <td th:text="*{student.email}"></td>
+                        <td th:text="*{student.contactNum}"></td>
+
+                        <!--<th:block th:each="item : *{}student.timeStamps">-->
+                            <!--<td th:text="*{timestamp}"></td>-->
+                            <!---->
+                        <!--</th:block>-->
+                        
+                        
                     </tr>
                     </tbody>
                 </table>
