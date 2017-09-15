@@ -15,6 +15,7 @@
             <form action="#" th:action="@{/addstudent/{cid}(cid=${course.id})}" th:object="${newstudent}" method="post">
                 <div class="row justify-content-center">
                     <input type="hidden" th:field="*{id}"/>
+
                     <div class="col col-sm-6 form-group">
                         <label for="firstName">First name</label>
                         <input type="text" class="form-control" th:field="*{nameFirst}" id="firstName"
