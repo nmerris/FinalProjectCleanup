@@ -17,18 +17,22 @@
                             <td>Name:</td>
                             <td>Start Date:</td>
                             <td>End Date:</td>
-                            <td>Action:</td>
+                            <td colspan="2">Action:</td>
 
                         </tr>
                         </thead>
                         <tbody>
-                        <tr  th:each="singlecourse:${allcourses}">>
+                        <tr  th:each="singlecourse:${allcourses}">
                             <td th:text="${singlecourse.courseRegistrationNum}"></td>
                             <td th:text="${singlecourse.name}"></td>
                             <td th:text="${singlecourse.dateStart}"></td>
                             <td th:text="${singlecourse.dateEnd}"></td>
                             <td>
-                                <a class="btn btn-primary bold-input" th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>Detail</b></a></td>
+                                <a class="btn btn-primary bold-input" th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>Detail</b></a>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary bold-input" th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
