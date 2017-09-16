@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.models.Authority;
 import com.example.demo.repositories.AuthorityRepo;
+import com.example.demo.repositories.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

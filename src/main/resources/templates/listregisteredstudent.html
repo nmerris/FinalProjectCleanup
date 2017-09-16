@@ -29,7 +29,9 @@
                             <td th:text="*{student.email}"></td>
                             <td th:text="*{student.contactNum}"></td>
                             <td th:text="${student.getTimeStampByCourseId(__${id}__)}"></td>
-                            <td><a th:href="@{/takeattendance/{id}(id=${courseId})}">Take Attendance</a></td>
+                            <td><a th:href="@{|/takeattendance/${id}?studentid=${student.id}|}">Take Attendance</a></td>
+                            <!--<td><a th:href="@{/takeattendance/{id}(id=${student.id})}">Take Attendance</a></td>-->
+                            <!--th:href="@{|/delete/${item.id}?type=skill|}"-->
                         </tr>
                         </tbody>
                     </table>

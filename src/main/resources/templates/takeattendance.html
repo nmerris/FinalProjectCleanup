@@ -27,21 +27,21 @@
 
                             <tbody>
 
-                                <th:block th:each="item, iter : *{attendanceList}">
-                                    <tr>
-                                        <td th:text="${#dates.format(item.date, 'MMM-dd-yyyy')}"></td>
-                                        <td>
-                                            <!-- checked is not working, not sure why -->
-                                            <input selected type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
-                                            <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
-                                            <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
-                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item.date}">
-                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].id}" th:value="${item.id}">
-                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${item.course.id}">
-                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${item.person.id}">
-                                        </td>
-                                    </tr>
-                                </th:block>
+        <th:block th:each="item, iter : *{attendanceList}">
+            <tr>
+                <td th:text="${#dates.format(item.date, 'MMM-dd-yyyy')}"></td>
+                <td>
+                    <!-- checked is not working, not sure why -->
+                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
+                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
+                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item.date}">
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].id}" th:value="${item.id}">
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${item.course.id}">
+                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${item.person.id}">
+                </td>
+            </tr>
+        </th:block>
 
                             </tbody>
                         </table>

@@ -95,6 +95,11 @@ public class Person {
         return new Date();
     }
 
+    // get the full name of this Person
+    public String getFullName() {
+        return nameFirst + ' ' + nameLast;
+    }
+
 
 
     // normal getters/setters ==================================================================================

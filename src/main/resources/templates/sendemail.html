@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="base:: FinalHead"></head>
+
+
+<body>
+<th:block th:replace="base::FinalNav"></th:block>
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+                <h4 class="section-heading" th:text="'Course name: ' + ${course.name}"></h4>
+
+                <!-- form to select an admin to send an email to -->
+                <!--returns the admin id of the selected admin, as a request param -->
+                <form class="form-signin" th:action="@{/sendemail}" method="post">
+
+                    <!-- pass the course id through, because we need to know which course to send the attendance info for -->
+                    <input type="hidden" name="courseId" th:value="${course.id}">
+
+                    <div class="form-group">
+                        <select class="form-control" name="selectedAdminId">
+                            <option th:each="item : ${adminList}"
+                                    th:value="${item.id}"
+                                    th:text="${item.nameFirst} + ' ' + ${item.nameLast}"></option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-lg btn-primary text-center" type="submit">Send Email</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>
+
