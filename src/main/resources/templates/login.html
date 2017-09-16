@@ -6,22 +6,46 @@
     <head th:replace="base:: FinalHead"></head>
 
 
-<body>
+<body  class="login-page">
 <th:block th:replace="base::FinalNav"></th:block>
-        <div th:if="${param.error}" class="well alert alert-danger" role="alert">
-            Invalid Username and Password!
-        </div>
-        <div th:if="${param.logout}">
-            You have been logged out.
-        </div>
-        <div class="login">
-            <form autocomplete="off" th:action="@{/login}" method="post">
-                <div><input type="text" placeholder="Username"  class="email" name="username"/></div>
-                <div><input type="password" placeholder="Password"  class="pass" name="password"/></div>
-                <div><input type="submit" value="LogIn"/></div>
-            </form>
-        </div>
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+                <h4 class="section-heading" th:text="${message}"></h4>
 
+                <!-- '?error' is appended automatically by spring if there is a login problem.. cool! -->
+                <form class="form-signin" th:action="@{/login}" method="post">
+                    <div class="inner-addon left-addon">
+                        <i class="glyphicon glyphicon-user"></i>
+                        <input type="text" name="username" class="form-control" placeholder="username" autofocus>
+                    </div>
+                    <br/>
+                    <div class="inner-addon left-addon">
+                        <i class="glyphicon glyphicon-lock"></i>
+                        <input type="password" name="password" class="form-control" placeholder="password">
+                    </div>
+
+                    <br/>
+                    <!-- 'param' must be a thymeleaf keyword, it just picks up the param, nothing else needed -->
+                    <p class="alert alert-danger" th:if="${param.error}">Invalid username or password</p>
+                    <p class="alert alert-success" th:if="${param.logout}">You have been logged out</p>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="remember-me"> Remember me
+                        </label>
+                    </div>
+                    <br/>
+                    <br/>
+                    <button class="btn btn-lg btn-primary text-center" type="submit">Sign in</button>
+                    <a class="btn btn-lg btn-success text-center" th:href="@{~/signup}">Register Now!</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>

@@ -31,12 +31,11 @@ public class Course {
 
     @NotEmpty
     private String name;
+
     @Min(6)
     private long courseRegistrationNum;
 
     private boolean hasBeenDeleted;
-
-
 
     private long numEvaluationsCompleted;
 

@@ -5,43 +5,68 @@
 
 <body>
 <th:block th:replace="base::FinalNav"></th:block>
+<div class="container">
+    <div class="col-lg-4 col-lg-offset-4">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+                <div class="text-center feedback">
+                    <h2>Sign up for a new account</h2>
+                </div>
 
-        <form autocomplete="off" class="well form-horizontal" th:action="@{/signup}" th:object="${newPerson}" method="post">
-            <fieldset>
-                <legend align="Center">Please Enter Your Information</legend>
-                <input type="hidden" th:field="*{id}" />
+                <form autocomplete="off" class="well form-horizontal" th:action="@{/signup}" th:object="${newPerson}" method="post">
 
-                    <label>Role Type</label>
-                    <select th:name="selectVal" class="form-control">
-                        <th:block th:each="uRole:${listRoles}">
-                            <option th:value="${uRole.role}"
-                                    th:text="${uRole.role}"></option>
-                        </th:block>
-                    </select>
-                    <!-- Text input-->
-                    First Name:<input  th:field="*{nameFirst}" name="nameFirst" placeholder="Enter First Name" class="form-control"  type="text">
-                    <p class="alert alert-danger" th:if="${#fields.hasErrors('nameFirst')}" th:errors="*{nameFirst}"></p>
-                    <!-- Text input-->
-                    Last Name:<input  th:field="*{nameLast}" name="nameLast" placeholder="Enter Last Name" class="form-control"  type="text">
-                    <p class="alert alert-danger" th:if="${#fields.hasErrors('nameLast')}" th:errors="*{nameLast}"></p>
-                    <!-- Text input-->
-                    Email:<input  th:field="*{email}" name="email" placeholder="Enter E-Mail" class="form-control"  type="text">
-                    <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-                    <!-- Text input-->
-                    Contact Number:<input  th:field="*{contactNum}" name="contactNum" placeholder="Enter Contact Number" class="form-control"  type="text">
-                    <p class="alert alert-danger" th:if="${#fields.hasErrors('contactNum')}" th:errors="*{contactNum}"></p>
-                    <!-- Text input-->
-                    UserName:<input  th:field="*{username}" name="username" placeholder="Enter Username" class="form-control"  type="text">
-                    <!-- Text input-->
-                    Password:<input  th:field="*{password}" name="password" placeholder="Enter Password" class="form-control"  type=password>
-                    <!-- Button -->
-                    <p><button type="submit" class="btn btn-success" ><span class="glyphicon glyphicon-user"></span>SignUp</button>
+                    <input type="hidden" th:field="*{id}" />
 
-                        <button type="reset" class="btn btn-warning" ><span class="glyphicon glyphicon-remove"></span>Reset</button></p>
+                    <div class="form-group">
+                        <label class="section-heading" for="nameFirst">First Name</label>
+                        <input id="nameFirst" class="form-control" type="text" th:field="*{nameFirst}" autofocus/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('nameFirst')}" th:errors="*{nameFirst}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="nameLast">Last Name</label>
+                        <input id="nameLast" class="form-control" type="text" th:field="*{nameLast}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('nameLast')}" th:errors="*{nameLast}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="email">Email</label>
+                        <input id="email" class="form-control" type="text" th:field="*{email}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="contactNum">Contact Number</label>
+                        <input id="contactNum" class="form-control" type="text" th:field="*{contactNum}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('contactNum')}" th:errors="*{contactNum}"></p>
+                    </div>
 
-        </fieldset>
-        </form>
+                    <div class="form-group">
+                        <label class="section-heading" for="username">Username</label>
+                        <input id="username" class="form-control" type="text" th:field="*{username}"/>
+                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>-->
+                        <p class="alert alert-danger" th:if="${usernameAlreadyExists}" th:text="${'that username already exists'}"></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="password">Password</label>
+                        <input id="password" class="form-control" type="text" th:field="*{password}"/>
+                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>-->
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading">Account Type</label>
+                        <select th:name="selectVal" class="form-control">
+                            <th:block th:each="uRole:${listRoles}">
+                                <option th:value="${uRole.role}"
+                                        th:text="${uRole.role}"></option>
+                            </th:block>
+                        </select>
+                    </div>
 
+                    <input class="btn btn-primary bold-input" type="submit" value="SignUp"/>
+                    <input type="reset" class="btn btn-warning" value="Reset"/>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>
