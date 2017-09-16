@@ -7,6 +7,7 @@ import com.example.demo.models.Course;
 import com.example.demo.models.Person;
 import com.example.demo.models.RegistrationTimestamp;
 import com.example.demo.repositories.*;
+import com.example.demo.services.UserService;
 import com.google.common.collect.Lists;
 import it.ozimov.springboot.mail.model.Email;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
@@ -41,6 +42,9 @@ public class TeacherController {
 	RegistrationTimestampRepo registrationTimestampRepo;
 	@Autowired
 	EvaluationRepo evaluationRepo;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	public EmailService emailService;
@@ -93,7 +97,6 @@ public class TeacherController {
 		model.addAttribute("newstudent", new Person());
 		Course course = courseRepo.findOne(id);
 		model.addAttribute("course", course);
-
 		return "addstudenttocourse";
 	}
 
@@ -101,20 +104,14 @@ public class TeacherController {
 	public String addStudentToCourse(@PathVariable("id") long courseId, @ModelAttribute("newstudent") Person student) {
 
 		RegistrationTimestamp timestamp = new RegistrationTimestamp();
-
-
-		student.setEnabled(true);
-		Person p = personRepo.save(student);
+		Person p=userService.saveStudent(student);
 		Course course = courseRepo.findOne(courseId);
-
 		timestamp.setCourse(course);
 		timestamp.setPerson(p);
 		timestamp.setTimestamp(new Date());
 		registrationTimestampRepo.save(timestamp);
-
 		course.addPerson(p);
 		courseRepo.save(course);
-
 
 		return "redirect:/addstudent/" + courseId;
 	}

@@ -59,7 +59,10 @@ public class MainController
             Authority teacherAuth = new Authority();
             teacherAuth.setRole("TEACHER");
             authorityRepo.save(teacherAuth);
-            System.out.println("================================== created teacher and admin authorites");
+
+            Authority studentAuth = new Authority();
+            studentAuth.setRole("STUDENT");
+            authorityRepo.save(studentAuth);
 
             // create some people, first a teacher
             Set<Authority> auths = new HashSet<>();

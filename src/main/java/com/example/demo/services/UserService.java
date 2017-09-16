@@ -51,6 +51,13 @@ public class UserService {
         personRepo.save(person);
 
     }
+    public Person saveStudent(Person  person){
+        person.setAuthorities(Arrays.asList(authorityRepo.findByRole("STUDENT")));
+        person.setEnabled(true);
+        setPersonMnumber(person);
+        return personRepo.save(person);
+
+    }
 
     private void setPersonMnumber(Person p) {
         // check to make sure the randomly generated mnumber is not already in the db
