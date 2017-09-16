@@ -9,28 +9,25 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-                <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
+                <form action="#" th:action="@{/addduplicatecourse}" th:object="${course}" method="post">
                     <div class="text-center feedback">
-                        <h2>Please enter course info.</h2>
+                        <h2>Please select and enter course info.</h2>
                     </div>
-
                     <input type="hidden" th:field="*{id}" />
-
                     <div class="form-group">
-                        <label class="section-heading" for="courseRegistrationN">CRN</label>
-                        <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('courseRegistrationNum')}" th:errors="*{courseRegistrationNum}"></p>
-                    </div>
-                    <div class="form-group">
-                        <label class="section-heading" for="name">Name</label>
-                        <input id="name" class="form-control" type="text" th:field="*{name}"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                        <label class="section-heading" for="selectCourse">Select a Course</label>
+                        <select id="selectCourse" class="form-control" name="selectCourse">
+                            <option th:each="item : ${courses}"
+                                    th:value="${item.id}"
+                                    th:text="${item.name}"></option>
+                        </select>
+                       <input type="hidden" th:field="*{courseRegistrationNum}"/>
+                        <input type="hidden" th:field="*{name}"/>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'please enter a day, month, and year'"></p>
-
                     </div>
                     <div class="form-group">
                     <label class="section-heading" for="dateEnd">End Date</label>

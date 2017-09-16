@@ -54,7 +54,34 @@ public class AdminController
 
 		return "courseconfirm";
 	}
+	@GetMapping("/addduplicatecourse")
+	public String addDuplicateCourse(Model model)
+	{
+		Course cour=new Course();
+		cour.setCourseRegistrationNum(12345678);
+		cour.setName("Java");
+		model.addAttribute("courses", courseRepo.findAll());
+		model.addAttribute("course",cour);
+		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+		return "addduplicatecourse";
+	}
 
+	@PostMapping("/addduplicatecourse")
+	public String submitDuplicateCourse(@Valid @ModelAttribute("course")Course course,BindingResult bindingResult,@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,Model model) {
+		if(bindingResult.hasErrors()){
+			model.addAttribute("course",courseRepo.save(course));
+			model.addAttribute("teacher", personRepo.findOne(teacherId));
+			return"addduplicatecourse";
+		}
+
+		course.setName(courseRepo.findOne(courseId).getName());
+		course.setCourseRegistrationNum(courseRepo.findOne(courseId).getCourseRegistrationNum());
+		course.addPerson(personRepo.findOne(teacherId));
+		model.addAttribute("course",courseRepo.save(course));
+		model.addAttribute("teacher", personRepo.findOne(teacherId));
+
+		return "courseconfirm";
+	}
 
 	@GetMapping("/editcourse/{courseid}")
 	public String editCourse(@PathVariable ("courseid") long id, Model model)
