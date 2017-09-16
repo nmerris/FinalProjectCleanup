@@ -12,19 +12,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-
-                <!--<div class="text-center feedback">-->
-                    <!--<h2 th:text="'Resume for ' + ${firstAndLastName}"></h2>-->
-                    <!--<span class="glyphicon glyphicon-apple"></span>-->
-                    <!--<span th:text="${currentNumRecords} + ' of 10 educational achievements entered'"></span>-->
-                <!--</div>-->
-
                 <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
-
-                    <!-- need this or ed id is zero every time and keep getting additional records when updating -->
-                    <!--<input type="hidden" th:field="*{id}" />-->
-                    <!--&lt;!&ndash; need this or person_id attached to ed id is null every time &ndash;&gt;-->
-                    <!--<input type="hidden" th:field="*{myPerson.id}"/>-->
 
                     <input type="hidden" th:field="*{id}" />
 
@@ -38,19 +26,12 @@
                         <input id="name" class="form-control" type="text" th:field="*{name}"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                     </div>
-                    <!--<div class="form-group">-->
-                        <!--<label class="section-heading" for="name">Evaluation Completed</label>-->
-                        <!--<input id="numEvaluationsCompleted" class="form-control" type="text" th:field="*{numEvaluationsCompleted}"/>-->
-                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('numEvaluationsCompleted')}" th:errors="*{numEvaluationsCompleted}"></p>-->
-                    <!--</div>-->
-
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}"></p>
 
                     </div>
-
                     <div class="form-group">
                     <label class="section-heading" for="dateEnd">End Date</label>
                     <input id="dateEnd" class="form-control" type="text" th:field="*{dateEnd}" th:placeholder="'Jul 4, 1976'"/>
