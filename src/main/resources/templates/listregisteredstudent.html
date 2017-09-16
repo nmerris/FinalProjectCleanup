@@ -21,15 +21,17 @@
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Contact Number</th>
+                        <th>Time Arrived</th>
 
                     </tr>
                     </thead>
                     <tbody align="left">
-                    <tr th:each="list: ${liststudent}">
-                        <td th:text="*{list.nameFirst}"></td>
-                        <td th:text="*{list.nameLast}"></td>
-                        <td th:text="*{list.email}"></td>
-                        <td th:text="*{list.contactNum}"></td>
+                    <tr th:each="student : ${liststudent}">
+                        <td th:text="*{student.nameFirst}"></td>
+                        <td th:text="*{student.nameLast}"></td>
+                        <td th:text="*{student.email}"></td>
+                        <td th:text="*{student.contactNum}"></td>
+                        <td th:text="${student.getTimeStampByCourseId(__${id}__)}"></td>
                     </tr>
                     </tbody>
                 </table>

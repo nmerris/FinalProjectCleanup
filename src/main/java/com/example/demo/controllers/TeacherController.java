@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.AttendanceWrapper;
+import com.example.demo.Utilities;
 import com.example.demo.models.Attendance;
 import com.example.demo.models.Course;
 import com.example.demo.models.Person;
@@ -45,8 +46,8 @@ public class TeacherController {
 	public EmailService emailService;
 
 	//List of courses for a particular Teacher
-	@RequestMapping("/mycoursesdetail/{id}")
-	public String listTeacherCourses(@PathVariable("id") long id, Principal principal, Model model) {
+	@RequestMapping("/mycoursesdetail")
+	public String listTeacherCourses(Principal principal, Model model) {
 		Person teacher = personRepo.findByUsername(principal.getName());
 		model.addAttribute("teachercourse", teacher);
 		model.addAttribute("courselist", courseRepo.findByPersons(teacher));
@@ -54,10 +55,14 @@ public class TeacherController {
 	}
 
 	//List of Students for a particular Course
+	// path variable is the course id
 	@RequestMapping("/viewregisteredstudent/{id}")
-	public String listRegisteredStud(@PathVariable("id") long id, Model model) {
-		model.addAttribute("liststudent", personRepo.findAll());
-		// something to do here
+	public String listRegisteredStud(@PathVariable("id") long id, Model model, Principal principal) {
+		model.addAttribute("liststudent",
+				personRepo.findByCoursesIsAndUsernameIsOrderByNameLastAsc(courseRepo.findOne(id),
+						personRepo.findByUsername(principal.getName()).getUsername()));
+
+		model.addAttribute("courseId", id);
 		return "listregisteredstudent";
 	}
 
@@ -117,74 +122,47 @@ public class TeacherController {
 
 
 	// UNDER CONSTRUCTION BUT IS SAVING A LIST OF ATTENDANCE OBJECTS TO DB!
+	// NOTE: for now, we are taking attendance for one student at a time, not ideal, but works..
+	// will update to do all students in course on one page if there is enough time
 	@GetMapping("/takeattendance/{courseid}")
-	public String takeAttendance(@PathVariable("courseid") long courseId, Model model) {
+	public String takeAttendance(@PathVariable("courseid") long courseId,
+								 @RequestParam("studentid") long studentid, Model model) {
+
+		// get the course we are taking attendance for
 		Course course = courseRepo.findOne(courseId);
-		Collection<Person> students = course.getPersons();
+		// get the student we are taking attendance for
+		Person student = personRepo.findOne(studentid);
+		System.out.println("=================== fist name of student who we are taking attendance for (person.getNameFirst): " + student.getNameFirst());
+		System.out.println("=================== id of student who we are taking attendance for (person.getId): " + student.getId());
 
-		// convert students Collection to ArrayList
-		ArrayList<Person> studsArray = new ArrayList<>(students);
+		// get the difference in days between course start and end dates
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+		System.out.printf("======================= Difference between course start and end dates: %d day(s)", diffInDays);
 
-		// testing for now....
-		Person someStudent = studsArray.get(0);
-		System.out.println("===================== number of students in studsArray: " + studsArray.size());
-		System.out.println("=================== fist name of student picked out for testing (index 0): " + someStudent.getNameFirst());
-
-//		// create a test start and end date
-//		Date date1 = new Date();
-//		Date date2 = new Date();
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-//		int diffInDays;
-//
-////		System.out.print("Enter first date (MM/DD/YY): ");
-//		try {
-//			date1 = dateFormat.parse("01/01/2000");
-//		} catch (ParseException e) {
-//			System.out.println("Date parse error");
-//		}
-//
-////		System.out.print("Enter second date (MM/DD/YY): ");
-//		try {
-//			date2 = dateFormat.parse("01/10/2000");
-//		} catch (ParseException e) {
-//			System.out.println("Date parse error");
-//		}
-
-		// * 1000 to convert to seconds
-		// * 60 to convert to minutes
-		// * 60 to convert to hours
-		// * 24 to convert to days
-		// absolute value in case user entered later date first
-		int dayInSeconds = 1000 * 60 * 60 * 24;
-		int diffInDays = (int) (Math.abs((course.getDateStart().getTime() - course.getDateEnd().getTime()) / dayInSeconds));
-
-		System.out.printf("======================= Difference: %d day(s)", diffInDays);
-
-
-
+		// need this to be able to process a list of objects in a single form
 		AttendanceWrapper wrapper = new AttendanceWrapper();
-
+		// get the course start date
+		Date startDate = course.getDateStart();
 		// create an empty list of attendance
 		List<Attendance> attendanceArrayList = new ArrayList<>();
-		// now create diffInDays Attendance objects to send to view
+
+		// now create diffInDays number of Attendance objects to send to view
 		for (int i = 0; i < diffInDays; i++) {
 			Attendance attendance = new Attendance();
 			// set the person
-			attendance.setPerson(someStudent);
+			attendance.setPerson(student);
 			// set the course
 			attendance.setCourse(course);
-			// set the date
-			attendance.setDate(new Date());
+			// set the date, increment by one day for each new Attendance object
+			attendance.setDate(Utilities.addDays(startDate, i));
 			// add it to the list
 			attendanceArrayList.add(attendance);
 
 		}
-
-
 		wrapper.setAttendanceList(attendanceArrayList);
 
 		model.addAttribute("attendanceWrapper", wrapper);
-		model.addAttribute("studentName", someStudent.getNameFirst() + ' ' + someStudent.getNameLast());
+		model.addAttribute("studentName", student.getNameFirst() + ' ' + student.getNameLast());
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
 
@@ -199,13 +177,12 @@ public class TeacherController {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
-		for (Attendance att : attWrapper.getAttendanceList()) {
-			System.out.println("========= attWrapper.getAttendanceList element: " + att.getDate() + "..... " + att.getAstatus());
-		}
+//		for (Attendance att : attWrapper.getAttendanceList()) {
+//			System.out.println("========= attWrapper.getAttendanceList element: " + att.getDate() + "..... " + att.getAstatus());
+//		}
 
 		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
-
 
 		return "redirect:/mycoursesdetail/" + courseId;
 	}
@@ -253,4 +230,17 @@ public class TeacherController {
 
 		return "redirect:/allcourses";
 	}
+
+	// builds a String that has all the attendance info for a single course
+	private String buildAttendanceEmail(Course course) {
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+//		ArrayList<Person> students = courseRepo.f
+
+
+
+
+
+		return "";
+	}
+
 }
