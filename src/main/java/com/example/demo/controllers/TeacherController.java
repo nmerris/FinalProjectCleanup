@@ -23,10 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class TeacherController {
@@ -181,7 +178,7 @@ public class TeacherController {
 		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
-		return "redirect:/mycoursesdetail/" + courseId;
+		return "redirect:/mycoursesdetail";
 	}
 
 
@@ -219,25 +216,58 @@ public class TeacherController {
 
 
 	}
-	@RequestMapping("/sendemail")
-	public String sendEmail () {
 
+
+	// sends and email containing attendance info for course with id = courseId (path variable)
+	@RequestMapping("/sendemail")
+	public String sendEmail (@RequestParam("id") long courseId) {
+
+
+		String body = buildAttendanceEmail(courseRepo.findOne(courseId));
+		System.out.println(body);
+
+
+		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
 		sendEmailWithoutTemplate("Fi","Java Boot Camp",
-				"Hell Java Boot Camp","behabtuhiwot@gmail.com","Hiwi");
+				body,"nate.merris@gmail.com","Hiwi");
 
 		return "redirect:/allcourses";
 	}
 
 	// builds a String that has all the attendance info for a single course
+	// result is a basic text based table, will only look nice with a fixed width font
 	private String buildAttendanceEmail(Course course) {
 		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-//		ArrayList<Person> students = courseRepo.f
+
+		Set<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
 
 
+		String s = String.format("%-16s %-10s", "LAST NAME", "mNUM");
 
+		// create a header row
+		for (int i = 0; i < diffInDays; i++) {
+			s += String.format("%-10s", dateFormat.format(Utilities.addDays(course.getDateStart(), i)));
+		}
 
+		// add a horizontal line
+		s += "\n-------------------------"; // 26
+		for(int i = 0; i < diffInDays; i++) {
+			s += "----------"; // 10
+		}
 
-		return "";
+		s += "\n";
+
+		for (Person p : students) {
+			s += String.format("%-16s %-10s", p.getNameLast(), p.getmNumber());
+			for (Attendance a : attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(p, course)) {
+				s += String.format("%-10s", a.getAstatus());
+			}
+			s += "\n";
+		}
+
+		return s;
 	}
 
 }

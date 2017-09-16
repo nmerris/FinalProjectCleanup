@@ -9,7 +9,7 @@
 <th:block th:replace="base::FinalNav"></th:block>
 
 <div class="container">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
@@ -36,6 +36,7 @@
                             <th>CR Number</th>
                             <th>Start Date</th>
                             <th>End Date</th>
+                            <th>Evals Completed</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -47,12 +48,12 @@
                             <td th:text="*{list.dateEnd}"></td>
                             <td th:text="*{list.numEvaluationsCompleted}"></td>
                             <td>
-                                <a th:href="@{/addstudent/{id}(id=${list.id})}"> Register New Student</a>
-                                <a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}">View Registered Student</a>
+                                <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student</a>
+                                <a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}">View Registered Students</a>
                                 <a th:href="@{/viewattendance/{id}(id=${list.id})}">View Student Attendance</a>
                                 <a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Student Evaluation</a>
+                                <a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Student Evaluation</a>
                                 <a th:href="@{/sendemail(id=${list.id})}">Send Student Attendance</a>
-
                             </td>
                         </tr>
                         </tbody>
