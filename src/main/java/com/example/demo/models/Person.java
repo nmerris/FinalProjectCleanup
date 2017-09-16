@@ -35,6 +35,7 @@ public class Person {
 
 //    @NotEmpty
     private String password;
+
     @NotEmpty
     private String contactNum;
 

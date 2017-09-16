@@ -29,13 +29,13 @@ public class Course {
     @DateTimeFormat(pattern = "MMM d, yyyy")
     private Date dateEnd;
 
+    @NotEmpty
+    private String name;
+
     @Min(6)
     private long courseRegistrationNum;
 
     private boolean hasBeenDeleted;
-
-    @NotEmpty
-    private String name;
 
     private long numEvaluationsCompleted;
 
