@@ -5,6 +5,8 @@ import com.example.demo.models.Course;
 import com.example.demo.models.Person;
 import org.springframework.data.repository.CrudRepository;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Set;
 
 public interface PersonRepo extends CrudRepository<Person, Long> {
@@ -19,9 +21,10 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
     long countByMNumberIs(String mNumber);
 
-//    Set<Person> findByCoursesIsAndAuthoritiesIsNotAndAuthoritiesIsNot
-
     //Added by Yun on 09/15,find person according to course id
     Set<Person> findByCoursesIs (Course course);
+
+    // get all the STUDENTS for a particular course
+    Set<Person> findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(Course course, Authority authority);
 
 }
