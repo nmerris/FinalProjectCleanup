@@ -227,11 +227,13 @@ public class MainController
        }
 
 
-       if(person.getUsername().isEmpty()){
+       // manually validate for username is null and also make sure it is unique
+       if(person.getUsername().isEmpty() || personRepo.countByUsername(person.getUsername()) > 0) {
            model.addAttribute("usernameWasNull",true);
            return "signup";
 
        }
+       // manually check to make sure password was not null
         if(person.getPassword().isEmpty()){
             model.addAttribute("passwordWasNull",true);
             return "signup";
