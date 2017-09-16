@@ -215,6 +215,8 @@ public class MainController
     @RequestMapping("/signup")
     public String addUserInfo(Model model) {
         model.addAttribute("newPerson", new Person());
+
+
         model.addAttribute("listRoles", authorityRepo.findAll());
         return "signup";
     }

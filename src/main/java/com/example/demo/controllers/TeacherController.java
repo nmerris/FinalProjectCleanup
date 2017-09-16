@@ -219,23 +219,37 @@ public class TeacherController {
 	}
 
 
-	// sends and email containing attendance info for course with id = courseId (path variable)
-	@RequestMapping("/sendemail")
-	public String sendEmail (@RequestParam("id") long courseId) {
-
+	// shows a drop down list of admins, teacher selects one to send an attendance email to
+	@GetMapping("/sendemail")
+	public String sendEmail (@RequestParam("id") long courseId, Model model) {
 
 		String body = buildAttendanceEmail(courseRepo.findOne(courseId));
 		System.out.println(body);
 
+		// first add a list of admins to the template
+		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
+		// add the course to the model, so we can show the name on the page
+		model.addAttribute("course", courseRepo.findOne(courseId));
 
-
-
-		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
-		sendEmailWithoutTemplate("Fi","Java Boot Camp",
-				body,"nate.merris@gmail.com","Hiwi");
-
-		return "redirect:/allcourses";
+		return "sendemail";
 	}
+
+
+	@PostMapping("/sendemail")
+	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId) {
+
+		System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
+
+		// the email needs to know what admin addres to send to
+		// sendemail.html has a drop down list of admins, teacher selects
+		// one to send the attendance info to
+		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
+//		sendEmailWithoutTemplate("Fi","Java Boot Camp",
+//				body,"nate.merris@gmail.com","Hiwi");
+
+		return "redirect:/mycoursesdetail";
+	}
+
 
 	// builds a String that has all the attendance info for a single course
 	// result is a basic text based table, will only look nice with a fixed width font
