@@ -71,6 +71,7 @@ public class TeacherController {
 	}
 
 	//List of Student attendance for a particular course
+	// NOT DONE YET, not even started yet
 	@RequestMapping("/viewattendance/{id}")
 	public String listStudAttendance(@PathVariable("id") long id, Model model) {
 		model.addAttribute("listattendance", attendanceRepo.findAll());
@@ -78,6 +79,7 @@ public class TeacherController {
 	}
 
 	//Display course evealuation
+	// WAITING FOR JESSE
 	@RequestMapping("/dispevaluation/{id}")
 	public String dipCourseEvaluation(@PathVariable("id") long id, Model model) {
 		model.addAttribute("dispEval", evaluationRepo.findAll());
@@ -182,7 +184,7 @@ public class TeacherController {
 	@PostMapping("/takeattendance/{courseid}")
 	public String takeAttendancePost(
 			@ModelAttribute("attendanceWrapper") AttendanceWrapper attWrapper,
-			@PathVariable("courseid") long courseId, Model model) {
+			@PathVariable("courseid") long courseId) {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
@@ -190,7 +192,7 @@ public class TeacherController {
 		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
-		return "redirect:/mycoursesdetail";
+		return "redirect:/viewregisteredstudent/" + courseId;
 	}
 
 
@@ -266,6 +268,8 @@ public class TeacherController {
 
 		String s = String.format("%-16s %-10s", "LAST NAME", "mNUM");
 
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! inside buildEmail.. diffInDays: " + diffInDays);
+
 		// create a header row
 		for (int i = 0; i < diffInDays; i++) {
 			s += String.format("%-10s", dateFormat.format(Utilities.addDays(course.getDateStart(), i)));
@@ -304,7 +308,7 @@ public class TeacherController {
 					.from(new InternetAddress("anyone@anywhere.net", teacherName))
 					.to(Lists.newArrayList(
 							new InternetAddress(adminEmail, adminName)))
-					.subject("Attendance For"+ courseName)
+					.subject("Attendance For "+ courseName)
 					.body(eBody)
 					.encoding("UTF-8").build();
 
