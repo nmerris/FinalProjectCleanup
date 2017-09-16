@@ -215,13 +215,29 @@ public class MainController
     @RequestMapping("/signup")
     public String addUserInfo(Model model) {
         model.addAttribute("newPerson", new Person());
-        model.addAttribute("listRoles", authorityRepo.findAll());
+        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIs("TEACHER","ADMIN"));
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String addUserInfo(@ModelAttribute("newPerson") Person person, Model model){
-        model.addAttribute("newPerson",person);
+    public String addUserInfo(@Valid @ModelAttribute("newPerson") Person person, BindingResult bindingResult,Model model){
+        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIs("TEACHER","ADMIN"));
+        if(bindingResult.hasErrors()) {
+           return "signup";
+       }
+
+
+       if(person.getUsername().isEmpty()){
+           model.addAttribute("usernameWasNull",true);
+           return "signup";
+
+       }
+        if(person.getPassword().isEmpty()){
+            model.addAttribute("passwordWasNull",true);
+            return "signup";
+
+        }
+
         if(person.getSelectVal().equalsIgnoreCase("TEACHER")  )      {
 
             userService.saveTeacher(person);

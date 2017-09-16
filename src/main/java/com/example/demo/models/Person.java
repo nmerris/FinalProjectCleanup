@@ -30,16 +30,15 @@ public class Person {
     @Size(max = 50)
     private String email;
 
+    @NotEmpty
+    private String contactNum;
+
 //    @NotEmpty
     private String selectVal;
 
 //    @NotEmpty
     private String password;
 
-    @NotEmpty
-    private String contactNum;
-
-    // all usernames must be unique
 //    @NotEmpty
     @Column(unique = true)
     private String username;

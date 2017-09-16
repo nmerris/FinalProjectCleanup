@@ -26,11 +26,13 @@
                         <label class="section-heading" for="nameLast">Last Name</label>
                         <input id="nameLast" class="form-control" type="text" th:field="*{nameLast}"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('nameLast')}" th:errors="*{nameLast}"></p>
+
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="email">Email</label>
                         <input id="email" class="form-control" type="text" th:field="*{email}"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="contactNum">Contact Number</label>
@@ -43,11 +45,13 @@
                         <input id="username" class="form-control" type="text" th:field="*{username}"/>
                         <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>-->
                         <p class="alert alert-danger" th:if="${usernameAlreadyExists}" th:text="${'that username already exists'}"></p>
+                        <p class="alert alert-danger" th:if="${usernameWasNull}" th:text="${'Please enter your username'}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="password">Password</label>
                         <input id="password" class="form-control" type="text" th:field="*{password}"/>
                         <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>-->
+                        <p class="alert alert-danger" th:if="${passwordWasNull}" th:text="${'Please enter your Password'}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading">Account Type</label>
