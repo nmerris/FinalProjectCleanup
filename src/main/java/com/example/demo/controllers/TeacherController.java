@@ -59,9 +59,10 @@ public class TeacherController {
 	// path variable is the course id
 	@RequestMapping("/viewregisteredstudent/{id}")
 	public String listRegisteredStud(@PathVariable("id") long id, Model model, Principal principal) {
+
 		model.addAttribute("liststudent",
-				personRepo.findByCoursesIsAndUsernameIsOrderByNameLastAsc(courseRepo.findOne(id),
-						personRepo.findByUsername(principal.getName()).getUsername()));
+				personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(courseRepo.findOne(id),
+						authorityRepo.findByRole("STUDENT")));
 
 		model.addAttribute("courseId", id);
 		return "listregisteredstudent";
@@ -225,6 +226,8 @@ public class TeacherController {
 
 		String body = buildAttendanceEmail(courseRepo.findOne(courseId));
 		System.out.println(body);
+
+
 
 
 		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
