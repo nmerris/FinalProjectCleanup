@@ -15,10 +15,12 @@ import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.internet.InternetAddress;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.ParseException;
@@ -98,8 +100,20 @@ public class TeacherController {
 		return "addstudenttocourse";
 	}
 
+
+	// students do not have usernames or passwords, but they must enter first, last names
+	// and contact num, email
 	@PostMapping("/addstudent/{id}")
-	public String addStudentToCourse(@PathVariable("id") long courseId, @ModelAttribute("newstudent") Person student) {
+	public String addStudentToCourse(@PathVariable("id") long courseId,
+									 @Valid @ModelAttribute("newstudent") Person student,
+									 BindingResult bindingResult, Model model) {
+
+		if(bindingResult.hasErrors()) {
+			Course course = courseRepo.findOne(courseId);
+			model.addAttribute("course", course);
+			return "addstudenttocourse";
+		}
+
 
 		RegistrationTimestamp timestamp = new RegistrationTimestamp();
 		Person p=userService.saveStudent(student);
@@ -172,9 +186,6 @@ public class TeacherController {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
-//		for (Attendance att : attWrapper.getAttendanceList()) {
-//			System.out.println("========= attWrapper.getAttendanceList element: " + att.getDate() + "..... " + att.getAstatus());
-//		}
 
 		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
@@ -189,42 +200,12 @@ public class TeacherController {
 		return "endcourse";
 	}
 
-//Email Sending to admin from the teacher
-
-	public void sendEmailWithoutTemplate(String teacherName, String courseName,String eBody,String adminEmail,String adminName) {
-
-		final Email email;
-		try {
-			email = DefaultEmail.builder()
-					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
-					// this may work depending on the email server config that is being used
-					// the from NAME does get used though
-					.from(new InternetAddress("anyone@anywhere.net", teacherName))
-					.to(Lists.newArrayList(
-							new InternetAddress(adminEmail, adminName)))
-					.subject("Attendance For"+ courseName)
-					.body(eBody)
-					.encoding("UTF-8").build();
-
-			// conveniently, .send will put a nice INFO message in the console output when it sends
-			emailService.send(email);
-
-		} catch (UnsupportedEncodingException e) {
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
-			e.printStackTrace();
-		}
-
-
-
-	}
-
 
 	// shows a drop down list of admins, teacher selects one to send an attendance email to
 	@GetMapping("/sendemail")
 	public String sendEmail (@RequestParam("id") long courseId, Model model) {
 
-		String body = buildAttendanceEmail(courseRepo.findOne(courseId));
-		System.out.println(body);
+
 
 		// first add a list of admins to the template
 		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
@@ -236,16 +217,38 @@ public class TeacherController {
 
 
 	@PostMapping("/sendemail")
-	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId) {
+	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
+								@RequestParam("courseId") long courseId,
+								Principal principal) {
 
 		System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
+
+		// get the logged in person
+		Person teacher = personRepo.findByUsername(principal.getName());
+
+		// get the selected admin
+		Person admin = personRepo.findOne(adminId);
+
+		// get the course
+		Course course = courseRepo.findOne(courseId);
+
+		// build the email body
+		String body = buildAttendanceEmail(course);
+
+		// testing
+		System.out.println(body);
+
 
 		// the email needs to know what admin addres to send to
 		// sendemail.html has a drop down list of admins, teacher selects
 		// one to send the attendance info to
 		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
-//		sendEmailWithoutTemplate("Fi","Java Boot Camp",
-//				body,"nate.merris@gmail.com","Hiwi");
+		sendEmailWithoutTemplate(
+				teacher.getFullName(),	// teacher name
+				course.getName(),		// course name
+				body,					// email body
+				admin.getEmail(),		// to email address
+				admin.getFullName());	// to email name
 
 		return "redirect:/mycoursesdetail";
 	}
@@ -286,5 +289,36 @@ public class TeacherController {
 
 		return s;
 	}
+
+
+	//Email Sending to admin from the teacher
+
+	public void sendEmailWithoutTemplate(String teacherName, String courseName,String eBody,String adminEmail,String adminName) {
+
+		final Email email;
+		try {
+			email = DefaultEmail.builder()
+					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
+					// this may work depending on the email server config that is being used
+					// the from NAME does get used though
+					.from(new InternetAddress("anyone@anywhere.net", teacherName))
+					.to(Lists.newArrayList(
+							new InternetAddress(adminEmail, adminName)))
+					.subject("Attendance For"+ courseName)
+					.body(eBody)
+					.encoding("UTF-8").build();
+
+			// conveniently, .send will put a nice INFO message in the console output when it sends
+			emailService.send(email);
+
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
+			e.printStackTrace();
+		}
+
+
+
+	}
+
 
 }
