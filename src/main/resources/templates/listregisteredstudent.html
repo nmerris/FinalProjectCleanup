@@ -32,6 +32,7 @@
                         <td th:text="*{student.email}"></td>
                         <td th:text="*{student.contactNum}"></td>
                         <td th:text="${student.getTimeStampByCourseId(__${id}__)}"></td>
+                        <td><a th:href="@{/takeattendance/{id}(id=${student.id})}">View Attendance</a></td>
                     </tr>
                     </tbody>
                 </table>
