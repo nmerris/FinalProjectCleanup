@@ -49,8 +49,9 @@ public class AdminController
 		course.addPerson(personRepo.findOne(teacherId));
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
+		System.out.println("teacher after add course:"+personRepo.findOne(teacherId));
 
-		return "coursedetail";
+		return "courseconfirm";
 	}
 
 

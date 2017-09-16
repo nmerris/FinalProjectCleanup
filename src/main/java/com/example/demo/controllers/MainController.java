@@ -237,12 +237,6 @@ public class MainController
     }
 
 
-
-
-
-
-
-
     @GetMapping("/evaluation")
     public String eval(Model model)
     {
@@ -257,10 +251,14 @@ public class MainController
     }
 
 //Teacher and admin
+    //Modified by Yun on 09/15, show teacher information in coursedetail page
     @RequestMapping("/coursedetail/{courseid}")
     public String courseDetail(@PathVariable ("courseid") long id, Model model)
     {
         model.addAttribute("course", courseRepo.findOne(id));
+//        System.out.println("course after coursedetail:"+courseRepo.findOne(id));
+        model.addAttribute("teachers", personRepo.findByCoursesIs(courseRepo.findOne(id)));
+//        System.out.println("teacher after coursedetail---: "+personRepo.findByCoursesIs(courseRepo.findOne(id)));
         return "coursedetail";
     }
 

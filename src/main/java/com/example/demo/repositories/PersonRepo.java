@@ -21,4 +21,7 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
 //    Set<Person> findByCoursesIsAndAuthoritiesIsNotAndAuthoritiesIsNot
 
+    //Added by Yun on 09/15,find person according to course id
+    Set<Person> findByCoursesIs (Course course);
+
 }

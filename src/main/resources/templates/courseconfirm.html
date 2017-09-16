@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="base:: FinalHead"></head>
+<head th:replace="base:: FinalHead"></head>
 
 
 <body>
-<!--Created by Yun on 09/15, Show course details by click detail link on all course page-->
+<!--Created by Yun on 09/15, Show confirmation page after added a course-->
 
 <th:block th:replace="base::FinalNav"></th:block>
 <br />
@@ -17,9 +17,8 @@ CRN Number: <p th:text="${course.courseRegistrationNum}"></p>
 Name: <p th:text="${course.name}"></p>
 Start Date: <p th:text="${course.dateStart}"></p>
 End Date: <p th:text="${course.dateEnd}"></p>
-<th:block th:each="singleteacher:${teachers}">
-Teacher: <p th:text="${singleteacher.nameFirst}+' '+${singleteacher.nameLast}"></p>
-</th:block>
+Teacher: <p th:text="${teacher.nameFirst}+' '+${teacher.nameLast}"></p>
+
 
 <a th:href="@{/editcourse/{id}(id=${course.id})}">Edit course</a> -
 <a th:href="@{/deletecourse/{id}(id=${course.id})}">Delete course</a> -
