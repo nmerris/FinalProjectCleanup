@@ -15,7 +15,7 @@
                 <h4 class="section-heading" th:text="${message}"></h4>
 
                 <!-- '?error' is appended automatically by spring if there is a login problem.. cool! -->
-                <form class="form-signin" th:action="@{/login}" method="post">
+                <form autocomplete="off" class="form-signin" th:action="@{/login}" method="post">
                     <div class="inner-addon left-addon">
                         <i class="glyphicon glyphicon-user"></i>
                         <input type="text" name="username" class="form-control" placeholder="username" autofocus>
@@ -38,7 +38,7 @@
                     </div>
                     <br/>
                     <br/>
-                    <button class="btn btn-lg btn-primary text-center" type="submit">Sign in</button>
+                    <button class="btn btn-lg btn-primary bold-input text-center" type="submit"> Sign in</button>
                     <a class="btn btn-lg btn-success text-center" th:href="@{~/signup}">Sign Up Now!</a>
                 </form>
 

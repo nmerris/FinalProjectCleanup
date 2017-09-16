@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="base:: FinalHead"></head>
-
 <body>
-
 <th:block th:replace="base::FinalNav"></th:block>
-<br />
-<br />
 <div class="container">
     <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <caption><h3><b>Registered Student Lists:</b></h3></caption>
+                        <caption><h3><b>Course Lists:</b></h3></caption>
                         <thead>
                         <tr>
 
@@ -33,7 +27,8 @@
                             <td th:text="${singlecourse.name}"></td>
                             <td th:text="${singlecourse.dateStart}"></td>
                             <td th:text="${singlecourse.dateEnd}"></td>
-                            <td th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><button class="btn btn-link">Detail</button></a></td>
+                            <td>
+                                <a class="btn btn-primary bold-input" th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>Detail</b></a></td>
                         </tr>
                         </tbody>
                     </table>
