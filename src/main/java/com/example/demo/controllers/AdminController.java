@@ -124,11 +124,12 @@ public class AdminController
 
 
 	// view all the students, admin can click on one to see the courses that particular student is registered in
+	// this route shows the list of students only
 	@GetMapping("/allstudents")
 	public String allStudents(Model model) {
 
-		// TODO implement this
-
+		// TODO implement this... HIWOT CAN YOU TAKE CARE OF THIS?
+		// TODO need to make another route that will show the courses that the student is registered in, ie what student was clicked from this routes table of students
 
 		return "allstudents";
 	}

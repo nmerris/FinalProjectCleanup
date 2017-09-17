@@ -12,6 +12,8 @@
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
+                <!-- this table shows all evals for a teacher, including for deleted courses -->
+                <!-- the reason is that you might want to go back and review evals after deleting a course -->
                 <caption> <h4><b th:text="'All evaluations for: ' + ${teacherName}"></b></h4></caption>
                 <table class="table table-striped" class="table table-hover">
                     <thead>
@@ -40,10 +42,19 @@
                             <td th:text="*{item.course.name}"></td>
                             <td th:text="*{item.course.getDeletedString()}"></td>
                             <td th:text="*{item.course.courseRegistrationNum}"></td>
-
-                            <td th:text="*{item.mNumber}"></td>
-                            <td th:text="*{item.evaluations.size()}"></td>
-                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}">View Evaluations</a></td>
+                            <td th:text="*{item.course.startDate}"></td>
+                            <td th:text="*{item.course.endDate}"></td>
+                            <td th:text="*{item.courseContentRating}"></td>
+                            <td th:text="*{item.instructionQualityRating}"></td>
+                            <td th:text="*{item.trainingExperienceRating}"></td>
+                            <td th:text="*{item.textBookRating}"></td>
+                            <td th:text="*{item.classroomEnvironment}"></td>
+                            <td th:text="*{item.equipmentRating}"></td>
+                            <td th:text="*{item.whatDidYouLike}"></td>
+                            <td th:text="*{item.whatDidntYouLike}"></td>
+                            <td th:text="*{item.whatImprovements}"></td>
+                            <td th:text="*{item.whatOtherClasses}"></td>
+                            <td th:text="*{item.howDidYouFindOut}"></td>
                         </tr>
                     </tbody>
 
