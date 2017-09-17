@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -35,7 +34,8 @@ public class Course {
     @Min(6)
     private long courseRegistrationNum;
 
-    private boolean hasBeenDeleted;
+    // 0 = false, 1 = true
+    private boolean deleted;
 
     private long numEvaluationsCompleted;
 
@@ -73,12 +73,12 @@ public class Course {
     // normal getter/setter methods ==================================================================================
 
 
-    public boolean isHasBeenDeleted() {
-        return hasBeenDeleted;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setHasBeenDeleted(boolean hasBeenDeleted) {
-        this.hasBeenDeleted = hasBeenDeleted;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public long getId() {

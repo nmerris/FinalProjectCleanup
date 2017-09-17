@@ -51,7 +51,7 @@ public class AdminController
 		// find out what Person was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
 		course.addPerson(personRepo.findOne(teacherId));
-		course.setHasBeenDeleted(false);
+		course.setDeleted(false);
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
 		System.out.println("teacher after add course:"+personRepo.findOne(teacherId));
@@ -62,9 +62,15 @@ public class AdminController
 	public String addDuplicateCourse(Model model)
 	{
 		Course cour=new Course();
+		// need dummy data for CRN and name or validation is problematic in post route, both these are set again in post route
+		// so it doesn't matter what you set them to here
 		cour.setCourseRegistrationNum(12345678);
-		cour.setName("Java");
-		model.addAttribute("courses", courseRepo.findAll());
+		cour.setName("fakeName");
+
+//		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
+//		System.out.println("============================================================ courseSet.size: " + courseSet.size());
+
+		model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 		model.addAttribute("course",cour);
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addduplicatecourse";
@@ -81,7 +87,7 @@ public class AdminController
 		course.setName(courseRepo.findOne(courseId).getName());
 		course.setCourseRegistrationNum(courseRepo.findOne(courseId).getCourseRegistrationNum());
 		course.addPerson(personRepo.findOne(teacherId));
-		course.setHasBeenDeleted(false);
+		course.setDeleted(false);
 		model.addAttribute("course",courseRepo.save(course));
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
 
@@ -101,7 +107,7 @@ public class AdminController
 	{
 		// not tested yet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Course course = courseRepo.findOne(id);
-		course.setHasBeenDeleted(true);
+		course.setDeleted(true);
 		courseRepo.save(course);
 
 		return "redirect:/allcourses";
@@ -110,7 +116,7 @@ public class AdminController
 	@RequestMapping("/allcourses")
 	public String allCourses(Model model)
 	{
-		model.addAttribute("allcourses", courseRepo.findAll());
+		model.addAttribute("allcourses", courseRepo.findByDeletedIs(false));
 		return "allcourses";
 	}
 
