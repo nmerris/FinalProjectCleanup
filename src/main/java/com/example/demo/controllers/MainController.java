@@ -55,6 +55,23 @@ public class MainController
     @RequestMapping("/")
     public String welcomePage()
     {
+        // create three authorities and save them to the authority table
+        // first make sure there are no authorities already in the table so as not to cause a unique constraint violation
+        // this is also in DataLoader, but that wasn't working for hiwot or orr, so now it's here too
+        if( authorityRepo.count() == 0) {
+            Authority adminAuthority = new Authority();
+            adminAuthority.setRole("ADMIN");
+            authorityRepo.save(adminAuthority);
+
+            Authority teacherAuthority = new Authority();
+            teacherAuthority.setRole("TEACHER");
+            authorityRepo.save(teacherAuthority);
+
+            Authority studentAuthority = new Authority();
+            studentAuthority.setRole("STUDENT");
+            authorityRepo.save(studentAuthority);
+        }
+
         return "welcome";
     }
 

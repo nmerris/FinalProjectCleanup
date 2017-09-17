@@ -113,6 +113,8 @@ public class AdminController
 		return "redirect:/allcourses";
 	}
 
+	// shows a list of all courses, admin can do various things from the list
+	// such as edit, delete, view details, and log info requests
 	@RequestMapping("/allcourses")
 	public String allCourses(Model model)
 	{
@@ -136,7 +138,6 @@ public class AdminController
 	@GetMapping("/allteachers")
 	public String allTeachers(Model model) {
 
-		// TODO implement this
 
 
 		return "allteachers";
