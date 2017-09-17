@@ -121,6 +121,28 @@ public class AdminController
 	}
 
 
+	// view all the students, admin can click on one to see the courses that particular student is registered in
+	@GetMapping("/allstudents")
+	public String allStudents(Model model) {
+
+		// TODO implement this
+
+
+		return "allstudents";
+	}
+
+
+	// view all the teachers, admin can click on one to see that teachers evaluations
+	@GetMapping("/allteachers")
+	public String allTeachers(Model model) {
+
+		// TODO implement this
+
+
+		return "allteachers";
+	}
+
+
 //	// this is where the admin can log information requests about a course
 	@GetMapping("/loginforequest/{courseId}")
 	public String logInfoRequestGet(@PathVariable("courseId") long courseId, Model model) {

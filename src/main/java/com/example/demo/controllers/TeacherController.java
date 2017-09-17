@@ -127,6 +127,7 @@ public class TeacherController {
 		course.addPerson(p);
 		courseRepo.save(course);
 
+		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
 		return "redirect:/addstudent/" + courseId;
 	}
 
@@ -196,11 +197,13 @@ public class TeacherController {
 	}
 
 
-	@RequestMapping("/endcourse/{courseid}")
-	public String endClass() {
-		System.out.println("Send email to admin");
-		return "endcourse";
-	}
+	// there is no requirement to notify anyone when a course is deleted so I don't think we need this
+	// we can do something here after we get the requirements done
+//	@RequestMapping("/endcourse/{courseid}")
+//	public String endClass() {
+//		System.out.println("Send email to admin");
+//		return "endcourse";
+//	}
 
 
 	// shows a drop down list of admins, teacher selects one to send an attendance email to

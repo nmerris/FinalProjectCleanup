@@ -3,7 +3,7 @@
 
 <head th:replace="base:: FinalHead"></head>
 <body>
-<th:block th:replace="base::FinalNav"></th:block>
+<th:block th:replace="base::FinalNavAdmin"></th:block>
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
@@ -15,14 +15,10 @@
                         <li class="list-group-item" th:text="${'Name: ' + course.name}"></li>
                         <li class="list-group-item" th:text="${'Start Date: ' + course.dateStart}"></li>
                         <li class="list-group-item" th:text="${'End Date: ' + course.dateEnd}"></li>
-                        <li class="list-group-item" th:text="${'Teacher: '+ teacher.nameFirst+' ' +teacher.nameLast}"></li>
+                        <li class="list-group-item" th:text="${'Teacher: '+ teacher.getFullName()}"></li>
                     </ul>
                 </div>
                 <a class="btn btn-primary bold-input" th:href="@{/addcourse}"><b>+ Add Another</b></a>
-                <a class="btn btn-primary bold-input" th:href="@{/editcourse/{id}(id=${course.id})}"><b>Edit Course</b></a>
-                <a class="btn btn-primary bold-input" th:href="@{/deletecourse/{id}(id=${course.id})}"><b>Delete Course</b></a>
-                <br/>
-                <a class="btn btn-primary bold-input" th:href="@{/allevaluations}"><b> View Course Evaluation</b></a>
             </div>
         </div>
     </div>

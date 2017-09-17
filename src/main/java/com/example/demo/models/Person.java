@@ -100,6 +100,20 @@ public class Person {
         return nameFirst + ' ' + nameLast;
     }
 
+    // get the single Authority for this person
+    // even though we are using a Collection to hold authorities, we are only allowing one per Person
+    // ideally we should change the relationship between Person and Authority to ManyToOne.. if time we can try this
+    public String getAuthority() {
+        for (Authority auth : authorities) {
+            if (auth.getRole().equals("ADMIN")) {
+                return "ADMIN";
+            }
+            if (auth.getRole().equals("TEACHER")) {
+                return "TEACHER";
+            }
+        }
+        return "STUDENT";
+    }
 
 
     // normal getters/setters ==================================================================================

@@ -4,6 +4,7 @@ import com.example.demo.models.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,14 +50,31 @@ public class MainController
      *  Welcome/login pages
      *
      ************************/
+    // this route fires for everybody, any anonymous visitor will hit this route
+    // including teachers and admins BEFORE they log in
     @RequestMapping("/")
     public String welcomePage()
     {
         return "welcome";
     }
 
+    // this route only fires after a user logs in
     @GetMapping("/welcome")
-    public String showHomePage() {
+    public String showHomePage(Principal principal) {
+
+        // display a welcome page depending on if teacher, admin, or student
+        // just to be safe, check for null, so if user logs out and clicks back button, app won't crash
+        if(principal != null) {
+            switch (personRepo.findByUsername(principal.getName()).getAuthority()) {
+                case "ADMIN":
+                    return "welcomeAdmin";
+                case "TEACHER":
+                    return "welcomeTeach";
+            }
+        }
+
+        // this should never happen because you can only get to this route if you are logged in
+        // but still need to return something for it to compile..
         return "welcome";
     }
 

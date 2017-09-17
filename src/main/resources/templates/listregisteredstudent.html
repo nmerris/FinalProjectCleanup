@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="base:: FinalHead"></head>
 <body>
-<th:block th:replace="base::FinalNav"></th:block>
+<th:block th:replace="base::FinalNavTeacher"></th:block>
 <div class="container">
     <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
@@ -30,8 +30,6 @@
                             <td th:text="*{student.contactNum}"></td>
                             <td th:text="${student.getTimeStampByCourseId(__${id}__)}"></td>
                             <td><a th:href="@{|/takeattendance/${id}?studentid=${student.id}|}">Take Attendance</a></td>
-                            <!--<td><a th:href="@{/takeattendance/{id}(id=${student.id})}">Take Attendance</a></td>-->
-                            <!--th:href="@{|/delete/${item.id}?type=skill|}"-->
                         </tr>
                         </tbody>
                     </table>

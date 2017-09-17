@@ -5,7 +5,7 @@
 
 <body>
 
-<th:block th:replace="base::FinalNav"></th:block>
+<th:block th:replace="base::FinalNavTeacher"></th:block>
 
 
 <div class="container">
@@ -13,28 +13,8 @@
         <div class="col col-sm-10 justify-content-center">
             <h1>Welcome!</h1>
 
-            <div sec:authorize!="isAuthenticated()">
-                <a class="btn btn-primary" th:href="@{/login}" role="button">Login</a>
+            <h1> About Project - teacher specific verbiage goes here</h1>
 
-                <br /><a class="btn btn-primary" th:href="@{/signup}" role="button">Sign up</a>
-
-                <br/><a class="btn btn-primary" th:href="@{/evaluation}" role="button">Complete student evaluation</a>
-            </div>
-            <h1> About Project</h1>
-            <!--<div sec:authorize="hasAuthority('ADMIN')">-->
-                <!--<a class="btn btn-primary" th:href="@{/addcourse}" role="button">Add course</a><br />-->
-                <!--<a class="btn btn-primary" th:href="@{/allcourses}" role="button">All courses</a><br />-->
-            <!--</div>-->
-            <!--<br />-->
-            <!--<br />-->
-            <!--<div sec:authorize="hasAuthority('TEACHER')">-->
-                <!--<a class="btn btn-primary" th:href="@{/mycoursesdetail}" role="button">My courses</a>  This needs to somehow get the specific teacher<br />-->
-            <!--</div>-->
-            <!--<br />-->
-            <!--<br />-->
-            <div sec:authorize="isAuthenticated()">
-                <a class="btn btn-primary" th:href="@{/logout}" role="button">Log out</a><br />
-            </div>
 
         </div>
     </div>
