@@ -69,6 +69,9 @@ public class Person {
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private Collection<CourseInfoRequestLog> courseInfoRequestLogs;
 
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    private Collection<Evaluation> evaluations;
+
     public Person() {
         this.authorities = new HashSet<>();
         this.courses = new HashSet<>();
@@ -237,5 +240,13 @@ public class Person {
 
     public void setCourseInfoRequestLogs(Collection<CourseInfoRequestLog> courseInfoRequestLogs) {
         this.courseInfoRequestLogs = courseInfoRequestLogs;
+    }
+
+    public Collection<Evaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(Collection<Evaluation> evaluations) {
+        this.evaluations = evaluations;
     }
 }

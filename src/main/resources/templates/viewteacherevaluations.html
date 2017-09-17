@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+<th:block th:replace="base::FinalNavAdmin"></th:block>
+
+<!-- show a gigantic table of evaluations for a single teacher -->
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                <caption> <h4><b th:text="'All evaluations for: ' + ${teacherName}"></b></h4></caption>
+                <table class="table table-striped" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Course Name</th>
+                            <th>Deleted</th>
+                            <th>CRN</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Content</th>
+                            <th>Inst Quality</th>
+                            <th>Training Exp</th>
+                            <th>Textbook</th>
+                            <th>Class Env</th>
+                            <th>Equipment</th>
+                            <th>Like</th>
+                            <th>Did Not Like</th>
+                            <th>Improvements</th>
+                            <th>Other Classes</th>
+                            <th>How Found Out</th>
+                        </tr>
+                    </thead>
+
+                    <tbody align="left">
+                        <tr th:each="item : ${evaluations}">
+                            <td th:text="*{item.course.name}"></td>
+                            <td th:text="*{item.course.getDeletedString()}"></td>
+                            <td th:text="*{item.course.courseRegistrationNum}"></td>
+
+                            <td th:text="*{item.mNumber}"></td>
+                            <td th:text="*{item.evaluations.size()}"></td>
+                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}">View Evaluations</a></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>

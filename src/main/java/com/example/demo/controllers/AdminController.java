@@ -138,9 +138,17 @@ public class AdminController
 	@GetMapping("/allteachers")
 	public String allTeachers(Model model) {
 
-
-
+		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "allteachers";
+	}
+
+	// view all the evaluations for a single teacher in one gigantic table
+	@GetMapping("/viewteacherevaluations/{id}")
+	public String viewEvalsForOneTeacher(@PathVariable("{id}") long teacherId, Model model) {
+
+		model.addAttribute("teacherName", personRepo.findOne(teacherId).getFullName());
+		model.addAttribute("evaluations", evaluationRepo.findByPersonIsOrderByCourseAsc(personRepo.findOne(teacherId)));
+		return "viewteacherevaluations";
 	}
 
 

@@ -28,6 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new SSUserDetailsService(personRepo);
     }
 
+
+    // TODO hiwot updated this sunday afternoon, but it will need a bit more touch up after everything is done, because I will prob
+    // need to add a few more routes as I work through the evaluations and students lists in admin section
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -35,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/","/signup","/css/**","/js/**", "/img/**", "/fonts/**","/welcome", "/evaluation").permitAll()
                 .antMatchers( "/welcomeAdmin","/addcourse","/addduplicatecourse","/allcourses","/allteachers","/allevaluations","/courseconfirm","/coursedetail","/coursestakenbystudent","/loginforequestform","/loginforequestconfirmation").access("hasAuthority('ADMIN')")
-                .antMatchers("/addstudenttocourse","/evaluation","/listregisteredstudent","/sendemail","/takeattendance","/teachercoursedetail","/viewstudentattendance").access("hasAuthority('TEACHER')")
+                .antMatchers("/addstudenttocourse","/listregisteredstudent","/sendemail","/takeattendance","/teachercoursedetail","/viewstudentattendance").access("hasAuthority('TEACHER')")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()

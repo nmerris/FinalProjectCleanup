@@ -68,7 +68,10 @@ public class Course {
         persons.add(person);
     }
 
-
+    // use this to display the deleted status in the evaluations table
+    public String getDeletedString() {
+        return deleted ? "YES" : "NO";
+    }
 
     // normal getter/setter methods ==================================================================================
 

@@ -14,6 +14,10 @@ public class Evaluation {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_id")
+    private Person person;
+
     private String courseContentRating;
     private String instructionQualityRating;
     private String trainingExperienceRating;
@@ -131,5 +135,13 @@ public class Evaluation {
 
     public void setHowDidYouFindOut(String howDidYouFindOut) {
         this.howDidYouFindOut = howDidYouFindOut;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

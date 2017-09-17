@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+<th:block th:replace="base::FinalNavAdmin"></th:block>
+
+<!-- show a table of teachers, the admin selects one to view that teachers evaluations -->
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                <caption> <h4><b>All current teachers</b></h4></caption>
+                <table class="table table-striped" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>M-Number</th>
+                            <th>Evals on Record</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody align="left">
+                        <tr th:each="item : ${teachers}">
+                            <td th:text="*{item.nameFirst}"></td>
+                            <td th:text="*{item.nameLast}"></td>
+                            <td th:text="*{item.mNumber}"></td>
+                            <td th:text="*{item.evaluations.size()}"></td>
+                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}">View Evaluations</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+
+<th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>
