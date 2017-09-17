@@ -167,6 +167,8 @@ public class TeacherController {
 			attendance.setCourse(course);
 			// set the date, increment by one day for each new Attendance object
 			attendance.setDate(Utilities.addDays(startDate, i));
+			// pre check it to 'Present'
+			attendance.setAstatus("Present");
 			// add it to the list
 			attendanceArrayList.add(attendance);
 
