@@ -13,11 +13,11 @@
                         <thead>
                         <tr>
 
-                            <td>CRN Number:</td>
-                            <td>Name:</td>
-                            <td>Start Date:</td>
-                            <td>End Date:</td>
-                            <td colspan="2">Action:</td>
+                            <td>CRN Number</td>
+                            <td>Name</td>
+                            <td>Start Date</td>
+                            <td>End Date</td>
+                            <td colspan="4">Action</td>
 
                         </tr>
                         </thead>
@@ -27,12 +27,10 @@
                             <td th:text="${singlecourse.name}"></td>
                             <td th:text="${singlecourse.dateStart}"></td>
                             <td th:text="${singlecourse.dateEnd}"></td>
-                            <td>
-                                <a class="btn btn-primary bold-input" th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>Detail</b></a>
-                            </td>
-                            <td>
-                                <a class="btn btn-primary bold-input" th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a>
-                            </td>
+                            <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>View Details</b></a></td>
+                            <td><a th:href="@{/editcourse/{id}(id=${singlecourse.id})}"><b>Edit Details</b></a></td>
+                            <td><a th:href="@{/allevaluations/{id}(id=${singlecourse.id})}"><b>View Evaluations</b></a></td>
+                            <td><a th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a></td>
                         </tr>
                         </tbody>
                     </table>
