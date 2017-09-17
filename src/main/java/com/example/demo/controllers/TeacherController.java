@@ -53,7 +53,7 @@ public class TeacherController {
 	public String listTeacherCourses(Principal principal, Model model) {
 		Person teacher = personRepo.findByUsername(principal.getName());
 		model.addAttribute("teachercourse", teacher);
-		model.addAttribute("courselist", courseRepo.findByPersons(teacher));
+		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(teacher, false));
 		return "teachercoursedetail";
 	}
 
@@ -73,13 +73,15 @@ public class TeacherController {
 	//List of Student attendance for a particular course
 	// NOT DONE YET, not even started yet
 	@RequestMapping("/viewattendance/{id}")
-	public String listStudAttendance(@PathVariable("id") long id, Model model) {
-		model.addAttribute("listattendance", attendanceRepo.findAll());
+	public String listStudAttendance(@PathVariable("id") long courseId, Model model, Principal principal) {
+		model.addAttribute("listattendance", attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(personRepo.
+				findByUsername(principal.getName()), courseRepo.findOne(courseId)));
+
 		return "viewstudentattendance";
 	}
 
 	//Display course evealuation
-	// WAITING FOR JESSE
+	// TODO WAITING FOR JESSE
 	@RequestMapping("/dispevaluation/{id}")
 	public String dipCourseEvaluation(@PathVariable("id") long id, Model model) {
 		model.addAttribute("dispEval", evaluationRepo.findAll());

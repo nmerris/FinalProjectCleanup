@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public interface CourseRepo extends CrudRepository<Course, Long> {
-    Set<Course> findByPersons(Person persons);
+    Set<Course> findByPersonsIsAndDeletedIs(Person person, boolean value);
 
     Set<Course> findByDeletedIs(boolean value);
 
