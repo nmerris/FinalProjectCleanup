@@ -95,13 +95,13 @@ public class MainController
 
         }
 
+        // NOTE: username uniqueness is enforced by Unique annotation in Person model, and a validation
+        // error msg is display bia binding result as usual, so no need to check here
         if(person.getSelectVal().equalsIgnoreCase("TEACHER")  )      {
-
             userService.saveTeacher(person);
             model.addAttribute("message", "Teacher Account Successfully Created");
         }
         else{
-
             userService.saveAdmin(person);
             model.addAttribute("message","Admin Account Successfully Created");
         }
@@ -123,14 +123,17 @@ public class MainController
     	return "welcome";
     }
 
-//Teacher and admin
+    //Teacher and admin
     //Modified by Yun on 09/15, show teacher information in coursedetail page
     @RequestMapping("/coursedetail/{courseid}")
     public String courseDetail(@PathVariable ("courseid") long id, Model model)
     {
-        model.addAttribute("course", courseRepo.findOne(id));
+        Course course = courseRepo.findOne(id);
+
+        model.addAttribute("numStudents", personRepo.countByCoursesIsAndAuthoritiesIs(course, authorityRepo.findByRole("STUDENT")));
+        model.addAttribute("course", course);
 //        System.out.println("course after coursedetail:"+courseRepo.findOne(id));
-        model.addAttribute("teachers", personRepo.findByCoursesIs(courseRepo.findOne(id)));
+        model.addAttribute("teachers", personRepo.findByCoursesIs(course));
 //        System.out.println("teacher after coursedetail---: "+personRepo.findByCoursesIs(courseRepo.findOne(id)));
         return "coursedetail";
     }

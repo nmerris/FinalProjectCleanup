@@ -34,12 +34,11 @@
                             <td th:text="*{list.dateEnd}"></td>
                             <td th:text="*{list.numEvaluationsCompleted}"></td>
                             <td>
-                                <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student</a>
+                                <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student(s)</a>
                                 <a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}">View Registered Students</a>
-                                <a th:href="@{/viewattendance/{id}(id=${list.id})}">View Student Attendance</a>
-                                <a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Student Evaluation</a>
-                                <!--<a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Student Evaluation</a>-->
-                                <a th:href="@{/sendemail(id=${list.id})}">Send Student Attendance</a>
+                                <!--<a th:href="@{/viewattendance/{id}(id=${list.id})}">View Student Attendance</a>-->
+                                <a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Course Evaluations</a>
+                                <a th:href="@{/sendemail(id=${list.id})}">Send Attendance Details</a>
                             </td>
                         </tr>
                         </tbody>

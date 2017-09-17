@@ -30,4 +30,10 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     // get student by contact number
     Person findByContactNumIsAndAuthoritiesIs(String contactNum, Authority authority);
 
+    // use this before saving a new TEACHER or ADMIN, to make sure the username is not already in use
+    long countByUsernameIs(String username);
+
+    // count the number of students registered in a given course
+    long countByCoursesIsAndAuthoritiesIs(Course course, Authority authority);
+
 }

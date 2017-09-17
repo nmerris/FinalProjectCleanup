@@ -8,22 +8,24 @@
         <div class="panel panel-default card card-3">
             <div class="panel-body">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><h4><b>Course Details</b></h4></div>
+                    <div class="panel-heading"><h4><b th:text="${course.name}"></b></h4></div>
                     <ul class="list-group">
                         <li class="list-group-item" th:text="${'CRN Number:  ' + course.courseRegistrationNum}"></li>
-                        <li class="list-group-item" th:text="${'Name: ' + course.name}"></li>
+                        <!--<li class="list-group-item" th:text="${'Name: ' + course.name}"></li>-->
                         <li class="list-group-item" th:text="${'Start Date: ' + course.dateStart}"></li>
                         <li class="list-group-item" th:text="${'End Date: ' + course.dateEnd}"></li>
+                        <li class="list-group-item" th:text="${'Number of Students: ' + numStudents}"></li>
+                        <li class="list-group-item" th:text="${'Number of evaluations: ' + course.evaluations.size()}"></li>
                         <th:block th:each="singleteacher:${teachers}">
-                        <li class="list-group-item" th:text="${'Teacher: '+ singleteacher.nameFirst+' ' +singleteacher.nameLast}"></li>
+                            <li class="list-group-item" th:text="${'Teacher: '+ singleteacher.getFullName()}"></li>
                         </th:block>
                     </ul>
                 </div>
-                <a class="btn btn-primary bold-input" th:href="@{/addcourse}"><b>+ Add Another</b></a>
+                <!--<a class="btn btn-primary bold-input" th:href="@{/addcourse}"><b>+ Add Another</b></a>-->
                 <a class="btn btn-primary bold-input" th:href="@{/editcourse/{id}(id=${course.id})}"><b>Edit Course</b></a>
                 <a class="btn btn-primary bold-input" th:href="@{/deletecourse/{id}(id=${course.id})}"><b>Delete Course</b></a>
                 <br/>
-                <a class="btn btn-primary bold-input" th:href="@{/allevaluations}"><b> View Course Evaluation</b></a>
+                <a class="btn btn-primary bold-input" th:href="@{/allevaluations}"><b>View Evaluations</b></a>
             </div>
         </div>
     </div>

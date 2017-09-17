@@ -70,15 +70,20 @@ public class TeacherController {
 		return "listregisteredstudent";
 	}
 
-	//List of Student attendance for a particular course
-	// NOT DONE YET, not even started yet
-	@RequestMapping("/viewattendance/{id}")
-	public String listStudAttendance(@PathVariable("id") long courseId, Model model, Principal principal) {
-		model.addAttribute("listattendance", attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(personRepo.
-				findByUsername(principal.getName()), courseRepo.findOne(courseId)));
 
-		return "viewstudentattendance";
-	}
+	//List of Student attendance for a particular course
+	// TODO I DO NOT THINK THIS ROUTE EVEN NEEDS TO EXIST!!!
+	// requirements state that teacher should be able to EMAIL attendance details to the admin
+	// there is actually nothing in requirements that state that a teacher or admin should be able to
+	// VIEW the attendance in any way, other than via email
+//	@RequestMapping("/viewattendance/{id}")
+//	public String listStudAttendance(@PathVariable("id") long courseId, Model model, Principal principal) {
+//		model.addAttribute("listattendance", attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(personRepo.
+//				findByUsername(principal.getName()), courseRepo.findOne(courseId)));
+//
+//		return "viewstudentattendance";
+//	}
+
 
 	//Display course evealuation
 	// TODO WAITING FOR JESSE
@@ -87,13 +92,6 @@ public class TeacherController {
 		model.addAttribute("dispEval", evaluationRepo.findAll());
 		return "dispevaluation";
 	}
-
-	//Send attendance for admin
-//	@RequestMapping("/viewattendance/{id}")
-//	public String sendAdmin(@PathVariable("id") long id, Model model) {
-//		model.addAttribute("listattendance", attendanceRepo.findAll());
-//		return "viewstudentattendance";
-//	}
 
 
 	@RequestMapping("/addstudent/{id}")
