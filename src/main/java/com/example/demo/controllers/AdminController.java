@@ -155,7 +155,7 @@ public class AdminController
 
 
 
-		// create some dummy data for testing
+		// create some dummy data for testing ================================================================
 		Set<Evaluation> testSet = new HashSet<>();
 
 		for(int i = 0; i < 30; i++) {
@@ -181,9 +181,12 @@ public class AdminController
 			eval.setWhatOtherClasses("Internet/Website");
 			testSet.add(eval);
 		}
-
-
 		model.addAttribute("evaluations", testSet);
+		// end dummy data for testing ================================================================
+
+
+
+
 //		model.addAttribute("evaluations", evaluationRepo.findByPersonIsOrderByCourseAsc(personRepo.findOne(teacherId)));
 		return "viewteacherevaluations";
 	}
