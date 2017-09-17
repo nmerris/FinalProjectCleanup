@@ -8,14 +8,15 @@
 
 <!-- show a gigantic table of evaluations for a single teacher -->
 <div class="container">
-    <div class="col-lg-10 col-lg-offset-1">
+    <div class="col-lg-12">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
                 <!-- this table shows all evals for a teacher, including for deleted courses -->
                 <!-- the reason is that you might want to go back and review evals after deleting a course -->
                 <caption> <h4><b th:text="'All evaluations for: ' + ${teacherName}"></b></h4></caption>
-                <table class="table table-striped" class="table table-hover">
+                <div class="table-responsive">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Course Name</th>
@@ -29,11 +30,11 @@
                             <th>Textbook</th>
                             <th>Class Env</th>
                             <th>Equipment</th>
-                            <th>Like</th>
-                            <th>Did Not Like</th>
-                            <th>Improvements</th>
-                            <th>Other Classes</th>
-                            <th>How Found Out</th>
+                            <th>What Did You Like About This Course</th>
+                            <th>What Didn't You Like About This Course</th>
+                            <th>What Improvement Would You Make</th>
+                            <th>What Other Classes Are You Taking</th>
+                            <th>How Did You Find Out</th>
                         </tr>
                     </thead>
 
@@ -42,8 +43,8 @@
                             <td th:text="*{item.course.name}"></td>
                             <td th:text="*{item.course.getDeletedString()}"></td>
                             <td th:text="*{item.course.courseRegistrationNum}"></td>
-                            <td th:text="*{item.course.startDate}"></td>
-                            <td th:text="*{item.course.endDate}"></td>
+                            <td th:text="*{#dates.format(item.course.dateStart, 'MM-dd-yy')}"></td>
+                            <td th:text="*{#dates.format(item.course.dateEnd, 'MM-dd-yy')}"></td>
                             <td th:text="*{item.courseContentRating}"></td>
                             <td th:text="*{item.instructionQualityRating}"></td>
                             <td th:text="*{item.trainingExperienceRating}"></td>
@@ -59,6 +60,7 @@
                     </tbody>
 
                 </table>
+                </div>
 
             </div>
         </div>

@@ -141,9 +141,20 @@ input[type="radio"] {
     margin-top: 50px;
 }
 
+
+
+.table-responsive {
+    max-height:100vh;
+}
+
 table {
-    width:100%;
+    max-width:100%;
     box-sizing: border-box;
+    overflow-x: scroll;
+}
+
+th, td {
+    min-width: 80px;
 }
 
 td a {
