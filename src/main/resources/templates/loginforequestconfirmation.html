@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+<th:block th:replace="base::FinalNav"></th:block>
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                <h3 th:text="${message}"></h3>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+<th:block th:replace="base::FinalJS"></th:block>
+
+</body>
+
+</html>

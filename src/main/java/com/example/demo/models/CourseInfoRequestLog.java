@@ -29,7 +29,7 @@ public class CourseInfoRequestLog {
     @Email
     private String email;
 
-    private long contactNum;
+    private String contactNum;
 
 
     public long getId() {
@@ -72,11 +72,11 @@ public class CourseInfoRequestLog {
         this.email = email;
     }
 
-    public long getContactNum() {
+    public String getContactNum() {
         return contactNum;
     }
 
-    public void setContactNum(long contactNum) {
+    public void setContactNum(String contactNum) {
         this.contactNum = contactNum;
     }
 }

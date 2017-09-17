@@ -27,4 +27,7 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     // get all the STUDENTS for a particular course
     Set<Person> findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(Course course, Authority authority);
 
+    // get student by contact number
+    Person findByContactNumIsAndAuthoritiesIs(String contactNum, Authority authority);
+
 }

@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @Controller
 public class AdminController
@@ -27,6 +28,8 @@ public class AdminController
 	RegistrationTimestampRepo registrationTimestampRepo;
 	@Autowired
 	EvaluationRepo evaluationRepo;
+	@Autowired
+	CourseInfoRequestLogRepo courseInfoRequestLogRepo;
 
 
 	@GetMapping("/addcourse")
@@ -48,6 +51,7 @@ public class AdminController
 		// find out what Person was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
 		course.addPerson(personRepo.findOne(teacherId));
+		course.setHasBeenDeleted(false);
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
 		System.out.println("teacher after add course:"+personRepo.findOne(teacherId));
@@ -77,6 +81,7 @@ public class AdminController
 		course.setName(courseRepo.findOne(courseId).getName());
 		course.setCourseRegistrationNum(courseRepo.findOne(courseId).getCourseRegistrationNum());
 		course.addPerson(personRepo.findOne(teacherId));
+		course.setHasBeenDeleted(false);
 		model.addAttribute("course",courseRepo.save(course));
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
 
@@ -94,8 +99,11 @@ public class AdminController
 	@RequestMapping("/deletecourse/{courseid}")
 	public String deleteCourse(@PathVariable ("courseid") long id)
 	{
-//		Course course = courseRepo.findOne(id);
-		courseRepo.delete(id);
+		// not tested yet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		Course course = courseRepo.findOne(id);
+		course.setHasBeenDeleted(true);
+		courseRepo.save(course);
+
 		return "redirect:/allcourses";
 	}
 
@@ -125,12 +133,10 @@ public class AdminController
 	}
 
 
+	// note: the course id is preserved through the form, so does not need to be set again here
 	@PostMapping("/loginforequest")
 	public String logInfoRequestPost(@Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
-									 BindingResult bindingResult,
-//									 @RequestParam("enteredContactNum") String enteredContactNum,
-//									 @RequestParam("enteredEmail") String enteredEmail,
-									 Model model) {
+									 BindingResult bindingResult, Model model) {
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
@@ -138,23 +144,27 @@ public class AdminController
 		}
 
 		// manually check if BOTH email and contact num were empty
-		if(log.getContactNum() == 0 && log.getEmail().isEmpty()) {
+		if(log.getContactNum().isEmpty() && log.getEmail().isEmpty()) {
 			model.addAttribute("noEmailAndNoContactNum", true);
 			return "loginforequestform";
 		}
 
-
-		if(log.getContactNum() > 0) {
-			// something was entered in the contact num field, now check if it matches and existing student
-
+		// TODO: waiting to here from Fi about uniqueness of contact number if it's a student, this is not quite done yet
+		// check to see if the contact num just entered matches any student in the db
+		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
+		if(matchedStudent != null) {
+			// found at least one match
+			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
+			model.addAttribute("message", s);
+			log.setPerson(matchedStudent);
+			courseInfoRequestLogRepo.save(log);
+		}
+		else {
+			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
+			courseInfoRequestLogRepo.save(log);
 		}
 
-//		if(enteredContactNum.isEmpty() && enteredEmail.isEmpty())
-//		if(enteredContactNum.isEmpty()) {
-//			model.addAttribute("noContactNum", true);
-//		}
-
-		return "testeroo";
+		return "loginforequestconfirmation";
 	}
 
 
