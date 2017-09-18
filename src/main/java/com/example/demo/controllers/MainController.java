@@ -168,7 +168,7 @@ public class MainController
         model.addAttribute("numStudents", personRepo.countByCoursesIsAndAuthoritiesIs(course, authorityRepo.findByRole("STUDENT")));
         model.addAttribute("course", course);
 //        System.out.println("course after coursedetail:"+courseRepo.findOne(id));
-        model.addAttribute("teachers", personRepo.findByCoursesIs(course));
+        model.addAttribute("teachers", personRepo.findByCoursesIsAndAuthoritiesIs(course,authorityRepo.findByRole("TEACHER")));
 //        System.out.println("teacher after coursedetail---: "+personRepo.findByCoursesIs(courseRepo.findOne(id)));
         return "coursedetail";
     }
