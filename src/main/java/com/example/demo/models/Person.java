@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
@@ -29,8 +30,8 @@ public class Person {
     @Email
     @Size(max = 50)
     private String email;
-
     @NotEmpty
+    @Pattern(regexp="\\(?\\d+\\)?[-.\\s]?\\d+[-.\\s]?\\d+")
     private String contactNum;
 
 //    @NotEmpty

@@ -399,6 +399,51 @@ public class TeacherController {
 		return "redirect:/mycoursesdetail";
 	}
 
+//	private String buildAttendanceEmail(Course course) {
+//		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+//
+//		Set<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+//
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+//
+//		String message = "<i>Greetings!</i><br>";
+//		message += "<b>Wish you a nice day!</b><br>";
+//		message += "<font color=red>Duke</font>";
+//
+//String s="<table><thead><tr><th>ColOne</th><th>coltwo</th><th>colthree</th></tr></thead><tbody><tr><td>data1</td><td>data2</td><td>data3</td></tr></tbody></table>";
+//
+//
+//
+//		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! inside buildEmail.. diffInDays: " + diffInDays);
+//
+//		// create a header row
+//		for (int i = 0; i < diffInDays; i++) {
+//			s += String.format("%-10s", dateFormat.format(Utilities.addDays(course.getDateStart(), i)));
+//		}
+//
+//		// add a horizontal line
+//		s += "\n-------------------------"; // 26
+//		for(int i = 0; i < diffInDays; i++) {
+//			s += "----------"; // 10
+//		}
+//
+//		s += "\n";
+//
+//		for (Person p : students) {
+//			s += String.format("%-16s %-10s", p.getNameLast(), p.getmNumber());
+//			for (Attendance a : attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(p, course)) {
+//				s += String.format("%-10s", a.getAstatus());
+//			}
+//			s += "\n";
+//		}
+//
+//		return s;
+//	}
+
+
+
+
+
 
 	// builds a String that has all the attendance info for a single course
 	// result is a basic text based table, will only look nice with a fixed width font
