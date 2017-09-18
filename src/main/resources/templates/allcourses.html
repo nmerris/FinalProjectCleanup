@@ -29,7 +29,7 @@
                             <td th:text="${singlecourse.dateEnd}"></td>
                             <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>View Details</b></a></td>
                             <td><a th:href="@{/editcourse/{id}(id=${singlecourse.id})}"><b>Edit Details</b></a></td>
-                            <td><a th:href="@{/allevaluations/{id}(id=${singlecourse.id})}"><b>View Evaluations</b></a></td>
+                            <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><b>View Evaluations</b></a></td>
                             <td><a th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a></td>
                         </tr>
                         </tbody>

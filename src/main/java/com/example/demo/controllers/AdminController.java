@@ -172,6 +172,52 @@ public class AdminController
 		return "allteachers";
 	}
 
+
+	// view all the evaluations for a single course
+	@GetMapping("/viewcourseevaluations/{id}")
+	public String viewEvalsForOneCourse(@PathVariable("id") long courseId, Model model) {
+
+		model.addAttribute("courseName", courseRepo.findOne(courseId).getName());
+
+
+
+
+		// create some dummy data for testing ================================================================
+		Set<Evaluation> testSet = new HashSet<>();
+
+		for(int i = 0; i < 30; i++) {
+			Evaluation eval = new Evaluation();
+			Course course = new Course();
+			course.setName("Astro Physics 200");
+			course.setDeleted(false);
+			course.setCourseRegistrationNum(987934534);
+			course.setDateStart(new Date());
+			course.setDateEnd(new Date());
+
+			eval.setCourse(course);
+			eval.setCourseContentRating("Above Average");
+			eval.setInstructionQualityRating("Excellent");
+			eval.setTrainingExperienceRating("Average");
+			eval.setTextBookRating("Fair");
+			eval.setClassroomEnvironment("Poor");
+			eval.setEquipmentRating("Poor");
+			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatOtherClasses("Internet/Website");
+			testSet.add(eval);
+		}
+		model.addAttribute("evaluations", testSet);
+		// end dummy data for testing ================================================================
+
+
+
+
+		return "viewcourseevaluations";
+	}
+
+
 	// view all the evaluations for a single teacher in one gigantic table
 	@GetMapping("/viewteacherevaluations/{id}")
 	public String viewEvalsForOneTeacher(@PathVariable("id") long teacherId, Model model) {
