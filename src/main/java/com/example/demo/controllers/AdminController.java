@@ -44,6 +44,8 @@ public class AdminController
 		return "addcourse";
 	}
 
+
+	// fires when adding new course OR updating existing course
 	@PostMapping("/addcourse")
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
