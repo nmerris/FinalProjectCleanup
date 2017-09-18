@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public interface PersonRepo extends CrudRepository<Person, Long> {
@@ -25,7 +26,7 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     Set<Person> findByCoursesIs (Course course);
 
     // get all the STUDENTS for a particular course
-    Set<Person> findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(Course course, Authority authority);
+    LinkedHashSet<Person> findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(Course course, Authority authority);
 
     // get student by contact number
     Person findByContactNumIsAndAuthoritiesIs(String contactNum, Authority authority);
