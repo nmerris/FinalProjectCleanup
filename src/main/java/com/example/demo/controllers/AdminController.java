@@ -54,6 +54,13 @@ public class AdminController
 			return "addcourse";
 		}
 
+		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
+		    // admin enterd a CRN that already exists, so display an error msg
+            model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+            model.addAttribute("crnExists", true);
+            return "addcourse";
+        }
+
 		// find out what Person was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
 		course.addPerson(personRepo.findOne(teacherId));
@@ -242,24 +249,30 @@ public class AdminController
 			return "loginforequestform";
 		}
 
-		// is admin entered an mnum, check to make sure it's valid
+		// if admin entered an mnum, check to make sure it's valid
 		if(!enteredMnum.isEmpty()) {
-//			personRepo.find
+			if(personRepo.countByMNumberIs(enteredMnum) == 0) {
+				// there was no student with that mnumber, display error msg
+				model.addAttribute("badMnum", true);
+				return "loginforequestform";
+			}
+			else {
+				// found a match for that mnum, so save to db
+				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
+				courseInfoRequestLogRepo.save(log);
+				model.addAttribute("message", "New course info request log saved");
+				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
+						courseRepo.findOne(log.getCourse().getId()).getName(),
+						personRepo.findByMNumberIs(enteredMnum).getFullName()));
+				return "loginforequestconfirmation";
+			}
 		}
 
-		// check to see if the contact num just entered matches any student in the db
-//		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
-//		if(matchedStudent != null) {
-//			// found at least one match
-//			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
-//			model.addAttribute("message", s);
-//			log.setPerson(matchedStudent);
-//			courseInfoRequestLogRepo.save(log);
-//		}
-//		else {
-//			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
-//			courseInfoRequestLogRepo.save(log);
-//		}
+		// at this point, we are saving a new request log, but not for an existing student
+		courseInfoRequestLogRepo.save(log);
+		model.addAttribute("message", "New course info request log saved");
+		model.addAttribute("extraMessage", String.format("Course: %s",
+				courseRepo.findOne(log.getCourse().getId()).getName()));
 
 		return "loginforequestconfirmation";
 	}

@@ -24,6 +24,7 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
     //Added by Yun on 09/15,find person according to course id
     Set<Person> findByCoursesIs (Course course);
+    Set<Person> findByCoursesIsAndAuthoritiesIs(Course course, Authority authority);
 
     // get all the STUDENTS for a particular course
     LinkedHashSet<Person> findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(Course course, Authority authority);

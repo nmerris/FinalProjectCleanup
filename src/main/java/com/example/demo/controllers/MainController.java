@@ -105,13 +105,13 @@ public class MainController
     @RequestMapping("/signup")
     public String addUserInfo(Model model) {
         model.addAttribute("newPerson", new Person());
-        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIs("TEACHER","ADMIN"));
+        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIsOrderByRoleDesc("TEACHER","ADMIN"));
         return "signup";
     }
 
     @PostMapping("/signup")
     public String addUserInfo(@Valid @ModelAttribute("newPerson") Person person, BindingResult bindingResult,Model model){
-        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIs("TEACHER","ADMIN"));
+        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIsOrderByRoleDesc("TEACHER","ADMIN"));
         if(bindingResult.hasErrors()) {
            return "signup";
        }
@@ -168,7 +168,7 @@ public class MainController
         model.addAttribute("numStudents", personRepo.countByCoursesIsAndAuthoritiesIs(course, authorityRepo.findByRole("STUDENT")));
         model.addAttribute("course", course);
 //        System.out.println("course after coursedetail:"+courseRepo.findOne(id));
-        model.addAttribute("teachers", personRepo.findByCoursesIs(course));
+        model.addAttribute("teachers", personRepo.findByCoursesIsAndAuthoritiesIs(course,authorityRepo.findByRole("TEACHER")));
 //        System.out.println("teacher after coursedetail---: "+personRepo.findByCoursesIs(courseRepo.findOne(id)));
         return "coursedetail";
     }

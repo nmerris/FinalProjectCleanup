@@ -11,7 +11,11 @@
             <div class="panel-body">
                 <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
                     <div class="text-center feedback">
-                        <h2>Please enter course info.</h2>
+                        <h2>Please enter course info</h2>
+                    </div>
+                    <div class="feedback">
+                        <h4>If you want to copy an EXISTING course, click Copy Existing Course in the navbar</h4>
+                        <h4>This form is ONLY for adding a brand NEW course with a new CRN</h4>
                     </div>
 
                     <input type="hidden" th:field="*{id}" />
@@ -20,6 +24,7 @@
                         <label class="section-heading" for="courseRegistrationN">CRN</label>
                         <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('courseRegistrationNum')}" th:errors="*{courseRegistrationNum}"></p>
+                        <p class="alert alert-danger" th:if="${crnExists}" th:text="'that CRN already exists, please click Copy Existing Course if you want to reuse a CRN'"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="name">Name</label>

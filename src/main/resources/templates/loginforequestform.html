@@ -37,7 +37,7 @@
                     <!-- mnum will be available as a request param in the post route, ok to be empty -->
                     <div class="form-group">
                         <label class="section-heading" for="mnum">If request came from existing MC student, enter their M-Number</label>
-                        <input id="mnum" class="form-control" type="text" name="mnum"/>
+                        <input id="mnum" class="form-control" type="text" name="mnum" placeholder="M1234567"/>
                         <p class="alert alert-danger" th:if="${badMnum}" th:text="'no student found with that M-Number'"></p>
                     </div>
 
