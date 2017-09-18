@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <head th:replace="base:: FinalHead"></head>
 
 <body>
 
-<!---TODO the navbar needs to be shown based on if teacher or admin is logged in, so I commented it out for now to avoid confusion ->
-<!--<th:block th:replace="base::FinalNavAdmin"></th:block>-->
+
+<!--Already Done_TODO the navbar needs to be shown based on if teacher or admin is logged in, so I commented it out for now to avoid confusion-->
+
+<div sec:authorize="hasAuthority('ADMIN')">
+<th:block th:replace="base::FinalNavAdmin"></th:block>
+</div>
+
+<div sec:authorize="hasAuthority('TEACHER')">
+    <th:block th:replace="base::FinalNavTeacher"></th:block>
+</div>
 
 <!-- show a gigantic table of evaluations for a single teacher -->
 <div class="container">
