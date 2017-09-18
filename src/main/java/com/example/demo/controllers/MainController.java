@@ -141,21 +141,61 @@ public class MainController
             model.addAttribute("message","Admin Account Successfully Created");
         }
 
-        return "redirect:/login;";
+        return "redirect:/login";
     }
 
 
     @GetMapping("/evaluation")
     public String eval(Model model)
     {
-    	model.addAttribute("evaluation", new Evaluation());
+
+    	model.addAttribute("course", new Course());
+    	model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
         return "evaluation";
     }
+
     @PostMapping("/evaluation")
-    public String submitEvaluation(@ModelAttribute("evaluation") Evaluation eval)
+    public String getCourseInfoForEval(@ModelAttribute("course") Course course, @RequestParam(value = "selectedTeacher")long teacherId, Model model)
     {
-    	evaluationRepo.save(eval);
-    	return "welcome";
+        Course specificCourse = courseRepo.findFirstByCourseRegistrationNumAndDateStartAndDeleted(course.getCourseRegistrationNum(), course.getDateStart(),false);
+        Person teacher = personRepo.findOne(teacherId);
+        if(specificCourse==null)
+        {
+            System.out.println("No Such Course");
+            return "evaluation";
+        }
+        if(!specificCourse.getPersons().contains(teacher))
+        {
+            System.out.println("That teacher doesn't teach that course");
+            return "evaluation";
+        }
+        model.addAttribute("course", specificCourse);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("evaluation", new Evaluation());
+        return "evaluation2";
+    }
+
+    @GetMapping("/evaluation2")
+    public String showEval(Model model)
+    {
+        return "evaluation2";
+    }
+
+    @PostMapping("/evaluation2")
+    public String submitEval(@RequestParam("howDidYouFindOut2")String other,
+                             @ModelAttribute("courseId")Course course,
+                             @ModelAttribute("teacher")Person teacher,
+                             @ModelAttribute("evaluation")Evaluation eval)
+    {
+
+        if(!eval.getHowDidYouFindOut().isEmpty() && eval.getHowDidYouFindOut().equalsIgnoreCase("Other"))
+        {
+            eval.setHowDidYouFindOut(other);
+        }
+        System.out.println("Course:"+course.getName());
+        System.out.println("Teacher:" +teacher.getFullName());
+        System.out.println("Eval:"+eval.getId());
+        return "redirect:/";
     }
 
     //Teacher and admin

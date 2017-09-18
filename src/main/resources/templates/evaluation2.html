@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+<th:block th:replace="base::FinalNav"></th:block>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col col-sm-10">
+            <div align="center">
+                <form action="#" th:action="@{/evaluation2}" th:object="${evaluation}" method="post">
+                    <!--<input type="hidden" th:field="*{teacher.id}" />-->
+                    <!--<input type="hidden" th:field="*{course.id}" />-->
+
+                    <table width="90%"><tr><td align="left">
+                        <a name="section1"></a>
+                        <div class="subtitle">Section I: Course Information</div>
+                        <br/>
+                        1. CRN# <span th:text="${course.courseRegistrationNum}"></span>
+                        <input type="hidden" th:name="courseId" th:field="*{course.id}" />
+                        <br />
+                        2. Course Name: <span th:text="${course.name}"></span>
+                        <br />
+                        3. Start Date: <span th:text="${course.dateStart}"></span>
+                        <br />
+                        4. Instructor's Name: <span th:text="${teacher.getFullName()}"></span>
+                        <br />
+
+                        <p></p>
+                        <div class="subtitle">Section II: Rate the Course </div>
+
+                        1. How would you rate the course content? <br />
+                        <div class="radio">
+                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Excellent" checked checked/>Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Above Average" />Above Average</label>
+                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Average" />Average</label>
+                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Fair" />Fair</label>
+                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Poor" />Poor</label>
+                        </div>
+                        <br />
+
+                        2. How would you rate the quality of instruction?<br />
+                        <div class="radio">
+                            <label class="radio-inline"><input type="radio" name="instructionQualityRating" value="Excellent" checked />Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="instructionQualityRating" value="Above Average" />Above Average</label>
+                            <label class="radio-inline"><input type="radio" name="instructionQualityRating" value="Average" />Average</label>
+                            <label class="radio-inline"><input type="radio" name="instructionQualityRating" value="Fair" />Fair</label>
+                            <label class="radio-inline"><input type="radio" name="instructionQualityRating" value="Poor" />Poor</label>
+                        </div>
+                        <br />
+
+                        3. How would you rate your overall training experience?<br />
+                        <div class="radio">
+                            <label class="radio-inline"><input type="radio" name="trainingExperienceRating" value="Excellent" checked />Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="trainingExperienceRating" value="Above Average" />Above Average</label>
+                            <label class="radio-inline"><input type="radio" name="trainingExperienceRating" value="Average" />Average</label>
+                            <label class="radio-inline"><input type="radio" name="trainingExperienceRating" value="Fair" />Fair</label>
+                            <label class="radio-inline"><input type="radio" name="trainingExperienceRating" value="Poor" />Poor</label>
+                        </div>
+                        <br />
+
+                        4. How would you rate the textbook or handouts? <br />
+                        <div class="radio">
+                            <label class="radio-inline"><input type="radio" name="textBookRating" value="Excellent" checked />Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="textBookRating" value="Above Average" />Above Average</label>
+                            <label class="radio-inline"><input type="radio" name="textBookRating" value="Average" />Average</label>
+                            <label class="radio-inline"><input type="radio" name="textBookRating" value="Fair" />Fair</label>
+                            <label class="radio-inline"><input type="radio" name="textBookRating" value="Poor" />Poor</label>
+                        </div>
+                        <br />
+
+                        5. How would you rate the classroom environment and seating? <br />
+                        <div class="radio">
+                            <label class="radio-inline"><input type="radio" name="classroomEnvironment" value="Excellent" checked />Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="classroomEnvironment" value="Above Average" />Above Average</label>
+                            <label class="radio-inline"><input type="radio" name="classroomEnvironment" value="Average" />Average</label>
+                            <label class="radio-inline"><input type="radio" name="classroomEnvironment" value="Fair" />Fair</label>
+                            <label class="radio-inline"><input type="radio" name="classroomEnvironment" value="Poor" />Poor</label>
+                        </div>
+                        <br />
+
+                        6. How would you rate the classroom computer equipment? <br />
+                        <div class="radio">
+                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Excellent" checked />Excellent</label>
+                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Above Average" />Above Average</label>
+                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Average" />Average</label>
+                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Fair" />Fair</label>
+                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Poor" />Poor</label>
+                        </div>
+                        <br />
+
+                        <p></p>
+                        <div class="subtitle">Section III: Comments</div>
+
+                        <br>
+
+                        1. What did you like about the class? <br />
+                        <textarea name="whatDidYouLike" rows="2" cols="75"></textarea> <br />
+
+                        2. What didn't you like about the class? <br />
+                        <textarea name="whatDidntYouLike" rows="2" cols="75"></textarea> <br />
+
+                        3. What improvements would you suggest? <br />
+                        <textarea name="whatImprovements" rows="2" cols="75"></textarea> <br />
+
+                        4.  What other classes would you like to see offered?<br />
+                        <textarea name="whatOtherClasses" rows="2" cols="75"></textarea> <br />
+
+                        <p></p>
+                        <div class="subtitle">Section IV: Optional</div>
+                        <br/>
+
+                        <p>1. How did you find out about the class? <br />
+                            <label><input type="radio" name="howDidYouFindOut" id="howDidYouFindOut" value="Internet / Website" checked>Internet / Website </label>
+
+                            <label><input type="radio" name="howDidYouFindOut" id="howDidYouFindOut" value="Brochure - ITI schedule of classes">Brochure - ITI schedule of classes </label><br>
+                            <label><input type="radio" name="howDidYouFindOut" id="howDidYouFindOut" value="Word of Mouth">Word of Mouth </label>
+                            <label><input type="radio" name="howDidYouFindOut" id="howDidYouFindOut" value="Other">Other </label>
+                            <input type="text"  name="howDidYouFindOut2" id="howDidYouFindOut" size=50 maxlength="100"><br>
+
+                        <!--<p>2. If you have further questions, please feel free to contact us at 240-567-5510</p><br>-->
+                        <br />
+                        <div class="row justify-content-left">
+                            <div class="col col-sm-12">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="reset" class="btn btn-primary">Reset</button>
+                            </div>
+                        </div>
+                    </td></tr></table>
+                </form>
+        </div>
+    </div>
+</div>
+
+
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>
