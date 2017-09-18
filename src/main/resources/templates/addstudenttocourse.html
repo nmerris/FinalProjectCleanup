@@ -12,13 +12,18 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col col-sm-10">
+
+            <!-- new student registers for this course in this form -->
             <form action="#" th:action="@{/addstudent/{cid}(cid=${course.id})}" th:object="${newstudent}" method="post">
                 <div class="text-center feedback">
-                    <h2>Please enter student infos.</h2>
+                    <h2 th:text="'Course Name: ' + ${course.name}"></h2>
+                    <h2>Register as a New Student if you have no M-number</h2>
                 </div>
                 <div class="row justify-content-center">
 
                     <input type="hidden" th:field="*{id}"/>
+
+                    <p class="alert alert-danger" th:if="${alreadyRegistered}" th:text="'you are already registered for this course'"></p>
 
                     <div class="col col-sm-6 form-group">
                         <label for="firstName">First name</label>
@@ -36,7 +41,7 @@
                 <div class="row justify-content-center">
                     <div class="col col-sm-6 form-group">
                         <label for="email">Email address</label>
-                        <input type="email" class="form-control" th:field="*{email}" id="email"
+                        <input type="text" class="form-control" th:field="*{email}" id="email"
                                placeholder="name@example.com"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
 
@@ -56,6 +61,51 @@
                     </div>
                 </div>
             </form>
+
+            <!-- existing student registers for this course -->
+            <form action="#" th:action="@{/addexistingstudent/{cid}(cid=${course.id})}" th:object="${existingStudent}" method="post">
+                <div class="text-center feedback">
+                    <h2>Register here if you are already a MC student</h2>
+                </div>
+                <div class="row justify-content-center">
+
+                    <input type="hidden" th:field="*{id}"/>
+
+                    <p class="alert alert-danger" th:if="${couldNotFindStudent}" th:text="'Could not find an existing student with that info'"></p>
+
+                    <div class="col col-sm-6 form-group">
+                        <label for="firstName">First name</label>
+                        <input type="text" class="form-control" th:field="*{nameFirst}" id="firstName" autofocus="autofocus" placeholder="Given name"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('nameFirst')}" th:errors="*{nameFirst}"></p>
+                    </div>
+                    <div class="col col-sm-6 form-group">
+                        <label for="lastName">Last name</label>
+                        <input type="text" class="form-control" th:field="*{nameLast}" id="lastName" placeholder="Family name"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('nameLast')}" th:errors="*{nameLast}"></p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col col-sm-6 form-group">
+                        <label for="email">Email address</label>
+                        <input type="text" class="form-control" th:field="*{email}" id="email" placeholder="name@example.com"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+                    </div>
+                    <div class="col col-sm-6 form-group">
+                        <label for="phone">Emergency Contact Number</label>
+                        <input type="text" class="form-control" th:field="*{contactNum}" id="phone" placeholder="1234567890"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('contactNum')}" th:errors="*{contactNum}"></p>
+
+                    </div>
+                </div>
+                <div class="row justify-content-left">
+                    <div class="col col-sm-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>

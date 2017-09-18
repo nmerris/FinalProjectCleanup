@@ -88,7 +88,7 @@ public class TeacherController {
 
 	//Display course evealuations for a single course for a single teacher
 	// TODO WAITING FOR JESSE, template is ready to go, and this route should be done
-	@RequestMapping("/dispevaluation/{id}")
+	@GetMapping("/dispevaluation/{id}")
 	public String dipCourseEvaluation(@PathVariable("id") long courseId, Model model, Principal principal) {
 		model.addAttribute("evaluations", evaluationRepo.findByPersonIsAndCourseIs(personRepo.findByUsername(principal.getName()),
                 courseRepo.findOne(courseId)));
@@ -104,9 +104,10 @@ public class TeacherController {
     // right now we just create a new student every time... this is wrong, needs to be fixed
     // actually it might be easier to just have students register the same way teachers and admins do...
     // then when they are signing up for a course, they would just put in the Mnumber... this would make more sense
-	@RequestMapping("/addstudent/{id}")
+	@GetMapping("/addstudent/{id}")
 	public String registerStudent(@PathVariable("id") long id, Model model) {
 		model.addAttribute("newstudent", new Person());
+		model.addAttribute("existingStudent", new Person());
 		Course course = courseRepo.findOne(id);
 		model.addAttribute("course", course);
 		return "addstudenttocourse";
@@ -120,20 +121,70 @@ public class TeacherController {
 									 @Valid @ModelAttribute("newstudent") Person student,
 									 BindingResult bindingResult, Model model) {
 
+		Course course = courseRepo.findOne(courseId);
+		model.addAttribute("course", course);
+		model.addAttribute("existingStudent", new Person());
+
 		if(bindingResult.hasErrors()) {
-			Course course = courseRepo.findOne(courseId);
-			model.addAttribute("course", course);
+			return "addstudenttocourse";
+		}
+
+		// check to see if the student is already registered for this course, they are not allowed to register twice
+		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
+			// they have already registered for this course, display an error msg
+			model.addAttribute("alreadyRegistered", true);
 			return "addstudenttocourse";
 		}
 
 
 		RegistrationTimestamp timestamp = new RegistrationTimestamp();
 		Person p=userService.saveStudent(student);
-		Course course = courseRepo.findOne(courseId);
 		timestamp.setCourse(course);
 		timestamp.setPerson(p);
 		timestamp.setTimestamp(new Date());
 		registrationTimestampRepo.save(timestamp);
+		course.addPerson(p);
+		courseRepo.save(course);
+
+		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
+		// it would be nice to display their new mnumber
+		return "redirect:/addstudent/" + courseId;
+	}
+
+
+	@PostMapping("/addexistingstudent/{id}")
+	public String addExistingStudentToCourse(@PathVariable("id") long courseId,
+											 @Valid @ModelAttribute("existingStudent") Person student,
+											 BindingResult bindingResult, Model model) {
+
+		Course course = courseRepo.findOne(courseId);
+		model.addAttribute("course", course);
+		model.addAttribute("newstudent", new Person());
+
+		if(bindingResult.hasErrors()) {
+			return "addstudenttocourse";
+		}
+
+		// check to make sure the info the existing student entered matches a student already in the db
+		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
+			// an existing person could not be found with that info, so display an error msg
+			model.addAttribute("couldNotFindStudent", true);
+
+			return "addstudenttocourse";
+		}
+
+		Person p = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+			student.getNameLast(), student.getContactNum(), student.getEmail());
+
+		// save the timestamp for when this existing person registered for this course
+		RegistrationTimestamp timestamp = new RegistrationTimestamp();
+		timestamp.setCourse(course);
+		timestamp.setPerson(p);
+		timestamp.setTimestamp(new Date());
+		registrationTimestampRepo.save(timestamp);
+
 		course.addPerson(p);
 		courseRepo.save(course);
 

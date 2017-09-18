@@ -37,4 +37,10 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     // count the number of students registered in a given course
     long countByCoursesIsAndAuthoritiesIs(Course course, Authority authority);
 
+    // find an existing person by names, contact num, and email
+    long countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(String firstName, String lastName, String contactNum, String email);
+
+    // this should only ever return one person
+    Person findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(String firstName, String lastName, String contactNum, String email);
+
 }

@@ -11,7 +11,9 @@
             <div class="panel-body">
                 <form action="#" th:action="@{/addduplicatecourse}" th:object="${course}" method="post">
                     <div class="text-center feedback">
-                        <h2>Please select and enter course info.</h2>
+                        <h2>Choose an existing course to copy</h2>
+                        <h4>The dates, and teacher may be different</h4>
+                        <h4>The Course Registration Number will be the same</h4>
                     </div>
                     <input type="hidden" th:field="*{id}" />
                     <div class="form-group">
@@ -19,7 +21,7 @@
                         <select id="selectCourse" class="form-control" name="selectCourse">
                             <option th:each="item : ${courses}"
                                     th:value="${item.id}"
-                                    th:text="${item.name}"></option>
+                                    th:text="${item.name} + ' - CRN: ' + ${item.courseRegistrationNum}"></option>
                         </select>
                        <input type="hidden" th:field="*{courseRegistrationNum}"/>
                         <input type="hidden" th:field="*{name}"/>

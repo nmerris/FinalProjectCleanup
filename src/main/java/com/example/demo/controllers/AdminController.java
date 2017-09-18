@@ -62,6 +62,10 @@ public class AdminController
 
 		return "courseconfirm";
 	}
+
+
+	// a course can have the same CRN number, but on different dates
+	// this page allows the admin to duplicate a course, it's like adding a new one, but the CRN number stays the same
 	@GetMapping("/addduplicatecourse")
 	public String addDuplicateCourse(Model model)
 	{
@@ -74,6 +78,8 @@ public class AdminController
 //		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
 //		System.out.println("============================================================ courseSet.size: " + courseSet.size());
 
+		// TODO it shows multiple listings of same course name, not what we want here.. doesn't matter for project specs
+		// this is a "nice to do" thing, don't spend time on this until we finish all requirements
 		model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 		model.addAttribute("course",cour);
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
@@ -81,9 +87,13 @@ public class AdminController
 	}
 
 	@PostMapping("/addduplicatecourse")
-	public String submitDuplicateCourse(@Valid @ModelAttribute("course")Course course,BindingResult bindingResult,@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,Model model) {
+	public String submitDuplicateCourse(@Valid @ModelAttribute("course")Course course,BindingResult bindingResult,
+										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
+										Model model) {
 		if(bindingResult.hasErrors()){
-			model.addAttribute("course",courseRepo.save(course));
+
+			model.addAttribute("course", course);
+//			model.addAttribute("course",courseRepo.save(course));
 			model.addAttribute("teacher", personRepo.findOne(teacherId));
 			return"addduplicatecourse";
 		}
