@@ -55,12 +55,6 @@ public class AdminController
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
 		}
-		if(course.getId()>0) {
-			// when admin trying to update a course information, so display an error msg
-			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
-			model.addAttribute("crnUpdate", true);
-			return "addcourse";
-		}
 
 		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
 		    // admin enterd a CRN that already exists, so display an error msg
@@ -72,10 +66,11 @@ public class AdminController
 
 		// find out what Person was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
-		course.addPerson(personRepo.findOne(teacherId));
-		course.setDeleted(false);
-		courseRepo.save(course);
-		model.addAttribute("teacher", personRepo.findOne(teacherId));
+
+			course.addPerson(personRepo.findOne(teacherId));
+			course.setDeleted(false);
+			courseRepo.save(course);
+			model.addAttribute("teacher", personRepo.findOne(teacherId));
 
 		return "courseconfirm";
 	}

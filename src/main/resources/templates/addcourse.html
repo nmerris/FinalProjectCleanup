@@ -17,10 +17,10 @@
                         <h4>If you want to copy an EXISTING course, click Copy Existing Course in the navbar</h4>
                         <h4>This form is ONLY for adding a brand NEW course with a new CRN</h4>
                     </div>
-                    <div  class="alert alert-warning" th:if="${crnUpdate}" th:text="'Caution! Make sure Changing CRN and Course Name will affect Student during fill the Course Evaluation!'"></div>
-
+                    <div class="alert alert-warning">
+                        <strong>Warning! </strong>Make sure Changing CRN and Course Name will affect Student during fill the Course Evaluation!
+                    </div>
                     <input type="hidden" th:field="*{id}" />
-
                     <div class="form-group">
                         <label class="section-heading" for="courseRegistrationN">CRN</label>
                         <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
