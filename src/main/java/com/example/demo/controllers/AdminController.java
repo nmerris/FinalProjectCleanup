@@ -247,25 +247,30 @@ public class AdminController
 			return "loginforequestform";
 		}
 
-		// is admin entered an mnum, check to make sure it's valid
+		// if admin entered an mnum, check to make sure it's valid
 		if(!enteredMnum.isEmpty()) {
-//			personRepo.find
+			if(personRepo.countByMNumberIs(enteredMnum) == 0) {
+				// there was no student with that mnumber, display error msg
+				model.addAttribute("badMnum", true);
+				return "loginforequestform";
+			}
+			else {
+				// found a match for that mnum, so save to db
+				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
+				courseInfoRequestLogRepo.save(log);
+				model.addAttribute("message", "New course info request log saved");
+				model.addAttribute("extraMesage", String.format("Course: %s - Student: %s",
+						log.getCourse().getName(), personRepo.findByMNumberIs(enteredMnum).getFullName()));
+						log.getCourse().getName(), personRepo.findByMNumberIs(enteredMnum).getFullName()));
+				return "loginforequestconfirmation";
+			}
 		}
 
-		// check to see if the contact num just entered matches any student in the db
-//		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
-//		if(matchedStudent != null) {
-//			// found at least one match
-//			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
-//			model.addAttribute("message", s);
-//			log.setPerson(matchedStudent);
-//			courseInfoRequestLogRepo.save(log);
-//		}
-//		else {
-//			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
-//			courseInfoRequestLogRepo.save(log);
-//		}
-
+		// at this point, we are saving a new request log, but not for an existing student
+		model.addAttribute("message", "New course info request log saved");
+		model.addAttribute("extraMesage", String.format("Course: %s",
+				log.getCourse().getName()));
+		courseInfoRequestLogRepo.save(log);
 		return "loginforequestconfirmation";
 	}
 
