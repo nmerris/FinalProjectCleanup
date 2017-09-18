@@ -48,7 +48,9 @@ public class AdminController
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
 
+
 		if(result.hasErrors()) {
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
 		}
 
@@ -58,7 +60,6 @@ public class AdminController
 		course.setDeleted(false);
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
-		System.out.println("teacher after add course:"+personRepo.findOne(teacherId));
 
 		return "courseconfirm";
 	}
@@ -91,10 +92,8 @@ public class AdminController
 										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
 										Model model) {
 		if(bindingResult.hasErrors()){
-
-			model.addAttribute("course", course);
-//			model.addAttribute("course",courseRepo.save(course));
-			model.addAttribute("teacher", personRepo.findOne(teacherId));
+			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
 		}
 
@@ -152,8 +151,6 @@ public class AdminController
 		Person student = personRepo.findOne(studentId);
 		model.addAttribute("studentcourse", student);
 		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(student, false));
-
-
 		return "viewcoursetakenbystudent";
 	}
 
@@ -221,11 +218,7 @@ public class AdminController
 //		model.addAttribute("course", courseRepo.findOne(courseId));
 		CourseInfoRequestLog logObject = new CourseInfoRequestLog();
 		logObject.setCourse(courseRepo.findOne(courseId));
-
-
 		model.addAttribute("courseInfoLog", logObject);
-
-
 		return "loginforequestform";
 	}
 
@@ -238,6 +231,7 @@ public class AdminController
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
+
 			return "loginforequestform";
 		}
 
@@ -247,24 +241,30 @@ public class AdminController
 			return "loginforequestform";
 		}
 
-		// is admin entered an mnum, check to make sure it's valid
+		// if admin entered an mnum, check to make sure it's valid
 		if(!enteredMnum.isEmpty()) {
-//			personRepo.find
+			if(personRepo.countByMNumberIs(enteredMnum) == 0) {
+				// there was no student with that mnumber, display error msg
+				model.addAttribute("badMnum", true);
+				return "loginforequestform";
+			}
+			else {
+				// found a match for that mnum, so save to db
+				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
+				courseInfoRequestLogRepo.save(log);
+				model.addAttribute("message", "New course info request log saved");
+				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
+						courseRepo.findOne(log.getCourse().getId()).getName(),
+						personRepo.findByMNumberIs(enteredMnum).getFullName()));
+				return "loginforequestconfirmation";
+			}
 		}
 
-		// check to see if the contact num just entered matches any student in the db
-//		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
-//		if(matchedStudent != null) {
-//			// found at least one match
-//			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
-//			model.addAttribute("message", s);
-//			log.setPerson(matchedStudent);
-//			courseInfoRequestLogRepo.save(log);
-//		}
-//		else {
-//			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
-//			courseInfoRequestLogRepo.save(log);
-//		}
+		// at this point, we are saving a new request log, but not for an existing student
+		courseInfoRequestLogRepo.save(log);
+		model.addAttribute("message", "New course info request log saved");
+		model.addAttribute("extraMessage", String.format("Course: %s",
+				courseRepo.findOne(log.getCourse().getId()).getName()));
 
 		return "loginforequestconfirmation";
 	}
