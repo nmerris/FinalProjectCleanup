@@ -82,6 +82,7 @@ public class AdminController
 		// TODO it shows multiple listings of same course name, not what we want here.. doesn't matter for project specs
 		// this is a "nice to do" thing, don't spend time on this until we finish all requirements
 		model.addAttribute("courses", courseRepo.findByDeletedIs(false));
+//		model.addAttribute("courses", courseRepo.findDistinctFirstByCourseRegistrationNumAndDeletedIs(crns,false));
 		model.addAttribute("course",cour);
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addduplicatecourse";
