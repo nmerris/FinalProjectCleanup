@@ -7,44 +7,46 @@
 
 <th:block th:replace="base::FinalNavTeacher"></th:block>
 <div class="container">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-12">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
-                <h3 th:text="'Student: ' + ${studentName}"></h3>
+                <!--<h3 th:text="'Student: ' + ${studentName}"></h3>-->
                 <h3 th:text="'Course: ' + ${courseName}"></h3>
 
                 <form action="#" th:action="@{~/takeattendance/{id}(id=${courseId})}" th:object="${attendanceWrapper}" method="post">
                     <div class="table-responsive">
+
+                        <caption><h3><b>Take Attendance</b></h3></caption>
                         <table class="table table-hover">
-                            <caption><h3><b> Take Attendance:</b></h3></caption>
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Status</th>
+                                    <th>Student</th>
+                                    <th:block th:each="adate : ${allDates}">
+                                        <th th:text="${#dates.format(adate, 'MMM-dd-yyyy')}"></th>
+                                    </th:block>
                                 </tr>
                             </thead>
 
                             <tbody>
-
-        <th:block th:each="item, iter : *{attendanceList}">
-            <tr>
-                <td th:text="${#dates.format(item.date, 'MMM-dd-yyyy')}"></td>
-                <td>
-                    <!-- checked is not working, not sure why -->
-                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
-                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
-                    <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
-                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item.date}">
-                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].id}" th:value="${item.id}">
-                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${item.course.id}">
-                    <input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${item.person.id}">
-                </td>
-            </tr>
-        </th:block>
-
+                                <th:block th:each="astudent, outter : ${students}">
+                                    <tr>
+                                        <td th:text="${astudent.getFullName()}"></td>
+                                        <th:block th:each="item, inner : ${allDates}">
+                                            <td>
+                                                <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Present">P
+                                                <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Late">L
+                                                <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Absent">A
+                                                <input type="hidden" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].date}" th:value="${item}">
+                                                <input type="hidden" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].course.id}" th:value="${courseId}">
+                                                <input type="hidden" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].person.id}" th:value="${astudent.id}">
+                                            </td>
+                                        </th:block>
+                                    </tr>
+                                </th:block>
                             </tbody>
                         </table>
+
                     <br/>
                     <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
                     </div>
@@ -57,3 +59,65 @@
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+
+<!--<head th:replace="base:: FinalHead"></head>-->
+
+<!--<body>-->
+
+<!--<th:block th:replace="base::FinalNavTeacher"></th:block>-->
+<!--<div class="container">-->
+    <!--<div class="col-lg-6 col-lg-offset-3">-->
+        <!--<div class="panel panel-default card card-3">-->
+            <!--<div class="panel-body">-->
+
+                <!--<h3 th:text="'Student: ' + ${studentName}"></h3>-->
+                <!--<h3 th:text="'Course: ' + ${courseName}"></h3>-->
+
+                <!--<form action="#" th:action="@{~/takeattendance/{id}(id=${courseId})}" th:object="${attendanceWrapper}" method="post">-->
+                    <!--<div class="table-responsive">-->
+                        <!--<table class="table table-hover">-->
+                            <!--<caption><h3><b> Take Attendance:</b></h3></caption>-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th>Date</th>-->
+                                <!--<th>Status</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+
+                            <!--<tbody>-->
+
+                            <!--<th:block th:each="item, iter : *{attendanceList}">-->
+                                <!--<tr>-->
+                                    <!--<td th:text="${#dates.format(item.date, 'MMM-dd-yyyy')}"></td>-->
+                                    <!--<td>-->
+                                        <!--&lt;!&ndash; checked is not working, not sure why &ndash;&gt;-->
+                                        <!--<input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">P-->
+                                        <!--<input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">L-->
+                                        <!--<input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">A-->
+                                        <!--<input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item.date}">-->
+                                        <!--<input type="hidden" th:field="*{attendanceList[__${iter.index}__].id}" th:value="${item.id}">-->
+                                        <!--<input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${item.course.id}">-->
+                                        <!--<input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${item.person.id}">-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</th:block>-->
+
+                            <!--</tbody>-->
+                        <!--</table>-->
+                        <!--<br/>-->
+                        <!--<input class="btn btn-primary bold-input" type="submit" value="Submit"/>-->
+                    <!--</div>-->
+                <!--</form>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--<th:block th:replace="base::FinalJS"></th:block>-->
+<!--</body>-->
+<!--</html>-->

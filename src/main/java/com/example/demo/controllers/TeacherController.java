@@ -86,15 +86,24 @@ public class TeacherController {
 //	}
 
 
-	//Display course evealuation
-	// TODO WAITING FOR JESSE
+	//Display course evealuations for a single course for a single teacher
+	// TODO WAITING FOR JESSE, template is ready to go, and this route should be done
 	@RequestMapping("/dispevaluation/{id}")
-	public String dipCourseEvaluation(@PathVariable("id") long id, Model model) {
-		model.addAttribute("dispEval", evaluationRepo.findAll());
-		return "dispevaluation";
+	public String dipCourseEvaluation(@PathVariable("id") long courseId, Model model, Principal principal) {
+		model.addAttribute("evaluations", evaluationRepo.findByPersonIsAndCourseIs(personRepo.findByUsername(principal.getName()),
+                courseRepo.findOne(courseId)));
+
+		model.addAttribute("teacherName", personRepo.findByUsername(principal.getName()).getFullName());
+
+		// we are REUSING this view.. both admin and teachers use it, so navbar needs to be correct
+		return "viewteacherevaluations";
 	}
 
 
+	// TODO needs work: same student should be able to register for multiple courses using the same Mnumber
+    // right now we just create a new student every time... this is wrong, needs to be fixed
+    // actually it might be easier to just have students register the same way teachers and admins do...
+    // then when they are signing up for a course, they would just put in the Mnumber... this would make more sense
 	@RequestMapping("/addstudent/{id}")
 	public String registerStudent(@PathVariable("id") long id, Model model) {
 		model.addAttribute("newstudent", new Person());
@@ -137,47 +146,115 @@ public class TeacherController {
 	// UNDER CONSTRUCTION BUT IS SAVING A LIST OF ATTENDANCE OBJECTS TO DB!
 	// NOTE: for now, we are taking attendance for one student at a time, not ideal, but works..
 	// will update to do all students in course on one page if there is enough time
-	@GetMapping("/takeattendance/{courseid}")
-	public String takeAttendance(@PathVariable("courseid") long courseId,
-								 @RequestParam("studentid") long studentid, Model model) {
+//	@GetMapping("/takeattendance/{courseid}")
+//	public String takeAttendance(@PathVariable("courseid") long courseId,
+//								 @RequestParam("studentid") long studentid, Model model) {
+//
+//		// get the course we are taking attendance for
+//		Course course = courseRepo.findOne(courseId);
+//		// get the student we are taking attendance for
+//		Person student = personRepo.findOne(studentid);
+//		System.out.println("=================== fist name of student who we are taking attendance for (person.getNameFirst): " + student.getNameFirst());
+//		System.out.println("=================== id of student who we are taking attendance for (person.getId): " + student.getId());
+//
+//		// get the difference in days between course start and end dates
+//		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+//		System.out.printf("======================= Difference between course start and end dates: %d day(s)", diffInDays);
+//
+//		// need this to be able to process a list of objects in a single form
+//		AttendanceWrapper wrapper = new AttendanceWrapper();
+//		// get the course start date
+//		Date startDate = course.getDateStart();
+//		// create an empty list of attendance
+//		List<Attendance> attendanceArrayList = new ArrayList<>();
+//
+//		// now create diffInDays number of Attendance objects to send to view
+//		for (int i = 0; i < diffInDays; i++) {
+//			Attendance attendance = new Attendance();
+//			// set the person
+//			attendance.setPerson(student);
+//			// set the course
+//			attendance.setCourse(course);
+//			// set the date, increment by one day for each new Attendance object
+//			attendance.setDate(Utilities.addDays(startDate, i));
+//			// pre check it to 'Present'
+//			attendance.setAstatus("Present");
+//			// add it to the list
+//			attendanceArrayList.add(attendance);
+//
+//		}
+//		wrapper.setAttendanceList(attendanceArrayList);
+//
+//		model.addAttribute("attendanceWrapper", wrapper);
+//		model.addAttribute("studentName", student.getNameFirst() + ' ' + student.getNameLast());
+//		model.addAttribute("courseName", course.getName());
+//		model.addAttribute("courseId", courseId);
+//
+//		return "takeattendance";
+//	}
 
-		// get the course we are taking attendance for
+	// each time we create a brand new set of Attendance objects to send to the form
+	// each student is a row, and each column is a single date
+	// all Attendances default to Presents, so teacher only has to change for late or absent
+	// the Attendance List sent to the form MUST be ordered (it's an ArrayList)
+	// a nested thymeleaf loop is used to construct the table
+	// the ArrayList of Attendance objects are in a wrapper class, because I could not get the form to assign
+	// values directly to the Attendance objects any other way!
+	// each time the teacher comes back, they will just have to redo the entire attendance for the entire class,
+	// values are not preserved, but duplicates are never created, not ideal, but good enough for now
+	@GetMapping("/takeattendance/{courseid}")
+	public String takeAttendance(@PathVariable("courseid") long courseId, Model model) {
+
 		Course course = courseRepo.findOne(courseId);
-		// get the student we are taking attendance for
-		Person student = personRepo.findOne(studentid);
-		System.out.println("=================== fist name of student who we are taking attendance for (person.getNameFirst): " + student.getNameFirst());
-		System.out.println("=================== id of student who we are taking attendance for (person.getId): " + student.getId());
+		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+		Date startDate = course.getDateStart();
+		List<Date> dates = new ArrayList<>();
+
+		for (int i = 0; i < diffInDays; i++) {
+			dates.add(Utilities.addDays(startDate, i));
+		}
+
 
 		// get the difference in days between course start and end dates
-		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-		System.out.printf("======================= Difference between course start and end dates: %d day(s)", diffInDays);
+		System.out.printf("======================= Difference between course start and end dates: %d day(s)\n", diffInDays);
+		System.out.println("======================= dates.size: " + dates.size());
 
 		// need this to be able to process a list of objects in a single form
 		AttendanceWrapper wrapper = new AttendanceWrapper();
-		// get the course start date
-		Date startDate = course.getDateStart();
-		// create an empty list of attendance
 		List<Attendance> attendanceArrayList = new ArrayList<>();
 
-		// now create diffInDays number of Attendance objects to send to view
-		for (int i = 0; i < diffInDays; i++) {
-			Attendance attendance = new Attendance();
-			// set the person
-			attendance.setPerson(student);
-			// set the course
-			attendance.setCourse(course);
-			// set the date, increment by one day for each new Attendance object
-			attendance.setDate(Utilities.addDays(startDate, i));
-			// add it to the list
-			attendanceArrayList.add(attendance);
 
+		// attendanceArrayList(0) through (diffInDays - 1) will be for first student
+		// attendanceArrayList(diffInDays) through (2 * diffInDays - 1) will be for second student, etc
+		// this will only work with ordered collections
+		for (Person student : students) {
+			for (int i = 0; i < diffInDays; i++) {
+
+				Attendance attendance = new Attendance();
+				// set the person
+				attendance.setPerson(student);
+				// set the course
+				attendance.setCourse(course);
+				// set the date, increment by one day for each new Attendance object
+				attendance.setDate(Utilities.addDays(startDate, i));
+				// pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
+				attendance.setAstatus("Present");
+				// add it to the list
+				attendanceArrayList.add(attendance);
+			}
 		}
+
+
 		wrapper.setAttendanceList(attendanceArrayList);
 
 		model.addAttribute("attendanceWrapper", wrapper);
-		model.addAttribute("studentName", student.getNameFirst() + ' ' + student.getNameLast());
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
+		model.addAttribute("numStudents", students.size());
+		model.addAttribute("students", students);
+		model.addAttribute("allDates", dates);
+		model.addAttribute("numDates", diffInDays);
 
 		return "takeattendance";
 	}
@@ -191,20 +268,34 @@ public class TeacherController {
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
 
+
+		Course course = courseRepo.findOne(courseId);
+		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+		Date startDate = course.getDateStart();
+		List<Date> dates = new ArrayList<>();
+
+		for (int i = 0; i < diffInDays; i++) {
+			dates.add(Utilities.addDays(startDate, i));
+		}
+
+
+		Set<Attendance> toDeleteList = new HashSet<>();
+		for (Person student : students) {
+			for (Date date : dates) {
+				// there can only be one Attendance per student, course, and date
+				// we delete all the previous records before saving a new set, so we don't get duplicates
+				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, date));
+			}
+		}
+		// wipe out all the existing records for each student for each date for this course
+		attendanceRepo.delete(toDeleteList);
+
 		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
-		return "redirect:/viewregisteredstudent/" + courseId;
+		return "redirect:/mycoursesdetail";
 	}
-
-
-	// there is no requirement to notify anyone when a course is deleted so I don't think we need this
-	// we can do something here after we get the requirements done
-//	@RequestMapping("/endcourse/{courseid}")
-//	public String endClass() {
-//		System.out.println("Send email to admin");
-//		return "endcourse";
-//	}
 
 
 	// shows a drop down list of admins, teacher selects one to send an attendance email to
