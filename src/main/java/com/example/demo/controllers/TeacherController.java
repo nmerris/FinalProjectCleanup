@@ -85,15 +85,24 @@ public class TeacherController {
 //	}
 
 
-	//Display course evealuation
-	// TODO WAITING FOR JESSE
+	//Display course evealuations for a single course for a single teacher
+	// TODO WAITING FOR JESSE, template is ready to go, and this route should be done
 	@RequestMapping("/dispevaluation/{id}")
-	public String dipCourseEvaluation(@PathVariable("id") long id, Model model) {
-		model.addAttribute("dispEval", evaluationRepo.findAll());
-		return "dispevaluation";
+	public String dipCourseEvaluation(@PathVariable("id") long courseId, Model model, Principal principal) {
+		model.addAttribute("evaluations", evaluationRepo.findByPersonIsAndCourseIs(personRepo.findByUsername(principal.getName()),
+                courseRepo.findOne(courseId)));
+
+		model.addAttribute("teacherName", personRepo.findByUsername(principal.getName()).getFullName());
+
+		// we are REUSING this view.. both admin and teachers use it, so navbar needs to be correct
+		return "viewteacherevaluations";
 	}
 
 
+	// TODO needs work: same student should be able to register for multiple courses using the same Mnumber
+    // right now we just create a new student every time... this is wrong, needs to be fixed
+    // actually it might be easier to just have students register the same way teachers and admins do...
+    // then when they are signing up for a course, they would just put in the Mnumber... this would make more sense
 	@RequestMapping("/addstudent/{id}")
 	public String registerStudent(@PathVariable("id") long id, Model model) {
 		model.addAttribute("newstudent", new Person());
