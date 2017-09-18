@@ -141,7 +141,7 @@ public class MainController
             model.addAttribute("message","Admin Account Successfully Created");
         }
 
-        return "redirect:/login;";
+        return "redirect:/login";
     }
 
 
