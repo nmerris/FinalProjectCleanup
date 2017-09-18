@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+<th:block th:replace="base::FinalNavAdmin"></th:block>
+
+<!-- show a table of students, the admin selects one to view that students courses taken -->
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+                <caption> <h4><b>All Student</b></h4></caption>
+                <table class="table table-striped" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>M-Number</th>
+                        <th>Email Address</th>
+                        <th>Emergency Contact Number</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody align="left">
+                    <tr th:each="item : ${students}">
+                        <td th:text="*{item.nameFirst}"></td>
+                        <td th:text="*{item.nameLast}"></td>
+                        <td th:text="*{item.mNumber}"></td>
+                        <td th:text="*{item.email}"></td>
+                        <td th:text="*{item.contactNum}"></td>
+                         <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}">View Courses</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+
+
+<th:block th:replace="base::FinalNavTeacher"></th:block>
+
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+
+                <caption> <h4><b th:text="'Course list for: ' + ${studentcourse.getFirstName()}"></b></h4></caption>
+                <table class="table table-striped" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>CR Number</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+
+                    </tr>
+                    </thead>
+                    <tbody align="left">
+                    <tr th:each="list: ${courselist}">
+                        <td th:text="*{list.name}"></td>
+                        <td th:text="*{list.courseRegistrationNum}"></td>
+                        <td th:text="*{list.dateStart}"></td>
+                        <td th:text="*{list.dateEnd}"></td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+<th:block th:replace="base::FinalJS"></th:block>
+
+</body>
+
+</html>

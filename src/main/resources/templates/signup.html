@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="password">Password</label>
-                        <input id="password" class="form-control" type="text" th:field="*{password}"/>
+                        <input id="password" class="form-control" type=password th:field="*{password}"/>
                         <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>-->
                         <p class="alert alert-danger" th:if="${passwordWasNull}" th:text="${'Please enter your Password'}"></p>
                     </div>

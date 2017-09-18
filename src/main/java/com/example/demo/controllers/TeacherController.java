@@ -57,6 +57,7 @@ public class TeacherController {
 		return "teachercoursedetail";
 	}
 
+
 	//List of Students for a particular Course
 	// path variable is the course id
 	@RequestMapping("/viewregisteredstudent/{id}")

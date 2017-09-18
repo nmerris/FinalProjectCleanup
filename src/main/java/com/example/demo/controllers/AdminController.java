@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -130,11 +131,20 @@ public class AdminController
 	// this route shows the list of students only
 	@GetMapping("/allstudents")
 	public String allStudents(Model model) {
-
 		// TODO implement this... HIWOT CAN YOU TAKE CARE OF THIS?
 		// TODO need to make another route that will show the courses that the student is registered in, ie what student was clicked from this routes table of students
-
+		model.addAttribute("students", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("STUDENT")));
 		return "allstudents";
+	}
+	//List of courses for a particular Student
+	@RequestMapping("/viewcoursetakenbystudent/{id}")
+	public String listStudentCourses(@PathVariable("id") long studentId,Model model) {
+		Person student = personRepo.findOne(studentId);
+		model.addAttribute("studentcourse", student);
+		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(student, false));
+
+
+		return "viewcoursetakenbystudent";
 	}
 
 
