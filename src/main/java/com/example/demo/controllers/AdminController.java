@@ -44,13 +44,24 @@ public class AdminController
 		return "addcourse";
 	}
 
+
+	// fires when adding new course OR updating existing course
 	@PostMapping("/addcourse")
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
 
+
 		if(result.hasErrors()) {
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
 		}
+
+		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
+		    // admin enterd a CRN that already exists, so display an error msg
+            model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+            model.addAttribute("crnExists", true);
+            return "addcourse";
+        }
 
 		// find out what Person was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
@@ -58,7 +69,6 @@ public class AdminController
 		course.setDeleted(false);
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
-		System.out.println("teacher after add course:"+personRepo.findOne(teacherId));
 
 		return "courseconfirm";
 	}
@@ -91,10 +101,8 @@ public class AdminController
 										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
 										Model model) {
 		if(bindingResult.hasErrors()){
-
-			model.addAttribute("course", course);
-//			model.addAttribute("course",courseRepo.save(course));
-			model.addAttribute("teacher", personRepo.findOne(teacherId));
+			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
 		}
 
@@ -152,8 +160,6 @@ public class AdminController
 		Person student = personRepo.findOne(studentId);
 		model.addAttribute("studentcourse", student);
 		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(student, false));
-
-
 		return "viewcoursetakenbystudent";
 	}
 
@@ -165,6 +171,52 @@ public class AdminController
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "allteachers";
 	}
+
+
+	// view all the evaluations for a single course
+	@GetMapping("/viewcourseevaluations/{id}")
+	public String viewEvalsForOneCourse(@PathVariable("id") long courseId, Model model) {
+
+		model.addAttribute("courseName", courseRepo.findOne(courseId).getName());
+
+
+
+
+		// create some dummy data for testing ================================================================
+		Set<Evaluation> testSet = new HashSet<>();
+
+		for(int i = 0; i < 30; i++) {
+			Evaluation eval = new Evaluation();
+			Course course = new Course();
+			course.setName("Astro Physics 200");
+			course.setDeleted(false);
+			course.setCourseRegistrationNum(987934534);
+			course.setDateStart(new Date());
+			course.setDateEnd(new Date());
+
+			eval.setCourse(course);
+			eval.setCourseContentRating("Above Average");
+			eval.setInstructionQualityRating("Excellent");
+			eval.setTrainingExperienceRating("Average");
+			eval.setTextBookRating("Fair");
+			eval.setClassroomEnvironment("Poor");
+			eval.setEquipmentRating("Poor");
+			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+			eval.setWhatOtherClasses("Internet/Website");
+			testSet.add(eval);
+		}
+		model.addAttribute("evaluations", testSet);
+		// end dummy data for testing ================================================================
+
+
+
+
+		return "viewcourseevaluations";
+	}
+
 
 	// view all the evaluations for a single teacher in one gigantic table
 	@GetMapping("/viewteacherevaluations/{id}")
@@ -221,22 +273,20 @@ public class AdminController
 //		model.addAttribute("course", courseRepo.findOne(courseId));
 		CourseInfoRequestLog logObject = new CourseInfoRequestLog();
 		logObject.setCourse(courseRepo.findOne(courseId));
-
-
 		model.addAttribute("courseInfoLog", logObject);
-
-
 		return "loginforequestform";
 	}
 
 
 	// note: the course id is preserved through the form, so does not need to be set again here
 	@PostMapping("/loginforequest")
-	public String logInfoRequestPost(@Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
+	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
+									 @Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
 									 BindingResult bindingResult, Model model) {
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
+
 			return "loginforequestform";
 		}
 
@@ -246,20 +296,30 @@ public class AdminController
 			return "loginforequestform";
 		}
 
-		// TODO: waiting to here from Fi about uniqueness of contact number if it's a student, this is not quite done yet
-		// check to see if the contact num just entered matches any student in the db
-		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
-		if(matchedStudent != null) {
-			// found at least one match
-			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
-			model.addAttribute("message", s);
-			log.setPerson(matchedStudent);
-			courseInfoRequestLogRepo.save(log);
+		// if admin entered an mnum, check to make sure it's valid
+		if(!enteredMnum.isEmpty()) {
+			if(personRepo.countByMNumberIs(enteredMnum) == 0) {
+				// there was no student with that mnumber, display error msg
+				model.addAttribute("badMnum", true);
+				return "loginforequestform";
+			}
+			else {
+				// found a match for that mnum, so save to db
+				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
+				courseInfoRequestLogRepo.save(log);
+				model.addAttribute("message", "New course info request log saved");
+				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
+						courseRepo.findOne(log.getCourse().getId()).getName(),
+						personRepo.findByMNumberIs(enteredMnum).getFullName()));
+				return "loginforequestconfirmation";
+			}
 		}
-		else {
-			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
-			courseInfoRequestLogRepo.save(log);
-		}
+
+		// at this point, we are saving a new request log, but not for an existing student
+		courseInfoRequestLogRepo.save(log);
+		model.addAttribute("message", "New course info request log saved");
+		model.addAttribute("extraMessage", String.format("Course: %s",
+				courseRepo.findOne(log.getCourse().getId()).getName()));
 
 		return "loginforequestconfirmation";
 	}

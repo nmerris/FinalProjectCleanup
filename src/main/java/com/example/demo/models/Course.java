@@ -73,6 +73,10 @@ public class Course {
         return deleted ? "YES" : "NO";
     }
 
+    public long getNumStudents(){
+        return persons.size()-1;
+    }
+
     // normal getter/setter methods ==================================================================================
 
 
