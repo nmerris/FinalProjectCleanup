@@ -48,7 +48,9 @@ public class AdminController
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
 
+
 		if(result.hasErrors()) {
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
 		}
 
@@ -58,7 +60,6 @@ public class AdminController
 		course.setDeleted(false);
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
-		System.out.println("teacher after add course:"+personRepo.findOne(teacherId));
 
 		return "courseconfirm";
 	}
@@ -91,10 +92,8 @@ public class AdminController
 										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
 										Model model) {
 		if(bindingResult.hasErrors()){
-
-			model.addAttribute("course", course);
-//			model.addAttribute("course",courseRepo.save(course));
-			model.addAttribute("teacher", personRepo.findOne(teacherId));
+			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
 		}
 
@@ -152,8 +151,6 @@ public class AdminController
 		Person student = personRepo.findOne(studentId);
 		model.addAttribute("studentcourse", student);
 		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(student, false));
-
-
 		return "viewcoursetakenbystudent";
 	}
 
@@ -221,11 +218,7 @@ public class AdminController
 //		model.addAttribute("course", courseRepo.findOne(courseId));
 		CourseInfoRequestLog logObject = new CourseInfoRequestLog();
 		logObject.setCourse(courseRepo.findOne(courseId));
-
-
 		model.addAttribute("courseInfoLog", logObject);
-
-
 		return "loginforequestform";
 	}
 
@@ -237,6 +230,7 @@ public class AdminController
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
+
 			return "loginforequestform";
 		}
 

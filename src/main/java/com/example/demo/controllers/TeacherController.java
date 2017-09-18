@@ -62,7 +62,6 @@ public class TeacherController {
 	// path variable is the course id
 	@RequestMapping("/viewregisteredstudent/{id}")
 	public String listRegisteredStud(@PathVariable("id") long id, Model model, Principal principal) {
-
 		model.addAttribute("liststudent",
 				personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(courseRepo.findOne(id),
 						authorityRepo.findByRole("STUDENT")));
@@ -92,7 +91,6 @@ public class TeacherController {
 	public String dipCourseEvaluation(@PathVariable("id") long courseId, Model model, Principal principal) {
 		model.addAttribute("evaluations", evaluationRepo.findByPersonIsAndCourseIs(personRepo.findByUsername(principal.getName()),
                 courseRepo.findOne(courseId)));
-
 		model.addAttribute("teacherName", personRepo.findByUsername(principal.getName()).getFullName());
 
 		// we are REUSING this view.. both admin and teachers use it, so navbar needs to be correct
