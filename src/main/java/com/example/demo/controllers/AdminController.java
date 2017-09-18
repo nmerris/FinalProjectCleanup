@@ -180,43 +180,45 @@ public class AdminController
 	@GetMapping("/viewcourseevaluations/{id}")
 	public String viewEvalsForOneCourse(@PathVariable("id") long courseId, Model model) {
 
-		model.addAttribute("courseName", courseRepo.findOne(courseId).getName());
+		// dummy testing data is commented out, but you can use it if you want, just make sure you comment
+		// out the line - model.addAttribute("evaluations", evaluationRepo.findByCourseIs(course));
+
+//		// create some dummy data for testing ================================================================
+//		Set<Evaluation> testSet = new HashSet<>();
+//
+//		for(int i = 0; i < 30; i++) {
+//			Evaluation eval = new Evaluation();
+//			Course course = new Course();
+//			course.setName("Astro Physics 200");
+//			course.setDeleted(false);
+//			course.setCourseRegistrationNum(987934534);
+//			course.setDateStart(new Date());
+//			course.setDateEnd(new Date());
+//
+//			eval.setCourse(course);
+//			eval.setCourseContentRating("Above Average");
+//			eval.setInstructionQualityRating("Excellent");
+//			eval.setTrainingExperienceRating("Average");
+//			eval.setTextBookRating("Fair");
+//			eval.setClassroomEnvironment("Poor");
+//			eval.setEquipmentRating("Poor");
+//			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatOtherClasses("Internet/Website");
+//			testSet.add(eval);
+//		}
+//		model.addAttribute("evaluations", testSet);
+//		// end dummy data for testing ================================================================
 
 
 
+		Course course = courseRepo.findOne(courseId);
+		model.addAttribute("courseName", course.getName());
 
-		// create some dummy data for testing ================================================================
-		Set<Evaluation> testSet = new HashSet<>();
-
-		for(int i = 0; i < 30; i++) {
-			Evaluation eval = new Evaluation();
-			Course course = new Course();
-			course.setName("Astro Physics 200");
-			course.setDeleted(false);
-			course.setCourseRegistrationNum(987934534);
-			course.setDateStart(new Date());
-			course.setDateEnd(new Date());
-
-			eval.setCourse(course);
-			eval.setCourseContentRating("Above Average");
-			eval.setInstructionQualityRating("Excellent");
-			eval.setTrainingExperienceRating("Average");
-			eval.setTextBookRating("Fair");
-			eval.setClassroomEnvironment("Poor");
-			eval.setEquipmentRating("Poor");
-			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatOtherClasses("Internet/Website");
-			testSet.add(eval);
-		}
-		model.addAttribute("evaluations", testSet);
-		// end dummy data for testing ================================================================
-
-
-
-
+		// get all the evaluations for a single course
+		model.addAttribute("evaluations", evaluationRepo.findByCourseIs(course));
 		return "viewcourseevaluations";
 	}
 
@@ -225,44 +227,48 @@ public class AdminController
 	@GetMapping("/viewteacherevaluations/{id}")
 	public String viewEvalsForOneTeacher(@PathVariable("id") long teacherId, Model model) {
 
-		model.addAttribute("teacherName", personRepo.findOne(teacherId).getFullName());
+		// dummy testing data is commented out, but you can use it if you want, just make sure you comment
+		// out the line - model.addAttribute("evaluations", evaluationRepo.findByCourseIs(course));
 
-
-
-
-		// create some dummy data for testing ================================================================
-		Set<Evaluation> testSet = new HashSet<>();
-
-		for(int i = 0; i < 30; i++) {
-			Evaluation eval = new Evaluation();
-			Course course = new Course();
-			course.setName("Astro Physics 200");
-			course.setDeleted(false);
-			course.setCourseRegistrationNum(987934534);
-			course.setDateStart(new Date());
-			course.setDateEnd(new Date());
-
-			eval.setCourse(course);
-			eval.setCourseContentRating("Above Average");
-			eval.setInstructionQualityRating("Excellent");
-			eval.setTrainingExperienceRating("Average");
-			eval.setTextBookRating("Fair");
-			eval.setClassroomEnvironment("Poor");
-			eval.setEquipmentRating("Poor");
-			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-			eval.setWhatOtherClasses("Internet/Website");
-			testSet.add(eval);
-		}
-		model.addAttribute("evaluations", testSet);
-		// end dummy data for testing ================================================================
+//		// create some dummy data for testing ================================================================
+//		Set<Evaluation> testSet = new HashSet<>();
+//
+//		for(int i = 0; i < 30; i++) {
+//			Evaluation eval = new Evaluation();
+//			Course course = new Course();
+//			course.setName("Astro Physics 200");
+//			course.setDeleted(false);
+//			course.setCourseRegistrationNum(987934534);
+//			course.setDateStart(new Date());
+//			course.setDateEnd(new Date());
+//
+//			eval.setCourse(course);
+//			eval.setCourseContentRating("Above Average");
+//			eval.setInstructionQualityRating("Excellent");
+//			eval.setTrainingExperienceRating("Average");
+//			eval.setTextBookRating("Fair");
+//			eval.setClassroomEnvironment("Poor");
+//			eval.setEquipmentRating("Poor");
+//			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
+//			eval.setWhatOtherClasses("Internet/Website");
+//			testSet.add(eval);
+//		}
+//		model.addAttribute("evaluations", testSet);
+//		// end dummy data for testing ================================================================
 
 
 
 
 //		model.addAttribute("evaluations", evaluationRepo.findByPersonIsOrderByCourseAsc(personRepo.findOne(teacherId)));
+
+
+		Person teacher = personRepo.findOne(teacherId);
+		model.addAttribute("teacherName", teacher.getFullName());
+		model.addAttribute("evaluations", evaluationRepo.findByPersonIs(teacher));
+
 		return "viewteacherevaluations";
 	}
 

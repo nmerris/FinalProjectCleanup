@@ -148,18 +148,67 @@ public class MainController
     @GetMapping("/evaluation")
     public String eval(Model model)
     {
-    	model.addAttribute("evaluation", new Evaluation());
+
+    	model.addAttribute("course", new Course());
+    	model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
         return "evaluation";
     }
+
     @PostMapping("/evaluation")
-    public String submitEvaluation(@ModelAttribute("evaluation") Evaluation eval)
+    public String getCourseInfoForEval(@ModelAttribute("course") Course course, @RequestParam(value = "selectedTeacher")long teacherId, Model model)
     {
-    	evaluationRepo.save(eval);
-    	return "welcome";
+        Course specificCourse = courseRepo.findFirstByCourseRegistrationNumAndDateStartAndDeleted(course.getCourseRegistrationNum(), course.getDateStart(),false);
+        Person teacher = personRepo.findOne(teacherId);
+        if(specificCourse==null)
+        {
+            System.out.println("No Such Course");
+            // TODO show an error msg
+            return "evaluation";
+        }
+        if(!specificCourse.getPersons().contains(teacher))
+        {
+            System.out.println("That teacher doesn't teach that course");
+            // TODO show an error msg
+            return "evaluation";
+        }
+        model.addAttribute("course", specificCourse);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("evaluation", new Evaluation());
+        return "evaluation2";
+    }
+
+    // not normally called, but may be called if user types in /evaluation2 as a URL, or goes 'back'
+    @GetMapping("/evaluation2")
+    public String showEval(Model model)
+    {
+        return "evaluation2";
+    }
+
+    // this is the big form with all the evaluation data
+    @PostMapping("/evaluation2")
+    public String submitEval(@RequestParam("howDidYouFindOut2")String other,
+                             @RequestParam("courseId")long courseId,
+                             @RequestParam("teacherId")long teacherId,
+                             @ModelAttribute("evaluation")Evaluation eval)
+    {
+        System.out.println("CourseId: " + courseId);
+        System.out.println("TeacherId: " + teacherId);
+
+        // if student chose 'other', set it on the eval object
+        if(!eval.getHowDidYouFindOut().isEmpty() && eval.getHowDidYouFindOut().equalsIgnoreCase("Other"))
+        {
+            eval.setHowDidYouFindOut(other);
+        }
+
+        // set the course and teacher, then save
+        eval.setCourse(courseRepo.findOne(courseId));
+        eval.setPerson(personRepo.findOne(teacherId));
+        evaluationRepo.save(eval);
+
+        return "redirect:/";
     }
 
     //Teacher and admin
-    //Modified by Yun on 09/15, show teacher information in coursedetail page
     @RequestMapping("/coursedetail/{courseid}")
     public String courseDetail(@PathVariable ("courseid") long id, Model model)
     {

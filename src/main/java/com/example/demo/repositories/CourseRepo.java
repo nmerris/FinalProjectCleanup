@@ -5,6 +5,7 @@ import com.example.demo.models.Person;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,6 +15,6 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
     Set<Course> findByDeletedIs(boolean value);
 
     long countByCourseRegistrationNumIs(long crn);
-//    Set<Long> findByCourseRegistrationNumAndDeletedIs(long crn,boolean b);
+    Course findFirstByCourseRegistrationNumAndDateStartAndDeleted(long crn, Date date, boolean value);
 
 }
