@@ -13,6 +13,6 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
 
     Set<Course> findByDeletedIs(boolean value);
 
-
+    long countByCourseRegistrationNumIs(long crn);
 
 }

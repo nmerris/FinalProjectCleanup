@@ -54,6 +54,13 @@ public class AdminController
 			return "addcourse";
 		}
 
+		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
+		    // admin enterd a CRN that already exists, so display an error msg
+            model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+            model.addAttribute("crnExists", true);
+            return "addcourse";
+        }
+
 		// find out what Person was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
 		course.addPerson(personRepo.findOne(teacherId));
