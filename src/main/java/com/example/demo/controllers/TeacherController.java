@@ -183,15 +183,22 @@ public class TeacherController {
 //		return "takeattendance";
 //	}
 
+	// each time we create a brand new set of Attendance objects to send to the form
+	// each student is a row, and each column is a single date
+	// all Attendances default to Presents, so teacher only has to change for late or absent
+	// the Attendance List sent to the form MUST be ordered (it's an ArrayList)
+	// a nested thymeleaf loop is used to construct the table
+	// the ArrayList of Attendance objects are in a wrapper class, because I could not get the form to assign
+	// values directly to the Attendance objects any other way!
+	// each time the teacher comes back, they will just have to redo the entire attendance for the entire class,
+	// values are not preserved, but duplicates are never created, not ideal, but good enough for now
 	@GetMapping("/takeattendance/{courseid}")
 	public String takeAttendance(@PathVariable("courseid") long courseId, Model model) {
 
 		Course course = courseRepo.findOne(courseId);
 		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
 		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-//		int numStudents = students.size();
 		Date startDate = course.getDateStart();
-//		Date[] dates = new Date[diffInDays];
 		List<Date> dates = new ArrayList<>();
 
 		for (int i = 0; i < diffInDays; i++) {
@@ -213,6 +220,7 @@ public class TeacherController {
 		// this will only work with ordered collections
 		for (Person student : students) {
 			for (int i = 0; i < diffInDays; i++) {
+
 				Attendance attendance = new Attendance();
 				// set the person
 				attendance.setPerson(student);
@@ -226,6 +234,7 @@ public class TeacherController {
 				attendanceArrayList.add(attendance);
 			}
 		}
+
 
 		wrapper.setAttendanceList(attendanceArrayList);
 
@@ -249,10 +258,33 @@ public class TeacherController {
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
 
+
+		Course course = courseRepo.findOne(courseId);
+		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+		Date startDate = course.getDateStart();
+		List<Date> dates = new ArrayList<>();
+
+		for (int i = 0; i < diffInDays; i++) {
+			dates.add(Utilities.addDays(startDate, i));
+		}
+
+
+		Set<Attendance> toDeleteList = new HashSet<>();
+		for (Person student : students) {
+			for (Date date : dates) {
+				// there can only be one Attendance per student, course, and date
+				// we delete all the previous records before saving a new set, so we don't get duplicates
+				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, date));
+			}
+		}
+		// wipe out all the existing records for each student for each date for this course
+		attendanceRepo.delete(toDeleteList);
+
 		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
-		return "redirect:/viewregisteredstudent/" + courseId;
+		return "redirect:/mycoursesdetail";
 	}
 
 

@@ -13,6 +13,7 @@ public interface AttendanceRepo extends CrudRepository<Attendance, Long> {
 
     Collection<Attendance> findByPersonIsAndCourseIsAndDateIs(Person p, Course c, Date d);
 
+    long countByPersonIsAndCourseIsAndDateIs(Person p, Course c, Date d);
 
     ArrayList<Attendance> findByPersonIsAndCourseIsOrderByDateAsc(Person p, Course c);
 }
