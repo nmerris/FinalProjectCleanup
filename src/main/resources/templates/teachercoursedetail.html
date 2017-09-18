@@ -23,6 +23,7 @@
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Evals Completed</th>
+                            <th>Numbers of Students</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -33,6 +34,8 @@
                             <td th:text="*{list.dateStart}"></td>
                             <td th:text="*{list.dateEnd}"></td>
                             <td th:text="*{list.numEvaluationsCompleted}"></td>
+                            <td th:text="*{list.getNumStudents()}"></td>
+
                             <td>
                                 <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student(s)</a>
                                 <a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}">View Registered Students</a>

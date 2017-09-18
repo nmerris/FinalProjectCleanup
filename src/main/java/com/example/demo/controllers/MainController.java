@@ -105,13 +105,13 @@ public class MainController
     @RequestMapping("/signup")
     public String addUserInfo(Model model) {
         model.addAttribute("newPerson", new Person());
-        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIs("TEACHER","ADMIN"));
+        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIsOrderByRoleDesc("TEACHER","ADMIN"));
         return "signup";
     }
 
     @PostMapping("/signup")
     public String addUserInfo(@Valid @ModelAttribute("newPerson") Person person, BindingResult bindingResult,Model model){
-        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIs("TEACHER","ADMIN"));
+        model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIsOrderByRoleDesc("TEACHER","ADMIN"));
         if(bindingResult.hasErrors()) {
            return "signup";
        }
