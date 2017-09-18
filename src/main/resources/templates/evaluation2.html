@@ -10,15 +10,18 @@
         <div class="col col-sm-10">
             <div align="center">
                 <form action="#" th:action="@{/evaluation2}" th:object="${evaluation}" method="post">
-                    <!--<input type="hidden" th:field="*{teacher.id}" />-->
-                    <!--<input type="hidden" th:field="*{course.id}" />-->
+
+                    <input type="hidden" name="courseId" th:value="${course.id}" />
+                    <input type="hidden" name="teacherId" th:value="${teacher.id}" />
+
+
+
 
                     <table width="90%"><tr><td align="left">
                         <a name="section1"></a>
                         <div class="subtitle">Section I: Course Information</div>
                         <br/>
                         1. CRN# <span th:text="${course.courseRegistrationNum}"></span>
-                        <input type="hidden" th:name="courseId" th:field="*{course.id}" />
                         <br />
                         2. Course Name: <span th:text="${course.name}"></span>
                         <br />
@@ -32,7 +35,7 @@
 
                         1. How would you rate the course content? <br />
                         <div class="radio">
-                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Excellent" checked checked/>Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="courseContentRating" value="Excellent" checked/>Excellent</label>
                             <label class="radio-inline"><input type="radio" name="courseContentRating" value="Above Average" />Above Average</label>
                             <label class="radio-inline"><input type="radio" name="courseContentRating" value="Average" />Average</label>
                             <label class="radio-inline"><input type="radio" name="courseContentRating" value="Fair" />Fair</label>

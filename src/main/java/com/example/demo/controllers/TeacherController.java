@@ -85,7 +85,7 @@ public class TeacherController {
 //	}
 
 
-	//Display course evealuations for a single course for a single teacher
+	//Display course evealuations for a single course for a single teacher, the teacher is logged in at this point
 	// TODO WAITING FOR JESSE, template is ready to go, and this route should be done
 	@GetMapping("/dispevaluation/{id}")
 	public String dipCourseEvaluation(@PathVariable("id") long courseId, Model model, Principal principal) {
