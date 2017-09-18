@@ -253,17 +253,19 @@ public class AdminController
 				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
 				courseInfoRequestLogRepo.save(log);
 				model.addAttribute("message", "New course info request log saved");
-				model.addAttribute("extraMesage", String.format("Course: %s - Student: %s",
-						log.getCourse().getName(), personRepo.findByMNumberIs(enteredMnum).getFullName()));
+				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
+						courseRepo.findOne(log.getCourse().getId()).getName(),
+						personRepo.findByMNumberIs(enteredMnum).getFullName()));
 				return "loginforequestconfirmation";
 			}
 		}
 
 		// at this point, we are saving a new request log, but not for an existing student
-		model.addAttribute("message", "New course info request log saved");
-		model.addAttribute("extraMesage", String.format("Course: %s",
-				log.getCourse().getName()));
 		courseInfoRequestLogRepo.save(log);
+		model.addAttribute("message", "New course info request log saved");
+		model.addAttribute("extraMessage", String.format("Course: %s",
+				courseRepo.findOne(log.getCourse().getId()).getName()));
+
 		return "loginforequestconfirmation";
 	}
 
