@@ -12,8 +12,8 @@
                 <form action="#" th:action="@{/addduplicatecourse}" th:object="${course}" method="post">
                     <div class="text-center feedback">
                         <h2>Choose an existing course to copy</h2>
-                        <h4>The dates, and teacher may be different</h4>
-                        <h4>The Course Registration Number will be the same</h4>
+                        <h4>The dates, teacher, and name may be different</h4>
+                        <h4>The CRN will be the same</h4>
                     </div>
                     <input type="hidden" th:field="*{id}" />
                     <div class="form-group">
@@ -24,7 +24,12 @@
                                     th:text="${item.name} + ' - CRN: ' + ${item.courseRegistrationNum}"></option>
                         </select>
                        <input type="hidden" th:field="*{courseRegistrationNum}"/>
-                        <input type="hidden" th:field="*{name}"/>
+                        <!--<input type="hidden" th:field="*{name}"/>-->
+                    </div>
+                    <div class="form-group">
+                        <label class="section-heading" for="name">Name</label>
+                        <input id="name" class="form-control" type="text" th:field="*{name}"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>

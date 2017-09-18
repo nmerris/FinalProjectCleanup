@@ -56,12 +56,13 @@ public class AdminController
 			return "addcourse";
 		}
 
-		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
-		    // admin enterd a CRN that already exists, so display an error msg
-            model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
-            model.addAttribute("crnExists", true);
-            return "addcourse";
-        }
+		// I realized we have to allow admin to edit the course, because that's what the requirements state
+//		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
+//		    // admin enterd a CRN that already exists, so display an error msg
+//            model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+//            model.addAttribute("crnExists", true);
+//            return "addcourse";
+//        }
 
 
 		// find out what Person was just selected (by the admin) from the drop down list for this course

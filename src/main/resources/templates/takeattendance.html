@@ -33,7 +33,7 @@
                                     <tr>
                                         <td th:text="${astudent.getFullName()}"></td>
                                         <th:block th:each="item, inner : ${allDates}">
-                                            <td>
+                                            <td class="attendance-cell">
                                                 <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Present">P
                                                 <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Late">L
                                                 <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Absent">A
