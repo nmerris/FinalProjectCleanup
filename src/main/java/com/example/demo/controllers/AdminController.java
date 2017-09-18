@@ -261,7 +261,6 @@ public class AdminController
 				model.addAttribute("message", "New course info request log saved");
 				model.addAttribute("extraMesage", String.format("Course: %s - Student: %s",
 						log.getCourse().getName(), personRepo.findByMNumberIs(enteredMnum).getFullName()));
-						log.getCourse().getName(), personRepo.findByMNumberIs(enteredMnum).getFullName()));
 				return "loginforequestconfirmation";
 			}
 		}
