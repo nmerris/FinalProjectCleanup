@@ -162,11 +162,13 @@ public class MainController
         if(specificCourse==null)
         {
             System.out.println("No Such Course");
+            // TODO show an error msg
             return "evaluation";
         }
         if(!specificCourse.getPersons().contains(teacher))
         {
             System.out.println("That teacher doesn't teach that course");
+            // TODO show an error msg
             return "evaluation";
         }
         model.addAttribute("course", specificCourse);
@@ -175,6 +177,7 @@ public class MainController
         return "evaluation2";
     }
 
+    // I don't think this route will ever be called...
     @GetMapping("/evaluation2")
     public String showEval(Model model)
     {
@@ -182,19 +185,31 @@ public class MainController
     }
 
     @PostMapping("/evaluation2")
-    public String submitEval(@RequestParam("howDidYouFindOut2")String other,
-                             @ModelAttribute("courseId")Course course,
-                             @ModelAttribute("teacher")Person teacher,
+    public String submitEval(
+                             @RequestParam("howDidYouFindOut2")String other,
+                             @RequestParam("courseId")long courseId,
+                             @RequestParam("teacherId")long teacherId,
+//                             @ModelAttribute("courseId")Course course,
+//                             @ModelAttribute("teacher")Person teacher,
                              @ModelAttribute("evaluation")Evaluation eval)
     {
+        System.out.println("CourseId: " + courseId);
+        System.out.println("TeacherId: " + teacherId);
+
 
         if(!eval.getHowDidYouFindOut().isEmpty() && eval.getHowDidYouFindOut().equalsIgnoreCase("Other"))
         {
             eval.setHowDidYouFindOut(other);
         }
-        System.out.println("Course:"+course.getName());
-        System.out.println("Teacher:" +teacher.getFullName());
-        System.out.println("Eval:"+eval.getId());
+
+
+        Person teacher = personRepo.findOne(teacherId);
+        Course course = courseRepo.findOne(courseId);
+        eval.setCourse(course);
+        eval.setPerson(teacher);
+        evaluationRepo.save(eval);
+
+
         return "redirect:/";
     }
 
