@@ -232,7 +232,8 @@ public class AdminController
 
 	// note: the course id is preserved through the form, so does not need to be set again here
 	@PostMapping("/loginforequest")
-	public String logInfoRequestPost(@Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
+	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
+									 @Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
 									 BindingResult bindingResult, Model model) {
 
 		// validates email field (if anything entered), validates description for not empty
@@ -246,20 +247,24 @@ public class AdminController
 			return "loginforequestform";
 		}
 
-		// TODO: waiting to here from Fi about uniqueness of contact number if it's a student, this is not quite done yet
+		// is admin entered an mnum, check to make sure it's valid
+		if(!enteredMnum.isEmpty()) {
+//			personRepo.find
+		}
+
 		// check to see if the contact num just entered matches any student in the db
-		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
-		if(matchedStudent != null) {
-			// found at least one match
-			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
-			model.addAttribute("message", s);
-			log.setPerson(matchedStudent);
-			courseInfoRequestLogRepo.save(log);
-		}
-		else {
-			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
-			courseInfoRequestLogRepo.save(log);
-		}
+//		Person matchedStudent = personRepo.findByContactNumIsAndAuthoritiesIs(log.getContactNum(), authorityRepo.findByRole("STUDENT"));
+//		if(matchedStudent != null) {
+//			// found at least one match
+//			String s = "Found this student with contact number " + log.getContactNum() + ": " + matchedStudent.getFullName() + " - " + matchedStudent.getmNumber();
+//			model.addAttribute("message", s);
+//			log.setPerson(matchedStudent);
+//			courseInfoRequestLogRepo.save(log);
+//		}
+//		else {
+//			model.addAttribute("message", "There are no current students with that contact number.  The info request has been saved");
+//			courseInfoRequestLogRepo.save(log);
+//		}
 
 		return "loginforequestconfirmation";
 	}
