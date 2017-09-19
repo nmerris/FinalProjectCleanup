@@ -10,9 +10,12 @@ import com.example.demo.repositories.*;
 import com.example.demo.services.UserService;
 import com.google.common.collect.Lists;
 import it.ozimov.springboot.mail.model.Email;
+import it.ozimov.springboot.mail.model.EmailAttachment;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
+import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
 import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -362,43 +366,45 @@ public class TeacherController {
 	}
 
 
-	@PostMapping("/sendemail")
-	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
-								@RequestParam("courseId") long courseId,
-								Principal principal) {
+//	@PostMapping("/sendemail")
+//	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
+//								@RequestParam("courseId") long courseId,
+//								Principal principal) {
+//
+//		System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
+//
+//		// get the logged in person
+//		Person teacher = personRepo.findByUsername(principal.getName());
+//
+//		// get the selected admin
+//		Person admin = personRepo.findOne(adminId);
+//
+//		// get the course
+//		Course course = courseRepo.findOne(courseId);
+//
+//		// build the email body
+//		String body = buildAttendanceEmail(course);
+//
+//		// testing
+//		System.out.println(body);
+//
+//
+//		// the email needs to know what admin addres to send to
+//		// sendemail.html has a drop down list of admins, teacher selects
+//		// one to send the attendance info to
+//		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
+//		sendEmailWithoutTemplate(
+//				teacher.getFullName(),	// teacher name
+//				course.getName(),		// course name
+//				body,					// email body
+//				admin.getEmail(),		// to email address
+//				admin.getFullName());	// to email name
+//
+//		return "redirect:/mycoursesdetail";
+//	}
 
-		System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
-
-		// get the logged in person
-		Person teacher = personRepo.findByUsername(principal.getName());
-
-		// get the selected admin
-		Person admin = personRepo.findOne(adminId);
-
-		// get the course
-		Course course = courseRepo.findOne(courseId);
-
-		// build the email body
-		String body = buildAttendanceEmail(course);
-
-		// testing
-		System.out.println(body);
-
-
-		// the email needs to know what admin addres to send to
-		// sendemail.html has a drop down list of admins, teacher selects
-		// one to send the attendance info to
-		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
-		sendEmailWithoutTemplate(
-				teacher.getFullName(),	// teacher name
-				course.getName(),		// course name
-				body,					// email body
-				admin.getEmail(),		// to email address
-				admin.getFullName());	// to email name
-
-		return "redirect:/mycoursesdetail";
-	}
-
+	// builds a String that has all the attendance info for a single course
+	// result is a basic text based table, will only look nice with a fixed width font
 //	private String buildAttendanceEmail(Course course) {
 //		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
 //
@@ -406,13 +412,8 @@ public class TeacherController {
 //
 //		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
 //
-//		String message = "<i>Greetings!</i><br>";
-//		message += "<b>Wish you a nice day!</b><br>";
-//		message += "<font color=red>Duke</font>";
 //
-//String s="<table><thead><tr><th>ColOne</th><th>coltwo</th><th>colthree</th></tr></thead><tbody><tr><td>data1</td><td>data2</td><td>data3</td></tr></tbody></table>";
-//
-//
+//		String s = String.format("%-16s %-10s", "LAST NAME", "mNUM");
 //
 //		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! inside buildEmail.. diffInDays: " + diffInDays);
 //
@@ -439,54 +440,91 @@ public class TeacherController {
 //
 //		return s;
 //	}
+//
+//
+//	//Email Sending to admin from the teacher
+//
+//	public void sendEmailWithoutTemplate(String teacherName, String courseName,String eBody,String adminEmail,String adminName) {
+//
+//		final Email email;
+//		try {
+//			email = DefaultEmail.builder()
+//					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
+//					// this may work depending on the email server config that is being used
+//					// the from NAME does get used though
+//					.from(new InternetAddress("anyone@anywhere.net", teacherName))
+//					.to(Lists.newArrayList(
+//							new InternetAddress(adminEmail, adminName)))
+//					.subject("Attendance For "+ courseName)
+//					.body(eBody)
+//					.encoding("UTF-8").build();
+//
+//			// conveniently, .send will put a nice INFO message in the console output when it sends
+//			emailService.send(email);
+//
+//		} catch (UnsupportedEncodingException e) {
+//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
+//			e.printStackTrace();
+//		}
+//
+//
+//
+//	}
 
 
+//	===========================================================================================================================================
+@PostMapping("/sendemail")
+public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
+							@RequestParam("courseId") long courseId,
+							Principal principal) {
 
+	System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
 
+	// get the logged in person
+	Person teacher = personRepo.findByUsername(principal.getName());
 
+	// get the selected admin
+	Person admin = personRepo.findOne(adminId);
 
-	// builds a String that has all the attendance info for a single course
-	// result is a basic text based table, will only look nice with a fixed width font
-	private String buildAttendanceEmail(Course course) {
-		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+	// get the course
+	Course course = courseRepo.findOne(courseId);
 
-		Set<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+	sendEmailWithoutTemplate(course,
+			teacher.getFullName(),	// teacher name
+			course.getName(),		// course name
+			admin.getEmail(),		// to email address
+			admin.getFullName());	// to email name
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+	return "redirect:/mycoursesdetail";
+}
 
-
-		String s = String.format("%-16s %-10s", "LAST NAME", "mNUM");
-
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! inside buildEmail.. diffInDays: " + diffInDays);
-
-		// create a header row
-		for (int i = 0; i < diffInDays; i++) {
-			s += String.format("%-10s", dateFormat.format(Utilities.addDays(course.getDateStart(), i)));
-		}
-
-		// add a horizontal line
-		s += "\n-------------------------"; // 26
-		for(int i = 0; i < diffInDays; i++) {
-			s += "----------"; // 10
-		}
-
-		s += "\n";
-
-		for (Person p : students) {
-			s += String.format("%-16s %-10s", p.getNameLast(), p.getmNumber());
-			for (Attendance a : attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(p, course)) {
-				s += String.format("%-10s", a.getAstatus());
+	private EmailAttachment getCsvForecastAttachment(String filename, Course course) {
+		String headers="M-Number,Student Name,Date,Status\n";
+		Iterable<Person> students = course.getPersons();
+		for (Person stud : students) {
+			String fullName = stud.getFullName();
+			String studentId = String.valueOf(stud.getId());
+			String mNUM = String.valueOf(stud.getmNumber());
+			Iterable<Attendance> attendances = stud.getAttendances();
+			for (Attendance att : attendances) {
+				String dates = String.valueOf(att.getDate());
+				String status = att.getAstatus();
+				headers+= mNUM + "," + fullName  + "," + dates+","+status + "\n";
 			}
-			s += "\n";
+
 		}
 
-		return s;
+		DefaultEmailAttachment attachment = DefaultEmailAttachment.builder()
+				.attachmentName(filename + ".csv")
+				.attachmentData(headers.getBytes(Charset.forName("UTF-8")))
+				.mediaType(MediaType.TEXT_PLAIN).build();
+
+		return attachment;
 	}
 
 
-	//Email Sending to admin from the teacher
 
-	public void sendEmailWithoutTemplate(String teacherName, String courseName,String eBody,String adminEmail,String adminName) {
+	public void sendEmailWithoutTemplate(Course course, String teacherName, String courseName,String adminEmail, String adminName) {
 
 		final Email email;
 		try {
@@ -497,8 +535,9 @@ public class TeacherController {
 					.from(new InternetAddress("anyone@anywhere.net", teacherName))
 					.to(Lists.newArrayList(
 							new InternetAddress(adminEmail, adminName)))
-					.subject("Attendance For "+ courseName)
-					.body(eBody)
+					.subject("Attendance For " + courseName)
+					.body("Student Attendance Details")
+					.attachment(getCsvForecastAttachment("Attendance", course))
 					.encoding("UTF-8").build();
 
 			// conveniently, .send will put a nice INFO message in the console output when it sends
@@ -508,10 +547,6 @@ public class TeacherController {
 			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
 			e.printStackTrace();
 		}
-
-
-
 	}
 
-
-}
+	}
