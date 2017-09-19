@@ -82,6 +82,8 @@ public class Course {
         return courseInfoRequestLogs.size();
     }
 
+    public long getNumEvaluations(){return evaluations.size();}
+
     // normal getter/setter methods ==================================================================================
 
 
