@@ -5,21 +5,21 @@
 
 <body>
 <th:block th:replace="base::FinalNavTeacher"></th:block>
-<br />
-<br />
-<br />
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col col-sm-10">
+
             <table border="1">
+
                 You entered this information:
-                <thead>
-                <td>Name</td>
-                <td>Contact Number</td>
-                <td>Email</td>
-                </thead>
                 <tr>
+                    <td>Name</td>
+                    <td>Contact Number</td>
+                    <td>Email</td>
+                </tr>
+                <tr>
+
                     <td th:text="${newstudent.getFullName()}"></td>
                     <td th:text="${newstudent.contactNum}"></td>
                     <td th:text="${newstudent.email}"></td>
@@ -37,15 +37,10 @@
                     <td th:text="${potential.getFullName()}"></td>
                     <td th:text="${potential.contactNum}"></td>
                     <td th:text="${potential.email}"></td>
-                    <td><a th:href="@{/addstudent/{id}(id=courseId)}">This is me!</a></td>
-                </tr>
-                <tr>
-                    <td><a th:href="@{/addstudent/{id}(id=courseId)}">None of these are me</a></td>
+                    <td><a th:href="@{/registerstudent/{cid}/{pid}(cid=${course.id}, pid=${potential.id})}">This is me!</a></td>
                 </tr>
             </table>
-
-
-
+            <a th:href="@{/registerstudent/{cid}/{pid}(cid=${course.id}, pid=0)}">None of these are me</a>
         </div>
     </div>
 </div>

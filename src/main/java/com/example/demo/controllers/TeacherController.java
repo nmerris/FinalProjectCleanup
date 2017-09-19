@@ -103,52 +103,116 @@ public class TeacherController {
     // actually it might be easier to just have students register the same way teachers and admins do...
     // then when they are signing up for a course, they would just put in the Mnumber... this would make more sense
 	@GetMapping("/addstudent/{id}")
-	public String registerStudent(@PathVariable("id") long id, Model model) {
+	public String addStudent(@PathVariable("id") long courseId, Model model) {
 		model.addAttribute("newstudent", new Person());
-		model.addAttribute("existingStudent", new Person());
-		Course course = courseRepo.findOne(id);
+		Course course = courseRepo.findOne(courseId);
 		model.addAttribute("course", course);
 		return "addstudenttocourse";
 	}
-
 
 	// students do not have usernames or passwords, but they must enter first, last names
 	// and contact num, email
 	@PostMapping("/addstudent/{id}")
 	public String addStudentToCourse(@PathVariable("id") long courseId,
 									 @Valid @ModelAttribute("newstudent") Person student,
-									 BindingResult bindingResult, Model model) {
-
+									 BindingResult bindingResult, Model model)
+	{
+		//Check for validation error
+		if(bindingResult.hasErrors())
+		{
+			return "addstudenttocourse";
+		}
+		//Get course object
 		Course course = courseRepo.findOne(courseId);
-		model.addAttribute("course", course);
-		model.addAttribute("existingStudent", new Person());
-
-		if(bindingResult.hasErrors()) {
-			return "addstudenttocourse";
-		}
-
-		// check to see if the student is already registered for this course, they are not allowed to register twice
+		//check if person exists
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
-			// they have already registered for this course, display an error msg
+		                                                                       student.getNameLast(), student.getContactNum(), student.getEmail()) == 1)
+		{
+			System.out.println("Person exists");
+			//person exists, register them
+			student=personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+			                                                                                student.getNameLast(), student.getContactNum(), student.getEmail());
+			registerStudent(courseId, student.getId(), student, model);
+		}
+		//if no exact match, check if name exists
+		else if(personRepo.countByNameFirstIsAndNameLastIs(student.getNameFirst(), student.getNameLast())>=1)
+		{
+			System.out.println("Name exists");
+			//if yes, ask for match
+			model.addAttribute("newstudent", student);
+			model.addAttribute("potentials", personRepo.findAllByNameFirstIsAndNameLastIs(student.getNameFirst(), student.getNameLast()));
+			model.addAttribute("course", course);
+			System.out.println(student.getNameFirst());
+			System.out.println(student.getNameLast());
+			return "checkforduplicatestudent";
+		}
+		else{
+			System.out.println("Person does not exist");
+
+			//here, person does not exist in the database and neither does their name, so create new and register
+			registerStudent(courseId, 0, student, model);
+		}
+//		return null;
+		return "redirect:/addstudent/" + courseId;
+
+	}
+
+	@RequestMapping("registerstudent/{cid}/{pid}")
+	public String registerStudent(@PathVariable("cid") long courseId, @PathVariable("pid") long personId,
+	                              @ModelAttribute("newstudent")Person student,
+	                              Model model)
+	{
+		System.out.println(student.getNameFirst());
+		System.out.println(student.getNameLast());
+		System.out.println("Start over");
+/*
+		Course course = courseRepo.findOne(courseId);
+
+		//student doesn't exist in the database
+		if(personId==0)
+		{
+			System.out.println("Person not in DB");
+
+			student = userService.saveStudent(student);
+			System.out.println(student.getNameFirst());
+			System.out.println(student.getNameLast());
+		}
+		else
+		{
+			System.out.println("Person in DB");
+			student=personRepo.findOne(personId);
+		}
+		//check if the person is already registered (new students won't be registered)
+		if(course.getPersons().contains(student))
+		{
+			System.out.println("Person already registered");
+			// if yes, they have already registered for this course, display an error msg
 			model.addAttribute("alreadyRegistered", true);
+			model.addAttribute("newstudent", new Person());
+			model.addAttribute("course", course);
 			return "addstudenttocourse";
 		}
 
-
-		RegistrationTimestamp timestamp = new RegistrationTimestamp();
-		Person p=userService.saveStudent(student);
-		timestamp.setCourse(course);
-		timestamp.setPerson(p);
-		timestamp.setTimestamp(new Date());
-		registrationTimestampRepo.save(timestamp);
-		course.addPerson(p);
+		System.out.println("Register person");
+//		RegistrationTimestamp timestamp = new RegistrationTimestamp();
+//		timestamp.setCourse(course);
+//		timestamp.setPerson(student);
+//		timestamp.setTimestamp(new Date());
+//		registrationTimestampRepo.save(timestamp);
+		course.addPerson(student);
 		courseRepo.save(course);
 
 		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
-		// it would be nice to display their new mnumber
+
+		//add empty
+		model.addAttribute("course", course);
+*/
+		model.addAttribute("course", courseRepo.findOne(courseId));
+		model.addAttribute("newstudent", new Person());
+
 		return "redirect:/addstudent/" + courseId;
 	}
+
 
 
 	@PostMapping("/addexistingstudent/{id}")
