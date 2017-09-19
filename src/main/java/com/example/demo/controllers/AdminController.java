@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.Utilities;
 import com.example.demo.models.Course;
 import com.example.demo.models.CourseInfoRequestLog;
 import com.example.demo.models.Evaluation;
@@ -50,10 +51,17 @@ public class AdminController
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
 
+		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
 
 		if(result.hasErrors()) {
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
+		}
+
+		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
+			// do not allow a course to be added if start date is after end date
+			// note that same start and end date is OK
+
 		}
 
 		// I realized we have to allow admin to edit the course, because that's what the requirements state

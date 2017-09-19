@@ -15,9 +15,19 @@ public class Utilities {
         return cal.getTime();
     }
 
+
+    // returns negative number if start date is after end date, returns 0 if both dates are the same
     public static int getDiffInDays(Date startDate, Date endDate) {
-        int dayInSeconds = 1000 * 60 * 60 * 24;
-        return (int) ((Math.abs(startDate.getTime() - endDate.getTime()) / dayInSeconds) + 1);
+//        int dayInSeconds = 1000 * 60 * 60 * 24;
+        int diffInDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        if(diffInDays > 0) {
+            return diffInDays + 1;
+        }
+        else if (diffInDays < 0) {
+            return diffInDays - 1;
+        }
+        else return 0;
     }
 
 }
