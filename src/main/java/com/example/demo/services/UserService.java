@@ -33,8 +33,6 @@ public class UserService {
 
     }
 
-    // returns the Person just saved if successful
-    // returns null if the username entered is already in use
     public void saveAdmin(Person person){
         person.setAuthorities(Arrays.asList(authorityRepo.findByRole("ADMIN")));
         person.setEnabled(true);
@@ -42,14 +40,13 @@ public class UserService {
         personRepo.save(person);
     }
 
-    // returns 0 if there is a problem (ie if randomly generated mnum happened to already exist)
-    // returns 1 if no problems
     public void saveTeacher(Person  person){
         person.setAuthorities(Arrays.asList(authorityRepo.findByRole("TEACHER")));
         person.setEnabled(true);
         setPersonMnumber(person);
         personRepo.save(person);
     }
+
     public Person saveStudent(Person  person){
         person.setAuthorities(Arrays.asList(authorityRepo.findByRole("STUDENT")));
         person.setEnabled(true);

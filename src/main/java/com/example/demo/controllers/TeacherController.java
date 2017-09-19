@@ -128,28 +128,23 @@ public class TeacherController {
 			return "addstudenttocourse";
 		}
 
-		// determine if this is a new student, an existing single student, or possibly multiple students that match entered form data
-//		long count =
-
-
-
-
 		// check to see if the student does not exist, if they don't, register them and save everything as needed
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
 
 			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
-			student.addCourse(course);
+			Person p = userService.saveStudent(student);
 			RegistrationTimestamp rt = new RegistrationTimestamp();
 			rt.setCourse(course);
-			rt.setPerson(student);
+			rt.setPerson(p);
 			rt.setTimestamp(new Date());
 			registrationTimestampRepo.save(rt);
-			personRepo.save(student);
+			course.addPerson(p);
+			courseRepo.save(course);
 			return "redirect:/addstudent/" + courseId;
 		}
 
-		// if there is one match found based on the form data that was just entered
+		// if there is one match found based on the form data that was just entered, create a timestamp,
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
 			System.out.println("============================= in /addstudent POST, one matching student was found, about to add this course to existing student");
@@ -160,17 +155,28 @@ public class TeacherController {
 			rt.setPerson(existingStudent);
 			rt.setTimestamp(new Date());
 			registrationTimestampRepo.save(rt);
-			personRepo.save(existingStudent);
+			course.addPerson(existingStudent);
+			courseRepo.save(course);
+			return "redirect:/addstudent/" + courseId;
 		}
 
-		RegistrationTimestamp timestamp = new RegistrationTimestamp();
-		Person p=userService.saveStudent(student);
-		timestamp.setCourse(course);
-		timestamp.setPerson(p);
-		timestamp.setTimestamp(new Date());
-		registrationTimestampRepo.save(timestamp);
-		course.addPerson(p);
+		// if there is more than one match found based on the form data that was just entered, create a timestamp,
+		System.out.println("============================= in /addstudent POST, MORE than one matching student was found");
+		Person existingStudent = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+				student.getNameLast(), student.getContactNum(), student.getEmail());
+		RegistrationTimestamp rt = new RegistrationTimestamp();
+		rt.setCourse(course);
+		rt.setPerson(existingStudent);
+		rt.setTimestamp(new Date());
+		registrationTimestampRepo.save(rt);
+		course.addPerson(existingStudent);
 		courseRepo.save(course);
+//		return "redirect:/addstudent/" + courseId;
+
+
+
+
+
 
 		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
 		// it would be nice to display their new mnumber
