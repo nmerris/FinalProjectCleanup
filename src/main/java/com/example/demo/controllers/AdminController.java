@@ -67,8 +67,10 @@ public class AdminController
 
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
-			// note that same start and end date is OK
-
+			System.out.println("========================= in /addcourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("negativeDayCount", true);
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+			return "addcourse";
 		}
 
 		// I realized we have to allow admin to edit the course, because that's what the requirements state
@@ -123,6 +125,14 @@ public class AdminController
 			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
+		}
+
+		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
+			// do not allow a course to be added if start date is after end date
+			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("negativeDayCount", true);
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+			return "addduplicatecourse";
 		}
 
 		course.setName(courseRepo.findOne(courseId).getName());
