@@ -278,34 +278,28 @@ public class TeacherController {
 		List<Attendance> attendanceArrayList = new ArrayList<>();
 
 
+		// set up a new Attendance for each student
 		for (Person student : students) {
-			for (int i = 0; i < diffInDays; i++) {
+            Attendance attendance = new Attendance();
+            // set the person
+            attendance.setPerson(student);
+            // set the course
+            attendance.setCourse(course);
 
-				Attendance attendance = new Attendance();
-				// set the person
-				attendance.setPerson(student);
-				// set the course
-				attendance.setCourse(course);
-				// set the date, increment by one day for each new Attendance object
-//				attendance.setDate(new Date()); // testing - needs to happen in post route
-				// pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
-				attendance.setAstatus("Present");
-				// add it to the list
-				attendanceArrayList.add(attendance);
-			}
+            // pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
+            attendance.setAstatus("Present");
+            // add it to the list
+            attendanceArrayList.add(attendance);
 		}
 
-
+        // set the list in the wrapper
 		wrapper.setAttendanceList(attendanceArrayList);
 
 		model.addAttribute("attendanceWrapper", wrapper);
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
-//		model.addAttribute("numStudents", students.size());
 		model.addAttribute("students", students);
-//		model.addAttribute("date", new Date()); // testing for now
 		model.addAttribute("dates", dates);
-//		model.addAttribute("numDates", diffInDays);
 
 		return "takeattendance";
 	}
@@ -323,30 +317,18 @@ public class TeacherController {
 
 		Course course = courseRepo.findOne(courseId);
 		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
-//		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-//		Date startDate = course.getDateStart();
-//		List<Date> dates = new ArrayList<>();
-
-		// build a list of Dates for this course, in ascending order from start date
-//		for (int i = 0; i < diffInDays; i++) {
-//			dates.add(Utilities.addDays(startDate, i));
-//		}
 
         // set the date on each Attendance that we just got back from the form
         for (Attendance att : attWrapper.getAttendanceList()) {
+            System.out.println("============================ in /takeattendance POST, att.getPerson.getId: " + att.getPerson().getId());
             att.setDate(selectedDate);
         }
 
-
 		Set<Attendance> toDeleteList = new HashSet<>();
 		for (Person student : students) {
-//			for (Date date : dates) {
-				// there can only be one Attendance per student, course, and date
-				// we delete all the previous records before saving a new set, so we don't get duplicates
-				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, selectedDate));
-
-
-//			}
+            // there can only be one Attendance per student, course, and date
+            // we delete all the previous records before saving a new set, so we don't get duplicates
+            toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, selectedDate));
 		}
 		// wipe out all the existing records for each student for each date for this course
 		attendanceRepo.delete(toDeleteList);
