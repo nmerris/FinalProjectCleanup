@@ -324,7 +324,8 @@ public class AdminController
 	@PostMapping("/loginforequest")
 	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
 									 @Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
-									 BindingResult bindingResult,@RequestParam(value = "selectedStudent")long studId, Model model) {
+									 BindingResult bindingResult, Model model) {
+
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
 
@@ -346,15 +347,14 @@ public class AdminController
 			}
 			else {
 				// found a match for that mnum, so save to db
-				model.addAttribute("students", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("STUDENT")));
 				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
 				courseInfoRequestLogRepo.save(log);
 				model.addAttribute("message", "New course info request log saved");
-//				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
-//						courseRepo.findOne(log.getCourse().getId()).getName(),
-//						personRepo.findByMNumberIs(enteredMnum).getFullName()));
-				model.addAttribute("student", personRepo.findOne(studId));
-
+				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
+						courseRepo.findOne(log.getCourse().getId()).getName(),
+						personRepo.findByMNumberIs(enteredMnum).getFullName(),
+						personRepo.findByMNumberIs(enteredMnum).getEmail(),
+				personRepo.findByMNumberIs(enteredMnum).getContactNum()));
 				return "loginforequestconfirmation";
 			}
 		}
@@ -367,6 +367,7 @@ public class AdminController
 
 		return "loginforequestconfirmation";
 	}
+
 
 	//List of log infor request for a particular course
 	@RequestMapping("/loginforequestdetail/{id}")
