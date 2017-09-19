@@ -274,9 +274,6 @@ public class TeacherController {
 		List<Attendance> attendanceArrayList = new ArrayList<>();
 
 
-		// attendanceArrayList(0) through (diffInDays - 1) will be for first student
-		// attendanceArrayList(diffInDays) through (2 * diffInDays - 1) will be for second student, etc
-		// this will only work with ordered collections
 		for (Person student : students) {
 			for (int i = 0; i < diffInDays; i++) {
 
@@ -286,7 +283,7 @@ public class TeacherController {
 				// set the course
 				attendance.setCourse(course);
 				// set the date, increment by one day for each new Attendance object
-				attendance.setDate(Utilities.addDays(startDate, i));
+//				attendance.setDate(new Date()); // testing - needs to happen in post route
 				// pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
 				attendance.setAstatus("Present");
 				// add it to the list
@@ -300,10 +297,11 @@ public class TeacherController {
 		model.addAttribute("attendanceWrapper", wrapper);
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
-		model.addAttribute("numStudents", students.size());
+//		model.addAttribute("numStudents", students.size());
 		model.addAttribute("students", students);
-		model.addAttribute("allDates", dates);
-		model.addAttribute("numDates", diffInDays);
+//		model.addAttribute("date", new Date()); // testing for now
+		model.addAttribute("dates", dates);
+//		model.addAttribute("numDates", diffInDays);
 
 		return "takeattendance";
 	}
