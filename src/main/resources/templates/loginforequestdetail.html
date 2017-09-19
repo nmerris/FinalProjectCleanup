@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+
+<body>
+
+
+<th:block th:replace="base::FinalNavAdmin"></th:block>
+
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+
+
+                <caption> <h4><b th:text="'Info Request list for: ' + ${courseinforeq.getName()}"></b></h4></caption>
+                <table class="table table-striped" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Contact Number</th>
+                        <th>Email</th>
+                        <th>Student</th>
+                        <th>M-Number</th>
+                        <th colspan="6">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody align="left">
+                    <tr th:each="list: ${inforeqlist}">
+                        <td th:text="*{list.description}"></td>
+                        <td th:text="*{list.contactNum}"></td>
+                        <td th:text="*{list.email}"></td>
+                        <td><p th:if="!*{list.person==null}" th:text="*{list.person.getFullName()}"></p></td>
+                        <td><p th:if="!*{list.person==null}" th:text="*{list.person.getmNumber()}"></p></td>
+                        <td><a th:href="@{/editloginforequest/{id}(id=${list.id})}">Edit Info Request</a></td>
+                        <td><a th:href="@{/deleteloginforequest/{id}(id=${list.id})}">Delete Info Request</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+
+<th:block th:replace="base::Footer"></th:block>
+<th:block th:replace="base::FinalJS"></th:block>
+
+</body>
+
+</html>

@@ -17,7 +17,8 @@
                             <td>Name</td>
                             <td>Start Date</td>
                             <td>End Date</td>
-                            <td colspan="4">Action</td>
+                            <td>Number of Info Request</td>
+                            <td colspan="6">Action</td>
 
                         </tr>
                         </thead>
@@ -27,11 +28,11 @@
                             <td th:text="${singlecourse.name}"></td>
                             <td th:text="${singlecourse.dateStart}"></td>
                             <td th:text="${singlecourse.dateEnd}"></td>
+                            <td><a th:href="@{/loginforequestdetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumInfoReq()}"></p></a></td>
                             <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>View Details</b></a></td>
                             <td><a th:href="@{/editcourse/{id}(id=${singlecourse.id})}"><b>Edit Details</b></a></td>
                             <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><b>View Evaluations</b></a></td>
                             <td><a th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a></td>
-                            <td><a href="#"><b>View Info Requests (NOT DONE YET)</b></a></td>
                         </tr>
                         </tbody>
                     </table>

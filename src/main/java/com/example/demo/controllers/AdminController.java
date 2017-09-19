@@ -334,6 +334,31 @@ public class AdminController
 		return "loginforequestconfirmation";
 	}
 
+	//List of log infor request for a particular course
+	@RequestMapping("/loginforequestdetail/{id}")
+	public String listCourseInfoReq(@PathVariable("id") long courseId,Model model) {
+		Course course = courseRepo.findOne(courseId);
+		model.addAttribute("courseinforeq", course);
+		model.addAttribute("inforeqlist", courseInfoRequestLogRepo.findByCourseIs(course));
+		return "loginforequestdetail";
+	}
+
+	//edit log info request
+	@RequestMapping("/editloginforequest/{inforeqid}")
+	public String editCourseInfoReq(@PathVariable ("inforeqid") long id, Model model)
+	{
+		model.addAttribute("courseInfoLog", courseInfoRequestLogRepo.findOne(id));
+		return "loginforequestform";
+	}
+
+	//delete log info request
+	@RequestMapping("/deleteloginforequest/{id}")
+	public String delCourseInfoReq(@PathVariable("id") long id)
+	{
+		courseInfoRequestLogRepo.delete(id);
+		return "redirect:/allcourses";
+	}
+
 
 
 }
