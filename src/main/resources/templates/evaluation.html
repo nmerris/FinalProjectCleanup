@@ -13,6 +13,10 @@
             <div class="panel-body">
 
                 <form action="#" th:action="@{/evaluation}" th:object="${course}" method="post">
+
+                    <input type="hidden" th:field="*{dateEnd}">
+                    <input type="hidden" th:field="*{name}">
+
                     <div class="form-group">
                         <label class="section-heading" for="courseRegistrationN">CRN</label>
                         <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
@@ -30,6 +34,8 @@
                                     th:value="${item.id}"
                                     th:text="${item.nameFirst} + ' ' + ${item.nameLast}"></option>
                         </select>
+                        <p class="alert alert-danger" th:if="${teacherError}" th:text="'that teacher does not teach that course for that start date'"></p>
+                        <p class="alert alert-danger" th:if="${courseError}" th:text="'could not find a course with that CRN and start date'"></p>
                     </div>
                     <div class="clearfix"></div>
                     <input class="btn btn-primary bold-input" type="submit" value="Submit"/>

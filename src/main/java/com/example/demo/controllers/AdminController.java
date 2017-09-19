@@ -1,17 +1,25 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.Course;
-import com.example.demo.models.CourseInfoRequestLog;
-import com.example.demo.models.Evaluation;
-import com.example.demo.models.Person;
+import com.example.demo.models.*;
 import com.example.demo.repositories.*;
+import com.google.common.collect.Lists;
+import it.ozimov.springboot.mail.model.Email;
+import it.ozimov.springboot.mail.model.EmailAttachment;
+import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
+import com.example.demo.Utilities;
+import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
+import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
 import java.util.HashSet;
@@ -50,8 +58,17 @@ public class AdminController
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
 
+		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
 
 		if(result.hasErrors()) {
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+			return "addcourse";
+		}
+
+		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
+			// do not allow a course to be added if start date is after end date
+			System.out.println("========================= in /addcourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
 		}
@@ -108,6 +125,14 @@ public class AdminController
 			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
+		}
+
+		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
+			// do not allow a course to be added if start date is after end date
+			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("negativeDayCount", true);
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+			return "addduplicatecourse";
 		}
 
 		course.setName(courseRepo.findOne(courseId).getName());
