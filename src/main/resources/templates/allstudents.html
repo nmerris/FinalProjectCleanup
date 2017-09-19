@@ -21,6 +21,7 @@
                         <th>M-Number</th>
                         <th>Email Address</th>
                         <th>Emergency Contact Number</th>
+                        <th>Number of Courses</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -31,6 +32,7 @@
                         <td th:text="*{item.mNumber}"></td>
                         <td th:text="*{item.email}"></td>
                         <td th:text="*{item.contactNum}"></td>
+                        <td th:text="*{item.getNumCourses()}"></td>
                          <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}">View Courses</a></td>
                     </tr>
                     </tbody>
@@ -41,7 +43,7 @@
     </div>
 </div><!-- container -->
 
-
+<th:block th:replace="base::Footer"></th:block>
 <th:block th:replace="base::FinalJS"></th:block>
 </body>
 </html>
