@@ -16,15 +16,19 @@ teacher: create your own or log in with FILL ME IN
 
 
 
+!!!! IMPORTANT !!!!
+MUST SET THE HEROKU SERVER TIMEZONE - OR TIMESTAMPS WILL BE OFF
+two ways to do this:
+1. log in to Heroku, go to settings for app, got to Environment Variables
+  - add TZ   America/New_York
+  
+  OR
+  
+2. do it straight from the command line
+  - log in
+  - type heroku config:add TZ="America/New_York"
 
-REMOVE BELOW BEFORE TURNING IN PROJECT
-(use this to seed the database for dev and testing)
-db seed sql:
-
--- authorites
+-- authorites (these are automatically generated every time the app runs)
 INSERT INTO role VALUES(1, 'ADMIN');
 INSERT INTO role VALUES(2, 'STUDENT');
 INSERT INTO role VALUES(3, 'TEACHER');
-
--- (id, rating, skill) 
--- TODO fille me in with courses and persons....... nate will do this, under construction at the moment! (nate is the database guy, at least that is what nate (myself) thinks as of Tue evening)
