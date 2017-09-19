@@ -45,7 +45,7 @@
                                             <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
                                             <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
                                             <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
-                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item}">
+                                            <!--<input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item}">-->
                                             <input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${courseId}">
                                             <input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${astudent.id}">
                                         </td>

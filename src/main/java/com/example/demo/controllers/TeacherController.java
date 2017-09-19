@@ -314,35 +314,45 @@ public class TeacherController {
 	@PostMapping("/takeattendance/{courseid}")
 	public String takeAttendancePost(
 			@ModelAttribute("attendanceWrapper") AttendanceWrapper attWrapper,
+			@RequestParam("selectedDate") Date selectedDate,
 			@PathVariable("courseid") long courseId) {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
-
+		System.out.println("=================== selectedDate: " + selectedDate);
 
 		Course course = courseRepo.findOne(courseId);
 		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
-		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-		Date startDate = course.getDateStart();
-		List<Date> dates = new ArrayList<>();
+//		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+//		Date startDate = course.getDateStart();
+//		List<Date> dates = new ArrayList<>();
 
-		for (int i = 0; i < diffInDays; i++) {
-			dates.add(Utilities.addDays(startDate, i));
-		}
+		// build a list of Dates for this course, in ascending order from start date
+//		for (int i = 0; i < diffInDays; i++) {
+//			dates.add(Utilities.addDays(startDate, i));
+//		}
+
+        // set the date on each Attendance that we just got back from the form
+        for (Attendance att : attWrapper.getAttendanceList()) {
+            att.setDate(selectedDate);
+        }
 
 
 		Set<Attendance> toDeleteList = new HashSet<>();
 		for (Person student : students) {
-			for (Date date : dates) {
+//			for (Date date : dates) {
 				// there can only be one Attendance per student, course, and date
 				// we delete all the previous records before saving a new set, so we don't get duplicates
-				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, date));
-			}
+				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, selectedDate));
+
+
+//			}
 		}
 		// wipe out all the existing records for each student for each date for this course
 		attendanceRepo.delete(toDeleteList);
 
-		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
+		// courseId, personId are all preserved through the form, so just need to save it now, both join columns are set
+        // and we set the date to the selected date above, so ready to save to repo
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
 		return "redirect:/mycoursesdetail";

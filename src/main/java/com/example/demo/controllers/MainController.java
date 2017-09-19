@@ -149,26 +149,47 @@ public class MainController
     public String eval(Model model)
     {
 
-    	model.addAttribute("course", new Course());
+        // create a course and add some dummy data to send to form, need it to have data in validated fields, doesn't matter because we are not going to save it
+        Course course = new Course();
+        course.setDateEnd(new Date()); // dummy date never to be saved
+        course.setName("fake name never to be saved");
+
+    	model.addAttribute("course", course);
+//    	model.addAttribute("course", new Course());
+
     	model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
         return "evaluation";
     }
 
+    // app was crashing if you type in an invalid date format or if you type in letters in the CRN field, so added @Valid to incoming Course
+    // this requires some dummy data in the get route, which doesn't matter because the course is never actually saved here
     @PostMapping("/evaluation")
-    public String getCourseInfoForEval(@ModelAttribute("course") Course course, @RequestParam(value = "selectedTeacher")long teacherId, Model model)
+    public String getCourseInfoForEval(@Valid @ModelAttribute("course") Course course, BindingResult bindingResult,
+                                       @RequestParam(value = "selectedTeacher")long teacherId, Model model)
     {
+
+        if(bindingResult.hasErrors()) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!! in /evaluation POST, bindingResult had errors");
+            model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+            return "evaluation";
+        }
+
         Course specificCourse = courseRepo.findFirstByCourseRegistrationNumAndDateStartAndDeleted(course.getCourseRegistrationNum(), course.getDateStart(),false);
         Person teacher = personRepo.findOne(teacherId);
         if(specificCourse==null)
         {
             System.out.println("No Such Course");
             // TODO show an error msg
+            model.addAttribute("courseError", true);
+            model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
             return "evaluation";
         }
         if(!specificCourse.getPersons().contains(teacher))
         {
             System.out.println("That teacher doesn't teach that course");
             // TODO show an error msg
+            model.addAttribute("teacherError", true);
+            model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
             return "evaluation";
         }
         model.addAttribute("course", specificCourse);
