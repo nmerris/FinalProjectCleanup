@@ -119,6 +119,10 @@ public class Person {
         return "STUDENT";
     }
 
+    public long getNumCourses(){
+        return courses.size();
+    }
+
 
     // normal getters/setters ==================================================================================
 

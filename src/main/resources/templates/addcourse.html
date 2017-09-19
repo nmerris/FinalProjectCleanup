@@ -36,7 +36,7 @@
                         <label class="section-heading" for="dateStart">Start Date</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'please enter a day, month, and year'"></p>
-
+                        <p class="alert alert-danger" th:if="${negativeDayCount}" th:text="'please enter a start date before or equal to an end date'"></p>
                     </div>
                     <div class="form-group">
                     <label class="section-heading" for="dateEnd">End Date</label>
@@ -50,7 +50,7 @@
                         <select id="selectaTeacher" class="form-control" name="selectedTeacher">
                             <option th:each="item : ${teachers}"
                                     th:value="${item.id}"
-                                    th:text="${item.nameFirst} + ' ' + ${item.nameLast}"></option>
+                                    th:text="${item.getFullName()}"></option>
                         </select>
                     </div>
                     <div class="clearfix"></div>

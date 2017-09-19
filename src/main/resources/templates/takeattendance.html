@@ -7,41 +7,48 @@
 
 <th:block th:replace="base::FinalNavTeacher"></th:block>
 <div class="container">
-    <div class="col-lg-12">
+    <div class="col-lg-8 col-lg-offset-2">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
-                <!--<h3 th:text="'Student: ' + ${studentName}"></h3>-->
                 <h3 th:text="'Course: ' + ${courseName}"></h3>
 
                 <form action="#" th:action="@{~/takeattendance/{id}(id=${courseId})}" th:object="${attendanceWrapper}" method="post">
                     <div class="table-responsive">
 
                         <caption><h3><b>Take Attendance</b></h3></caption>
+
+                        <!-- drop down list of dates for this course -->
+                        <div class="form-group">
+                            <label class="section-heading" for="selectaDate">Select a Date</label>
+                            <select id="selectaDate" class="form-control" name="selectedDate">
+                                <option th:each="item : ${dates}"
+                                        th:value="${item}"
+                                        th:text="${#dates.format(item, 'MMM-dd-yyyy')}">
+                                </option>
+                            </select>
+                        </div>
+
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Student</th>
-                                    <th:block th:each="adate : ${allDates}">
-                                        <th th:text="${#dates.format(adate, 'MMM-dd-yyyy')}"></th>
-                                    </th:block>
+                                    <th>Student Name</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <th:block th:each="astudent, outter : ${students}">
+                                <th:block th:each="astudent, iter : ${students}">
                                     <tr>
                                         <td th:text="${astudent.getFullName()}"></td>
-                                        <th:block th:each="item, inner : ${allDates}">
-                                            <td class="attendance-cell">
-                                                <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Present">P
-                                                <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Late">L
-                                                <input type="radio" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].astatus}" value="Absent">A
-                                                <input type="hidden" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].date}" th:value="${item}">
-                                                <input type="hidden" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].course.id}" th:value="${courseId}">
-                                                <input type="hidden" th:field="*{attendanceList[__${inner.index} + (${outter.index} * ${numDates})__].person.id}" th:value="${astudent.id}">
-                                            </td>
-                                        </th:block>
+                                        <td>
+                                            <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Present">Present
+                                            <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Late">Late
+                                            <input type="radio" th:field="*{attendanceList[__${iter.index}__].astatus}" value="Absent">Absent
+                                            <!--<input type="hidden" th:field="*{attendanceList[__${iter.index}__].date}" th:value="${item}">-->
+                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].course.id}" th:value="${courseId}">
+                                            <input type="hidden" th:field="*{attendanceList[__${iter.index}__].person.id}" th:value="${astudent.id}">
+                                        </td>
                                     </tr>
                                 </th:block>
                             </tbody>
