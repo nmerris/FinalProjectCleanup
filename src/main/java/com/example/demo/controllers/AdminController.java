@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import it.ozimov.springboot.mail.model.Email;
 import it.ozimov.springboot.mail.model.EmailAttachment;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
+import com.example.demo.Utilities;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
 import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,27 +30,21 @@ public class AdminController
 {
 	@Autowired
 	AuthorityRepo authorityRepo;
-
 	@Autowired
 	PersonRepo personRepo;
-
 	@Autowired
 	CourseRepo courseRepo;
-
 	@Autowired
 	AttendanceRepo attendanceRepo;
-
 	@Autowired
 	RegistrationTimestampRepo registrationTimestampRepo;
 	@Autowired
 	EvaluationRepo evaluationRepo;
-
 	@Autowired
 	CourseInfoRequestLogRepo courseInfoRequestLogRepo;
 
 
 	@GetMapping("/addcourse")
-
 	public String addCourse(Model model)
 	{
 		model.addAttribute("course", new Course());
@@ -63,8 +58,17 @@ public class AdminController
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
 
+		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
 
 		if(result.hasErrors()) {
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+			return "addcourse";
+		}
+
+		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
+			// do not allow a course to be added if start date is after end date
+			System.out.println("========================= in /addcourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
 		}
@@ -121,6 +125,14 @@ public class AdminController
 			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
+		}
+
+		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
+			// do not allow a course to be added if start date is after end date
+			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("negativeDayCount", true);
+			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+			return "addduplicatecourse";
 		}
 
 		course.setName(courseRepo.findOne(courseId).getName());
@@ -356,6 +368,30 @@ public class AdminController
 		return "loginforequestconfirmation";
 	}
 
+	//List of log infor request for a particular course
+	@RequestMapping("/loginforequestdetail/{id}")
+	public String listCourseInfoReq(@PathVariable("id") long courseId,Model model) {
+		Course course = courseRepo.findOne(courseId);
+		model.addAttribute("courseinforeq", course);
+		model.addAttribute("inforeqlist", courseInfoRequestLogRepo.findByCourseIs(course));
+		return "loginforequestdetail";
+	}
+
+	//edit log info request
+	@RequestMapping("/editloginforequest/{inforeqid}")
+	public String editCourseInfoReq(@PathVariable ("inforeqid") long id, Model model)
+	{
+		model.addAttribute("courseInfoLog", courseInfoRequestLogRepo.findOne(id));
+		return "loginforequestform";
+	}
+
+	//delete log info request
+	@RequestMapping("/deleteloginforequest/{id}")
+	public String delCourseInfoReq(@PathVariable("id") long id)
+	{
+		courseInfoRequestLogRepo.delete(id);
+		return "redirect:/allcourses";
+	}
 
 
 

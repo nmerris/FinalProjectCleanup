@@ -3,7 +3,7 @@
 
 <head th:replace="base:: FinalHead"></head>
 
-<body>
+<body class="teacher-module">
 <th:block th:replace="base::FinalNavAdmin"></th:block>
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
@@ -35,6 +35,7 @@
                         <label class="section-heading" for="dateStart">Start Date</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'please enter a day, month, and year'"></p>
+                        <p class="alert alert-danger" th:if="${negativeDayCount}" th:text="'please enter a start date before or equal to an end date'"></p>
                     </div>
                     <div class="form-group">
                     <label class="section-heading" for="dateEnd">End Date</label>

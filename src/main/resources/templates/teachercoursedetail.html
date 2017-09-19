@@ -3,7 +3,7 @@
 
 <head th:replace="base:: FinalHead"></head>
 
-<body>
+<body class="teacher-module">
 
 
 <th:block th:replace="base::FinalNavTeacher"></th:block>
@@ -33,15 +33,13 @@
                             <td th:text="*{list.courseRegistrationNum}"></td>
                             <td th:text="*{list.dateStart}"></td>
                             <td th:text="*{list.dateEnd}"></td>
-                            <td th:text="*{list.numEvaluationsCompleted}"></td>
-                            <td th:text="*{list.getNumStudents()}"></td>
+                            <td><a th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.numEvaluationsCompleted}"></p></a></td>
+                            <td><a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}"><p th:text="*{list.getNumStudents()}"></p></a></td>
 
                             <td>
                                 <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student(s)</a>
-                                <a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}">View Registered Students</a>
-                                <a th:href="@{/dispevaluation/{id}(id=${list.id})}">View Course Evaluations</a>
-                                <a th:href="@{/sendemail(id=${list.id})}">Send Attendance Details</a>
                                 <a th:href="@{/takeattendance/{id}(id=${list.id})}">Take Attendance</a>
+                                <a th:href="@{/sendemail(id=${list.id})}">Send Attendance Details</a>
                                 <a th:href="@{/sendemails(id=${list.id})}">Send Evaluation Details</a>
 
                             </td>

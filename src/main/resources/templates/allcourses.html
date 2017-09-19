@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="base:: FinalHead"></head>
-<body>
+<body class="teacher-module">
 <th:block th:replace="base::FinalNavAdmin"></th:block>
 <div class="container">
     <div class="col-lg-10 col-lg-offset-1">
@@ -17,21 +17,25 @@
                             <td>Name</td>
                             <td>Start Date</td>
                             <td>End Date</td>
-                            <td colspan="4">Action</td>
+                            <td># Students</td>
+                            <td># Evaluations</td>
+                            <td># Info Requests</td>
+                            <td>Action</td>
 
                         </tr>
                         </thead>
                         <tbody>
                         <tr  th:each="singlecourse:${allcourses}">
                             <td th:text="${singlecourse.courseRegistrationNum}"></td>
-                            <td th:text="${singlecourse.name}"></td>
+                            <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.name}"></p></a></td>
                             <td th:text="${singlecourse.dateStart}"></td>
                             <td th:text="${singlecourse.dateEnd}"></td>
-                            <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>View Details</b></a></td>
-                            <td><a th:href="@{/editcourse/{id}(id=${singlecourse.id})}"><b>Edit Details</b></a></td>
-                            <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><b>View Evaluations</b></a></td>
+                            <td><a th:href="@{/viewregisteredstudent/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumStudents()}"></p></a></td>
+                            <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumEvaluations()}"></p></a></td>
+                            <td><a th:href="@{/loginforequestdetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumInfoReq()}"></p></a></td>
+
+                            <!--<td><a th:href="@{/editcourse/{id}(id=${singlecourse.id})}"><b>Edit Details</b></a></td>-->
                             <td><a th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a></td>
-                            <td><a href="#"><b>View Info Requests (NOT DONE YET)</b></a></td>
                         </tr>
                         </tbody>
                     </table>

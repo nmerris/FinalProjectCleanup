@@ -17,26 +17,26 @@ footer {
     background-size: cover;
 }
 
-.person-page {
-    background: url("../img/02personal.jpg") no-repeat center center;
+.administrator-module {
+    background: url("../img/Admin-04.jpg") no-repeat center center;
     min-height: 100%;
     background-size: cover;
 }
 
-.education-page {
-    background: url("../img/03education.jpg") no-repeat center center;
+.teacher-module {
+    background: url("../img/backtoschool.jpg") no-repeat center center;
     min-height: 100%;
     background-size: cover;
 }
 
-.work-page {
-    background: url("../img/04work.jpg") no-repeat center center;
+.welcome-module {
+    background: url("../img/main.jpg") no-repeat center center;
     min-height: 100%;
     background-size: cover;
 }
 
 .skill-page {
-    background: url("../img/05skills.jpg") no-repeat center center;
+    background: url("../img/homepage-banner3.jpg") no-repeat center center;
     min-height: 100%;
     background-size: cover;
 }
@@ -56,11 +56,11 @@ footer {
 .final-section-header {
     width: 100%;
     padding: 10px 0px 5px 0px;
-    color: #52a3db;
+    color: #ffffff;
     font-size: large;
     font-weight: bold;
     margin-top: 30px;
-    border-bottom: 1px solid black;
+    /*border-bottom: 1px solid black;*/
 }
 
 .item-skill {
@@ -73,6 +73,10 @@ footer {
 
 .final-header h1 {
     font-weight: bold;
+}
+
+.teacher-header1 {
+    font-weight: italic;
 }
 
 .final-item-title {

@@ -3,7 +3,7 @@
 
 <head th:replace="base:: FinalHead"></head>
 
-<body>
+<body class="teacher-module">
 <th:block th:replace="base::FinalNavAdmin"></th:block>
 
 <!-- show a table of students, the admin selects one to view that students courses taken -->
@@ -22,7 +22,7 @@
                         <th>Email Address</th>
                         <th>Emergency Contact Number</th>
                         <th>Number of Courses</th>
-                        <th>Action</th>
+                        <!--<th>Action</th>-->
                     </tr>
                     </thead>
                     <tbody align="left">
@@ -32,8 +32,7 @@
                         <td th:text="*{item.mNumber}"></td>
                         <td th:text="*{item.email}"></td>
                         <td th:text="*{item.contactNum}"></td>
-                        <td th:text="*{item.getNumCourses()}"></td>
-                         <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}">View Courses</a></td>
+                        <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}"><p th:text="*{item.getNumCourses()}"></p></a></td>
                     </tr>
                     </tbody>
                 </table>

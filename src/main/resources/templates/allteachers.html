@@ -3,7 +3,7 @@
 
 <head th:replace="base:: FinalHead"></head>
 
-<body>
+<body class="teacher-module">
 <th:block th:replace="base::FinalNavAdmin"></th:block>
 
 <!-- show a table of teachers, the admin selects one to view that teachers evaluations -->
@@ -20,7 +20,7 @@
                             <th>Last Name</th>
                             <th>M-Number</th>
                             <th>Evals on Record</th>
-                            <th>Action</th>
+                            <!--<th>Action</th>-->
                         </tr>
                     </thead>
                     <tbody align="left">
@@ -28,8 +28,7 @@
                             <td th:text="*{item.nameFirst}"></td>
                             <td th:text="*{item.nameLast}"></td>
                             <td th:text="*{item.mNumber}"></td>
-                            <td th:text="*{item.evaluations.size()}"></td>
-                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}">View Evaluations</a></td>
+                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}"><p th:text="*{item.evaluations.size()}"></p></a></td>
                         </tr>
                     </tbody>
                 </table>

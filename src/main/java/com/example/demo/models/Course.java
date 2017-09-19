@@ -61,6 +61,7 @@ public class Course {
         this.evaluations = new HashSet<>();
         this.attendances = new HashSet<>();
         this.persons = new HashSet<>();
+        this.courseInfoRequestLogs = new HashSet<>();
     }
 
     // helper methods ==================================================================================
@@ -76,6 +77,12 @@ public class Course {
     public long getNumStudents(){
         return persons.size()-1;
     }
+
+    public long getNumInfoReq(){
+        return courseInfoRequestLogs.size();
+    }
+
+    public long getNumEvaluations(){return evaluations.size();}
 
     // normal getter/setter methods ==================================================================================
 
