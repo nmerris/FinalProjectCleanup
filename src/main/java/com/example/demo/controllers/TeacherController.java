@@ -275,36 +275,28 @@ public class TeacherController {
 		List<Attendance> attendanceArrayList = new ArrayList<>();
 
 
-		// attendanceArrayList(0) through (diffInDays - 1) will be for first student
-		// attendanceArrayList(diffInDays) through (2 * diffInDays - 1) will be for second student, etc
-		// this will only work with ordered collections
+		// set up a new Attendance for each student
 		for (Person student : students) {
-			for (int i = 0; i < diffInDays; i++) {
+            Attendance attendance = new Attendance();
+            // set the person
+            attendance.setPerson(student);
+            // set the course
+            attendance.setCourse(course);
 
-				Attendance attendance = new Attendance();
-				// set the person
-				attendance.setPerson(student);
-				// set the course
-				attendance.setCourse(course);
-				// set the date, increment by one day for each new Attendance object
-				attendance.setDate(Utilities.addDays(startDate, i));
-				// pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
-				attendance.setAstatus("Present");
-				// add it to the list
-				attendanceArrayList.add(attendance);
-			}
+            // pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
+            attendance.setAstatus("Present");
+            // add it to the list
+            attendanceArrayList.add(attendance);
 		}
 
-
+        // set the list in the wrapper
 		wrapper.setAttendanceList(attendanceArrayList);
 
 		model.addAttribute("attendanceWrapper", wrapper);
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
-		model.addAttribute("numStudents", students.size());
 		model.addAttribute("students", students);
-		model.addAttribute("allDates", dates);
-		model.addAttribute("numDates", diffInDays);
+		model.addAttribute("dates", dates);
 
 		return "takeattendance";
 	}
@@ -313,35 +305,33 @@ public class TeacherController {
 	@PostMapping("/takeattendance/{courseid}")
 	public String takeAttendancePost(
 			@ModelAttribute("attendanceWrapper") AttendanceWrapper attWrapper,
+			@RequestParam("selectedDate") Date selectedDate,
 			@PathVariable("courseid") long courseId) {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
-
+		System.out.println("=================== selectedDate: " + selectedDate);
 
 		Course course = courseRepo.findOne(courseId);
 		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
-		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-		Date startDate = course.getDateStart();
-		List<Date> dates = new ArrayList<>();
 
-		for (int i = 0; i < diffInDays; i++) {
-			dates.add(Utilities.addDays(startDate, i));
-		}
-
+        // set the date on each Attendance that we just got back from the form
+        for (Attendance att : attWrapper.getAttendanceList()) {
+            System.out.println("============================ in /takeattendance POST, att.getPerson.getId: " + att.getPerson().getId());
+            att.setDate(selectedDate);
+        }
 
 		Set<Attendance> toDeleteList = new HashSet<>();
 		for (Person student : students) {
-			for (Date date : dates) {
-				// there can only be one Attendance per student, course, and date
-				// we delete all the previous records before saving a new set, so we don't get duplicates
-				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, date));
-			}
+            // there can only be one Attendance per student, course, and date
+            // we delete all the previous records before saving a new set, so we don't get duplicates
+            toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, selectedDate));
 		}
 		// wipe out all the existing records for each student for each date for this course
 		attendanceRepo.delete(toDeleteList);
 
-		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
+		// courseId, personId are all preserved through the form, so just need to save it now, both join columns are set
+        // and we set the date to the selected date above, so ready to save to repo
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
 		return "redirect:/mycoursesdetail";
