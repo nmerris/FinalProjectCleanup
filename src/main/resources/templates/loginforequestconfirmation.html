@@ -9,10 +9,16 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-
                 <h2 th:text="${message}"></h2>
                 <h4 th:text="${extraMessage}"></h4>
-
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h4><b>Logs Info Confirmation</b></h4></div>
+                    <ul class="list-group">
+                        <li class="list-group-item" th:text="${'M-Number:  ' + student.mNumber}"></li>
+                        <li class="list-group-item" th:text="${'Contact Number: ' + student.contactNum}"></li>
+                        <li class="list-group-item" th:text="${'E-mail: ' + student.email}"></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

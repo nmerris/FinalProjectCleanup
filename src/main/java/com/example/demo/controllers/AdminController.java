@@ -161,6 +161,13 @@ public class AdminController
 		return "allcourses";
 	}
 
+	@RequestMapping("/viewdeletedcourses")
+	public String deletedCourses(Model model)
+	{
+		model.addAttribute("allcourses", courseRepo.findByDeletedIs(true));
+		return "viewdeletedcourses";
+	}
+
 
 	// view all the students, admin can click on one to see the courses that particular student is registered in
 	// this route shows the list of students only
@@ -305,8 +312,7 @@ public class AdminController
 	@PostMapping("/loginforequest")
 	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
 									 @Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
-									 BindingResult bindingResult, Model model) {
-
+									 BindingResult bindingResult,@RequestParam(value = "selectedStudent")long studId, Model model) {
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
 
@@ -328,12 +334,15 @@ public class AdminController
 			}
 			else {
 				// found a match for that mnum, so save to db
+				model.addAttribute("students", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("STUDENT")));
 				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
 				courseInfoRequestLogRepo.save(log);
 				model.addAttribute("message", "New course info request log saved");
-				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
-						courseRepo.findOne(log.getCourse().getId()).getName(),
-						personRepo.findByMNumberIs(enteredMnum).getFullName()));
+//				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
+//						courseRepo.findOne(log.getCourse().getId()).getName(),
+//						personRepo.findByMNumberIs(enteredMnum).getFullName()));
+				model.addAttribute("student", personRepo.findOne(studId));
+
 				return "loginforequestconfirmation";
 			}
 		}

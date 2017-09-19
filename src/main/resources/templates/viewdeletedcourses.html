@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base:: FinalHead"></head>
+<body>
+<th:block th:replace="base::FinalNavAdmin"></th:block>
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <caption><h3><b>Deleted Course List</b></h3></caption>
+                        <thead>
+                        <tr>
+
+                            <td>CRN Number</td>
+                            <td>Name</td>
+                            <td>Start Date</td>
+                            <td>End Date</td>
+                            <td colspan="4">Action</td>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr  th:each="singlecourse:${allcourses}">
+                            <td th:text="${singlecourse.courseRegistrationNum}"></td>
+                            <td th:text="${singlecourse.name}"></td>
+                            <td th:text="${singlecourse.dateStart}"></td>
+                            <td th:text="${singlecourse.dateEnd}"></td>
+                            <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>View Details</b></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- container -->
+<th:block th:replace="base::Footer"></th:block>
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>
