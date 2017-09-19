@@ -1,17 +1,24 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.Course;
-import com.example.demo.models.CourseInfoRequestLog;
-import com.example.demo.models.Evaluation;
-import com.example.demo.models.Person;
+import com.example.demo.models.*;
 import com.example.demo.repositories.*;
+import com.google.common.collect.Lists;
+import it.ozimov.springboot.mail.model.Email;
+import it.ozimov.springboot.mail.model.EmailAttachment;
+import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
+import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
+import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,21 +29,27 @@ public class AdminController
 {
 	@Autowired
 	AuthorityRepo authorityRepo;
+
 	@Autowired
 	PersonRepo personRepo;
+
 	@Autowired
 	CourseRepo courseRepo;
+
 	@Autowired
 	AttendanceRepo attendanceRepo;
+
 	@Autowired
 	RegistrationTimestampRepo registrationTimestampRepo;
 	@Autowired
 	EvaluationRepo evaluationRepo;
+
 	@Autowired
 	CourseInfoRequestLogRepo courseInfoRequestLogRepo;
 
 
 	@GetMapping("/addcourse")
+
 	public String addCourse(Model model)
 	{
 		model.addAttribute("course", new Course());
@@ -333,6 +346,7 @@ public class AdminController
 
 		return "loginforequestconfirmation";
 	}
+
 
 
 
