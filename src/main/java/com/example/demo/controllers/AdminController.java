@@ -102,7 +102,7 @@ public class AdminController
 		Course cour=new Course();
 		// need dummy data for CRN and name or validation is problematic in post route, both these are set again in post route
 		// so it doesn't matter what you set them to here
-		cour.setCourseRegistrationNum(12345678);
+		cour.setCourseRegistrationNum("12345678");
 		cour.setName("fakeName");
 
 //		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
