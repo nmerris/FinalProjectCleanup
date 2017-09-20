@@ -41,8 +41,11 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     // find an existing person by names, contact num, and email
     long countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(String firstName, String lastName, String contactNum, String email);
 
-    // this should only ever return one person
+    // call this if you are sure there is only one student that will be returned with given data
     Person findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(String firstName, String lastName, String contactNum, String email);
+
+    // call this if you think more than one student will have identical fn, ln, contact num, and email
+    Set<Person> findByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(String firstName, String lastName, String contactNum, String email);
 
     Person findByMNumberIs(String mnum);
 

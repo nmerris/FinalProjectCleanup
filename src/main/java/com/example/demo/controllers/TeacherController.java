@@ -13,6 +13,7 @@ import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
 import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -118,6 +119,7 @@ public class TeacherController {
 	@PostMapping("/addstudent/{id}")
 	public String addStudentToCourse(@PathVariable("id") long courseId,
 									 @Valid @ModelAttribute("newstudent") Person student,
+									 @RequestParam(value = "existingStudent", required = false) String existingStudent,
 									 BindingResult bindingResult, Model model) {
 
 		Course course = courseRepo.findOne(courseId);
@@ -128,9 +130,10 @@ public class TeacherController {
 			return "addstudenttocourse";
 		}
 
-		// check to see if the student does not exist, if they don't, register them and save everything as needed
+		// check to see if the student does not exists, if they don't create them and save
+		// also check to see if the student checked the 'existing student checkbox', if not also create a new student
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
+				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0 || existingStudent == null) {
 
 			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
 			Person p = userService.saveStudent(student);
@@ -144,136 +147,51 @@ public class TeacherController {
 			return "redirect:/addstudent/" + courseId;
 		}
 
-		// if there is one match found based on the form data that was just entered, create a timestamp,
-		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
-			System.out.println("============================= in /addstudent POST, one matching student was found, about to add this course to existing student");
-			Person existingStudent = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-					student.getNameLast(), student.getContactNum(), student.getEmail());
-			RegistrationTimestamp rt = new RegistrationTimestamp();
-			rt.setCourse(course);
-			rt.setPerson(existingStudent);
-			rt.setTimestamp(new Date());
-			registrationTimestampRepo.save(rt);
-			course.addPerson(existingStudent);
-			courseRepo.save(course);
-			return "redirect:/addstudent/" + courseId;
-		}
-
-		// if there is more than one match found based on the form data that was just entered, create a timestamp,
-		System.out.println("============================= in /addstudent POST, MORE than one matching student was found");
-		Person existingStudent = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+		// data entered matches a record in the db AND the 'existing student' box was checked, so now need to show
+		// a new page with a drop down of choices and Mnums for student to select.. themselves
+		System.out.println("============================= in /addstudent POST, 1 or more matching student was found");
+		// if there is more than one match found based on the form data that was just entered,
+		// we'll display a new page with a drop down list of possible students and ask them to select one, or not
+		Set<Person> potentials = personRepo.findByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 				student.getNameLast(), student.getContactNum(), student.getEmail());
-		RegistrationTimestamp rt = new RegistrationTimestamp();
-		rt.setCourse(course);
-		rt.setPerson(existingStudent);
-		rt.setTimestamp(new Date());
-		registrationTimestampRepo.save(rt);
-		course.addPerson(existingStudent);
-		courseRepo.save(course);
-//		return "redirect:/addstudent/" + courseId;
 
+		model.addAttribute("potentials", potentials);
+		model.addAttribute("course", course);
+		return "addstudentmultiplechoices";
 
-
-
-
-
-		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
-		// it would be nice to display their new mnumber
-		return "redirect:/addstudent/" + courseId;
 	}
 
 
-//	@PostMapping("/addexistingstudent/{id}")
-//	public String addExistingStudentToCourse(@PathVariable("id") long courseId,
-//											 @Valid @ModelAttribute("existingStudent") Person student,
-//											 BindingResult bindingResult, Model model) {
-//
-//		Course course = courseRepo.findOne(courseId);
-//		model.addAttribute("course", course);
-//		model.addAttribute("newstudent", new Person());
-//
-//		if(bindingResult.hasErrors()) {
-//			return "addstudenttocourse";
-//		}
-//
-//		// check to make sure the info the existing student entered matches a student already in the db
-//		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-//				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
-//			// an existing person could not be found with that info, so display an error msg
-//			model.addAttribute("couldNotFindStudent", true);
-//
-//			return "addstudenttocourse";
-//		}
-//
-//		Person p = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-//			student.getNameLast(), student.getContactNum(), student.getEmail());
-//
-//		// save the timestamp for when this existing person registered for this course
-//		RegistrationTimestamp timestamp = new RegistrationTimestamp();
-//		timestamp.setCourse(course);
-//		timestamp.setPerson(p);
-//		timestamp.setTimestamp(new Date());
-//		registrationTimestampRepo.save(timestamp);
-//
-//		course.addPerson(p);
-//		courseRepo.save(course);
-//
-//		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
-//		return "redirect:/addstudent/" + courseId;
-//	}
+	// this route fires only when there were multiple students that matched all the registration data when they were
+	// signing up for a course.. it there were > 1 existing students with same first and last names, emails, and contact nums
+	// I feel like we really just should have made email unique!!! it would be much less hassle that way...
+	@PostMapping("/addstudentmultiplechoices/{cid}")
+	public String selectaStudentToRegister(@PathVariable("cid") long courseId,
+										   @RequestParam("selectedStudentId") long selectedStudentId, Model model) {
+
+		Person selectedStudent = personRepo.findOne(selectedStudentId);
+		Course course = courseRepo.findOne(courseId);
+		
+		if(selectedStudent.getCourses().contains(course)) {
+			// student is already registered for this course, no problem, just don't save anything to dbs
+			return "redirect:/addstudent/" + courseId;
+		}
+
+		// at this point: existing student has been selected from drop down of choices and they are not already registered for this course
+		RegistrationTimestamp rt = new RegistrationTimestamp();
+		rt.setCourse(course);
+		rt.setPerson(selectedStudent);
+		rt.setTimestamp(new Date());
+		registrationTimestampRepo.save(rt);
+		course.addPerson(selectedStudent);
+		courseRepo.save(course);
+		return "redirect:/addstudent/" + courseId;
+
+	}
 
 
 
-	// UNDER CONSTRUCTION BUT IS SAVING A LIST OF ATTENDANCE OBJECTS TO DB!
-	// NOTE: for now, we are taking attendance for one student at a time, not ideal, but works..
-	// will update to do all students in course on one page if there is enough time
-//	@GetMapping("/takeattendance/{courseid}")
-//	public String takeAttendance(@PathVariable("courseid") long courseId,
-//								 @RequestParam("studentid") long studentid, Model model) {
-//
-//		// get the course we are taking attendance for
-//		Course course = courseRepo.findOne(courseId);
-//		// get the student we are taking attendance for
-//		Person student = personRepo.findOne(studentid);
-//		System.out.println("=================== fist name of student who we are taking attendance for (person.getNameFirst): " + student.getNameFirst());
-//		System.out.println("=================== id of student who we are taking attendance for (person.getId): " + student.getId());
-//
-//		// get the difference in days between course start and end dates
-//		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
-//		System.out.printf("======================= Difference between course start and end dates: %d day(s)", diffInDays);
-//
-//		// need this to be able to process a list of objects in a single form
-//		AttendanceWrapper wrapper = new AttendanceWrapper();
-//		// get the course start date
-//		Date startDate = course.getDateStart();
-//		// create an empty list of attendance
-//		List<Attendance> attendanceArrayList = new ArrayList<>();
-//
-//		// now create diffInDays number of Attendance objects to send to view
-//		for (int i = 0; i < diffInDays; i++) {
-//			Attendance attendance = new Attendance();
-//			// set the person
-//			attendance.setPerson(student);
-//			// set the course
-//			attendance.setCourse(course);
-//			// set the date, increment by one day for each new Attendance object
-//			attendance.setDate(Utilities.addDays(startDate, i));
-//			// pre check it to 'Present'
-//			attendance.setAstatus("Present");
-//			// add it to the list
-//			attendanceArrayList.add(attendance);
-//
-//		}
-//		wrapper.setAttendanceList(attendanceArrayList);
-//
-//		model.addAttribute("attendanceWrapper", wrapper);
-//		model.addAttribute("studentName", student.getNameFirst() + ' ' + student.getNameLast());
-//		model.addAttribute("courseName", course.getName());
-//		model.addAttribute("courseId", courseId);
-//
-//		return "takeattendance";
-//	}
+
 
 	// each time we create a brand new set of Attendance objects to send to the form
 	// each student is a row, and each column is a single date
@@ -315,7 +233,7 @@ public class TeacherController {
             // set the course
             attendance.setCourse(course);
 
-            // pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
+            // pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is being set to
             attendance.setAstatus("Present");
             // add it to the list
             attendanceArrayList.add(attendance);

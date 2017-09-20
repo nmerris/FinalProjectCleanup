@@ -17,7 +17,7 @@
             <form action="#" th:action="@{/addstudent/{cid}(cid=${course.id})}" th:object="${newstudent}" method="post">
                 <div class="text-center feedback">
                     <h2 th:text="'Course Name: ' + ${course.name}"></h2>
-                    <h2>Register as a New Student if you have no M-number</h2>
+                    <!--<h2>Register as a New Student if you have no M-number</h2>-->
                 </div>
                 <div class="row justify-content-center">
 
@@ -49,10 +49,17 @@
                     <div class="col col-sm-6 form-group">
                         <label for="phone">Emergency Contact Number</label>
                         <input type="text" class="form-control" th:field="*{contactNum}" id="phone"
-                               placeholder="1234567890"/>
+                               placeholder="123-456-7890"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('contactNum')}" th:errors="*{contactNum}"></p>
 
                     </div>
+
+                    <div class="col col-sm-6 form-group">
+                        <input type="checkbox" name="existingStudent" id="expertId" value="true"/>
+                        <label class="section-heading" for="expertId">Check if you are an existing student</label>
+                    </div>
+
+
                 </div>
                 <div class="row justify-content-left">
                     <div class="col col-sm-12">
