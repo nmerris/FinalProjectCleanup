@@ -2,18 +2,17 @@ package com.example.demo.controllers;
 
 import com.example.demo.AttendanceWrapper;
 import com.example.demo.Utilities;
-import com.example.demo.models.*;
+import com.example.demo.models.Attendance;
+import com.example.demo.models.Course;
+import com.example.demo.models.Person;
+import com.example.demo.models.RegistrationTimestamp;
 import com.example.demo.repositories.*;
 import com.example.demo.services.UserService;
 import com.google.common.collect.Lists;
 import it.ozimov.springboot.mail.model.Email;
-import it.ozimov.springboot.mail.model.EmailAttachment;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
-import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
 import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,152 +103,208 @@ public class TeacherController {
     // actually it might be easier to just have students register the same way teachers and admins do...
     // then when they are signing up for a course, they would just put in the Mnumber... this would make more sense
 	@GetMapping("/addstudent/{id}")
-	public String registerStudent(@PathVariable("id") long id, Model model) {
+	public String addStudent(@PathVariable("id") long courseId, Model model) {
 		model.addAttribute("newstudent", new Person());
-//		model.addAttribute("existingStudent", new Person());
-		Course course = courseRepo.findOne(id);
+		Course course = courseRepo.findOne(courseId);
 		model.addAttribute("course", course);
 		return "addstudenttocourse";
 	}
-
 
 	// students do not have usernames or passwords, but they must enter first, last names
 	// and contact num, email
 	@PostMapping("/addstudent/{id}")
 	public String addStudentToCourse(@PathVariable("id") long courseId,
 									 @Valid @ModelAttribute("newstudent") Person student,
-									 @RequestParam(value = "registerNew", required = false) String registerNew,
-									 BindingResult bindingResult, Model model) {
+									 BindingResult bindingResult, Model model)
+	{
+		//Check for validation error
+		if(bindingResult.hasErrors())
+		{
+			return "addstudenttocourse";
+		}
+		//Get course object
+		Course course = courseRepo.findOne(courseId);
+		//check if person exists
+		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+		                                                                       student.getNameLast(), student.getContactNum(), student.getEmail()) == 1)
+		{
+			System.out.println("Person exists");
+			//person exists, register them
+			student=personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+			                                                                                student.getNameLast(), student.getContactNum(), student.getEmail());
+			registerStudent(courseId, student.getId(), student, model);
+		}
+		//if no exact match, check if name exists
+		else if(personRepo.countByNameFirstIsAndNameLastIs(student.getNameFirst(), student.getNameLast())>=1)
+		{
+			System.out.println("Name exists");
+			//if yes, ask for match
+			model.addAttribute("newstudent", student);
+			model.addAttribute("potentials", personRepo.findAllByNameFirstIsAndNameLastIs(student.getNameFirst(), student.getNameLast()));
+			model.addAttribute("course", course);
+			System.out.println(student.getNameFirst());
+			System.out.println(student.getNameLast());
+			return "checkforduplicatestudent";
+		}
+		else{
+			System.out.println("Person does not exist");
+
+			//here, person does not exist in the database and neither does their name, so create new and register
+			registerStudent(courseId, 0, student, model);
+		}
+//		return null;
+		return "redirect:/addstudent/" + courseId;
+
+	}
+
+	@RequestMapping("registerstudent/{cid}/{pid}")
+	public String registerStudent(@PathVariable("cid") long courseId, @PathVariable("pid") long personId,
+	                              @ModelAttribute("newstudent")Person student,
+	                              Model model)
+	{
+		System.out.println(student.getNameFirst());
+		System.out.println(student.getNameLast());
+		System.out.println("Start over");
+/*
+		Course course = courseRepo.findOne(courseId);
+
+		//student doesn't exist in the database
+		if(personId==0)
+		{
+			System.out.println("Person not in DB");
+
+			student = userService.saveStudent(student);
+			System.out.println(student.getNameFirst());
+			System.out.println(student.getNameLast());
+		}
+		else
+		{
+			System.out.println("Person in DB");
+			student=personRepo.findOne(personId);
+		}
+		//check if the person is already registered (new students won't be registered)
+		if(course.getPersons().contains(student))
+		{
+			System.out.println("Person already registered");
+			// if yes, they have already registered for this course, display an error msg
+			model.addAttribute("alreadyRegistered", true);
+			model.addAttribute("newstudent", new Person());
+			model.addAttribute("course", course);
+			return "addstudenttocourse";
+		}
+
+		System.out.println("Register person");
+//		RegistrationTimestamp timestamp = new RegistrationTimestamp();
+//		timestamp.setCourse(course);
+//		timestamp.setPerson(student);
+//		timestamp.setTimestamp(new Date());
+//		registrationTimestampRepo.save(timestamp);
+		course.addPerson(student);
+		courseRepo.save(course);
+
+		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
+
+		//add empty
+		model.addAttribute("course", course);
+*/
+		model.addAttribute("course", courseRepo.findOne(courseId));
+		model.addAttribute("newstudent", new Person());
+
+		return "redirect:/addstudent/" + courseId;
+	}
 
 
-//		System.out.println("============================= in /addstudent POST, about to save a brand new student, registerNew: " + registerNew);
 
+	@PostMapping("/addexistingstudent/{id}")
+	public String addExistingStudentToCourse(@PathVariable("id") long courseId,
+											 @Valid @ModelAttribute("existingStudent") Person student,
+											 BindingResult bindingResult, Model model) {
 
 		Course course = courseRepo.findOne(courseId);
 		model.addAttribute("course", course);
-		model.addAttribute("existingStudent", new Person());
+		model.addAttribute("newstudent", new Person());
 
 		if(bindingResult.hasErrors()) {
 			return "addstudenttocourse";
 		}
 
-		// 'existing student' box was checked, register them as a new student
-		if(registerNew != null) {
-			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
-			Person p = userService.saveStudent(student);
-			RegistrationTimestamp rt = new RegistrationTimestamp();
-			rt.setCourse(course);
-			rt.setPerson(p);
-			rt.setTimestamp(new Date());
-			registrationTimestampRepo.save(rt);
-			course.addPerson(p);
-			courseRepo.save(course);
-
-			model.addAttribute("message", "Welcome to Montgomery College!  You have been registered for this course.  Make note of your new M-number.");
-			model.addAttribute("student", p);
-			model.addAttribute("course", course);
-
-			return "addstudenttocourseconfirmation";
-//			return "redirect:/addstudent/" + courseId;
-		}
-
-
-		// if 'existing student' box was checked, but can't find a match, display a msg
+		// check to make sure the info the existing student entered matches a student already in the db
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
-			System.out.println("============================= in /addstudent POST, 'new student' box was NOT checked, but could not find a match");
+			// an existing person could not be found with that info, so display an error msg
+			model.addAttribute("couldNotFindStudent", true);
 
-			model.addAttribute("message", "No existing student found that matches the info that was entered");
-			model.addAttribute("invalidStudent", true);
-			return "addstudenttocourseconfirmation";
+			return "addstudenttocourse";
 		}
 
+		Person p = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+			student.getNameLast(), student.getContactNum(), student.getEmail());
 
-		// if 'existing student' was checked, and there was only one match, register them for this course if they're not already in it
-		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
+		// save the timestamp for when this existing person registered for this course
+		RegistrationTimestamp timestamp = new RegistrationTimestamp();
+		timestamp.setCourse(course);
+		timestamp.setPerson(p);
+		timestamp.setTimestamp(new Date());
+		registrationTimestampRepo.save(timestamp);
 
-			System.out.println("============================= in /addstudent POST, about to register existing student, only found 1 match");
-			Person p = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-					student.getNameLast(), student.getContactNum(), student.getEmail());
-			model.addAttribute("message", "Welcome back!  You have been registered for this course.");
-			model.addAttribute("student", p);
-			model.addAttribute("course", course);
-
-			if(p.getCourses().contains(course)) {
-				// student is already registered for this course, no problem, just don't save anything to dbs
-				return "addstudenttocourseconfirmation";
-//			return "redirect:/addstudent/" + courseId;
-			}
-
-			// register them for this course, and create a timestamp
-			RegistrationTimestamp rt = new RegistrationTimestamp();
-			rt.setCourse(course);
-			rt.setPerson(p);
-			rt.setTimestamp(new Date());
-			registrationTimestampRepo.save(rt);
-			course.addPerson(p);
-			courseRepo.save(course);
-
-			return "addstudenttocourseconfirmation";
-//			return "redirect:/addstudent/" + courseId;
-		}
-
-
-
-
-		// data entered matches a record in the db AND the 'existing student' box was checked, so now need to show
-		// a new page with a drop down of choices and Mnums for student to select.. themselves
-		System.out.println("============================= in /addstudent POST, 1 or more matching student was found");
-		// if there is more than one match found based on the form data that was just entered,
-		// we'll display a new page with a drop down list of possible students and ask them to select one, or not
-		Set<Person> potentials = personRepo.findByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail());
-
-		model.addAttribute("potentials", potentials);
-		model.addAttribute("course", course);
-		return "addstudentmultiplechoices";
-
-	}
-
-
-	// this route fires only when there were multiple students that matched all the registration data when they were
-	// signing up for a course.. it there were > 1 existing students with same first and last names, emails, and contact nums
-	// I feel like we really just should have made email unique!!! it would be much less hassle that way...
-	@PostMapping("/addstudentmultiplechoices/{cid}")
-	public String selectaStudentToRegister(@PathVariable("cid") long courseId,
-										   @RequestParam("selectedStudentId") long selectedStudentId, Model model) {
-
-		Person selectedStudent = personRepo.findOne(selectedStudentId);
-		Course course = courseRepo.findOne(courseId);
-
-		model.addAttribute("message", "Welcome back!  You have been registered for this course.");
-		model.addAttribute("student", selectedStudent);
-		model.addAttribute("course", course);
-		
-		if(selectedStudent.getCourses().contains(course)) {
-			// student is already registered for this course, no problem, just don't save anything to dbs
-			return "addstudenttocourseconfirmation";
-//			return "redirect:/addstudent/" + courseId;
-		}
-
-		// at this point: existing student has been selected from drop down of choices and they are not already registered for this course
-		RegistrationTimestamp rt = new RegistrationTimestamp();
-		rt.setCourse(course);
-		rt.setPerson(selectedStudent);
-		rt.setTimestamp(new Date());
-		registrationTimestampRepo.save(rt);
-		course.addPerson(selectedStudent);
+		course.addPerson(p);
 		courseRepo.save(course);
 
-		return "addstudenttocourseconfirmation";
-//		return "redirect:/addstudent/" + courseId;
-
+		// TODO: if we have time, it would be nice to have some sort of confirmation that a student was registered to the course
+		return "redirect:/addstudent/" + courseId;
 	}
 
 
 
-
+	// UNDER CONSTRUCTION BUT IS SAVING A LIST OF ATTENDANCE OBJECTS TO DB!
+	// NOTE: for now, we are taking attendance for one student at a time, not ideal, but works..
+	// will update to do all students in course on one page if there is enough time
+//	@GetMapping("/takeattendance/{courseid}")
+//	public String takeAttendance(@PathVariable("courseid") long courseId,
+//								 @RequestParam("studentid") long studentid, Model model) {
+//
+//		// get the course we are taking attendance for
+//		Course course = courseRepo.findOne(courseId);
+//		// get the student we are taking attendance for
+//		Person student = personRepo.findOne(studentid);
+//		System.out.println("=================== fist name of student who we are taking attendance for (person.getNameFirst): " + student.getNameFirst());
+//		System.out.println("=================== id of student who we are taking attendance for (person.getId): " + student.getId());
+//
+//		// get the difference in days between course start and end dates
+//		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+//		System.out.printf("======================= Difference between course start and end dates: %d day(s)", diffInDays);
+//
+//		// need this to be able to process a list of objects in a single form
+//		AttendanceWrapper wrapper = new AttendanceWrapper();
+//		// get the course start date
+//		Date startDate = course.getDateStart();
+//		// create an empty list of attendance
+//		List<Attendance> attendanceArrayList = new ArrayList<>();
+//
+//		// now create diffInDays number of Attendance objects to send to view
+//		for (int i = 0; i < diffInDays; i++) {
+//			Attendance attendance = new Attendance();
+//			// set the person
+//			attendance.setPerson(student);
+//			// set the course
+//			attendance.setCourse(course);
+//			// set the date, increment by one day for each new Attendance object
+//			attendance.setDate(Utilities.addDays(startDate, i));
+//			// pre check it to 'Present'
+//			attendance.setAstatus("Present");
+//			// add it to the list
+//			attendanceArrayList.add(attendance);
+//
+//		}
+//		wrapper.setAttendanceList(attendanceArrayList);
+//
+//		model.addAttribute("attendanceWrapper", wrapper);
+//		model.addAttribute("studentName", student.getNameFirst() + ' ' + student.getNameLast());
+//		model.addAttribute("courseName", course.getName());
+//		model.addAttribute("courseId", courseId);
+//
+//		return "takeattendance";
+//	}
 
 	// each time we create a brand new set of Attendance objects to send to the form
 	// each student is a row, and each column is a single date
@@ -284,28 +338,36 @@ public class TeacherController {
 		List<Attendance> attendanceArrayList = new ArrayList<>();
 
 
-		// set up a new Attendance for each student
+		// attendanceArrayList(0) through (diffInDays - 1) will be for first student
+		// attendanceArrayList(diffInDays) through (2 * diffInDays - 1) will be for second student, etc
+		// this will only work with ordered collections
 		for (Person student : students) {
-            Attendance attendance = new Attendance();
-            // set the person
-            attendance.setPerson(student);
-            // set the course
-            attendance.setCourse(course);
+			for (int i = 0; i < diffInDays; i++) {
 
-            // pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is being set to
-            attendance.setAstatus("Present");
-            // add it to the list
-            attendanceArrayList.add(attendance);
+				Attendance attendance = new Attendance();
+				// set the person
+				attendance.setPerson(student);
+				// set the course
+				attendance.setCourse(course);
+				// set the date, increment by one day for each new Attendance object
+				attendance.setDate(Utilities.addDays(startDate, i));
+				// pre check it to 'Present', this works because th:field automatically sets checked to whatever the radio input is bing set to
+				attendance.setAstatus("Present");
+				// add it to the list
+				attendanceArrayList.add(attendance);
+			}
 		}
 
-        // set the list in the wrapper
+
 		wrapper.setAttendanceList(attendanceArrayList);
 
 		model.addAttribute("attendanceWrapper", wrapper);
 		model.addAttribute("courseName", course.getName());
 		model.addAttribute("courseId", courseId);
+		model.addAttribute("numStudents", students.size());
 		model.addAttribute("students", students);
-		model.addAttribute("dates", dates);
+		model.addAttribute("allDates", dates);
+		model.addAttribute("numDates", diffInDays);
 
 		return "takeattendance";
 	}
@@ -314,33 +376,35 @@ public class TeacherController {
 	@PostMapping("/takeattendance/{courseid}")
 	public String takeAttendancePost(
 			@ModelAttribute("attendanceWrapper") AttendanceWrapper attWrapper,
-			@RequestParam("selectedDate") Date selectedDate,
 			@PathVariable("courseid") long courseId) {
 
 		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
 		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
-		System.out.println("=================== selectedDate: " + selectedDate);
+
 
 		Course course = courseRepo.findOne(courseId);
 		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
+		Date startDate = course.getDateStart();
+		List<Date> dates = new ArrayList<>();
 
-        // set the date on each Attendance that we just got back from the form
-        for (Attendance att : attWrapper.getAttendanceList()) {
-            System.out.println("============================ in /takeattendance POST, att.getPerson.getId: " + att.getPerson().getId());
-            att.setDate(selectedDate);
-        }
+		for (int i = 0; i < diffInDays; i++) {
+			dates.add(Utilities.addDays(startDate, i));
+		}
+
 
 		Set<Attendance> toDeleteList = new HashSet<>();
 		for (Person student : students) {
-            // there can only be one Attendance per student, course, and date
-            // we delete all the previous records before saving a new set, so we don't get duplicates
-            toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, selectedDate));
+			for (Date date : dates) {
+				// there can only be one Attendance per student, course, and date
+				// we delete all the previous records before saving a new set, so we don't get duplicates
+				toDeleteList.addAll(attendanceRepo.findByPersonIsAndCourseIsAndDateIs(student, course, date));
+			}
 		}
 		// wipe out all the existing records for each student for each date for this course
 		attendanceRepo.delete(toDeleteList);
 
-		// courseId, personId are all preserved through the form, so just need to save it now, both join columns are set
-        // and we set the date to the selected date above, so ready to save to repo
+		// courseId, personId, and date are all preserved through the form, so just need to save it now, both join columns are set
 		attendanceRepo.save(attWrapper.getAttendanceList());
 
 		return "redirect:/mycoursesdetail";
@@ -362,45 +426,43 @@ public class TeacherController {
 	}
 
 
-//	@PostMapping("/sendemail")
-//	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
-//								@RequestParam("courseId") long courseId,
-//								Principal principal) {
-//
-//		System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
-//
-//		// get the logged in person
-//		Person teacher = personRepo.findByUsername(principal.getName());
-//
-//		// get the selected admin
-//		Person admin = personRepo.findOne(adminId);
-//
-//		// get the course
-//		Course course = courseRepo.findOne(courseId);
-//
-//		// build the email body
-//		String body = buildAttendanceEmail(course);
-//
-//		// testing
-//		System.out.println(body);
-//
-//
-//		// the email needs to know what admin addres to send to
-//		// sendemail.html has a drop down list of admins, teacher selects
-//		// one to send the attendance info to
-//		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
-//		sendEmailWithoutTemplate(
-//				teacher.getFullName(),	// teacher name
-//				course.getName(),		// course name
-//				body,					// email body
-//				admin.getEmail(),		// to email address
-//				admin.getFullName());	// to email name
-//
-//		return "redirect:/mycoursesdetail";
-//	}
+	@PostMapping("/sendemail")
+	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
+								@RequestParam("courseId") long courseId,
+								Principal principal) {
 
-	// builds a String that has all the attendance info for a single course
-	// result is a basic text based table, will only look nice with a fixed width font
+		System.out.println("=================== in /sendemail POST, selectedAdminId: " + adminId);
+
+		// get the logged in person
+		Person teacher = personRepo.findByUsername(principal.getName());
+
+		// get the selected admin
+		Person admin = personRepo.findOne(adminId);
+
+		// get the course
+		Course course = courseRepo.findOne(courseId);
+
+		// build the email body
+		String body = buildAttendanceEmail(course);
+
+		// testing
+		System.out.println(body);
+
+
+		// the email needs to know what admin addres to send to
+		// sendemail.html has a drop down list of admins, teacher selects
+		// one to send the attendance info to
+		// TODO it would be nice if we could force this to be a fixed width font, because it looks poor with non fixed width
+		sendEmailWithoutTemplate(
+				teacher.getFullName(),	// teacher name
+				course.getName(),		// course name
+				body,					// email body
+				admin.getEmail(),		// to email address
+				admin.getFullName());	// to email name
+
+		return "redirect:/mycoursesdetail";
+	}
+
 //	private String buildAttendanceEmail(Course course) {
 //		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
 //
@@ -408,8 +470,13 @@ public class TeacherController {
 //
 //		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
 //
+//		String message = "<i>Greetings!</i><br>";
+//		message += "<b>Wish you a nice day!</b><br>";
+//		message += "<font color=red>Duke</font>";
 //
-//		String s = String.format("%-16s %-10s", "LAST NAME", "mNUM");
+//String s="<table><thead><tr><th>ColOne</th><th>coltwo</th><th>colthree</th></tr></thead><tbody><tr><td>data1</td><td>data2</td><td>data3</td></tr></tbody></table>";
+//
+//
 //
 //		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! inside buildEmail.. diffInDays: " + diffInDays);
 //
@@ -436,88 +503,54 @@ public class TeacherController {
 //
 //		return s;
 //	}
-//
-//
-//	//Email Sending to admin from the teacher
-//
-//	public void sendEmailWithoutTemplate(String teacherName, String courseName,String eBody,String adminEmail,String adminName) {
-//
-//		final Email email;
-//		try {
-//			email = DefaultEmail.builder()
-//					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
-//					// this may work depending on the email server config that is being used
-//					// the from NAME does get used though
-//					.from(new InternetAddress("anyone@anywhere.net", teacherName))
-//					.to(Lists.newArrayList(
-//							new InternetAddress(adminEmail, adminName)))
-//					.subject("Attendance For "+ courseName)
-//					.body(eBody)
-//					.encoding("UTF-8").build();
-//
-//			// conveniently, .send will put a nice INFO message in the console output when it sends
-//			emailService.send(email);
-//
-//		} catch (UnsupportedEncodingException e) {
-//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
-//			e.printStackTrace();
-//		}
-//
-//
-//
-//	}
 
 
-//	===========================================================================================================================================
-@PostMapping("/sendemail")
-public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
-							@RequestParam("courseId") long courseId,
-							Principal principal) {
-	// get the logged in person
-	Person teacher = personRepo.findByUsername(principal.getName());
 
-	// get the selected admin
-	Person admin = personRepo.findOne(adminId);
 
-	// get the course
-	Course course = courseRepo.findOne(courseId);
 
-	sendEmailWithoutTemplate(course,
-			teacher.getFullName(),	// teacher name
-			course.getName(),		// course name
-			admin.getEmail(),		// to email address
-			admin.getFullName());	// to email name
 
-	return "redirect:/mycoursesdetail";
-}
+	// builds a String that has all the attendance info for a single course
+	// result is a basic text based table, will only look nice with a fixed width font
+	private String buildAttendanceEmail(Course course) {
+		int diffInDays = Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd());
 
-	private EmailAttachment getCsvForecastAttachment(String filename, Course course) {
-		String headers="M-Number,Student Name,Date,Status\n";
-		Iterable<Person> students = course.getPersons();
-		for (Person stud : students) {
-			String fullName = stud.getFullName();
-			String studentId = String.valueOf(stud.getId());
-			String mNUM = String.valueOf(stud.getmNumber());
-			Iterable<Attendance> attendances = stud.getAttendances();
-			for (Attendance att : attendances) {
-				String dates = String.valueOf(att.getDate());
-				String status = att.getAstatus();
-				headers+= mNUM + "," + fullName  + "," + dates+","+status + "\n";
-			}
+		Set<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
 
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+
+
+		String s = String.format("%-16s %-10s", "LAST NAME", "mNUM");
+
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! inside buildEmail.. diffInDays: " + diffInDays);
+
+		// create a header row
+		for (int i = 0; i < diffInDays; i++) {
+			s += String.format("%-10s", dateFormat.format(Utilities.addDays(course.getDateStart(), i)));
 		}
 
-		DefaultEmailAttachment attachment = DefaultEmailAttachment.builder()
-				.attachmentName(filename + ".csv")
-				.attachmentData(headers.getBytes(Charset.forName("UTF-8")))
-				.mediaType(MediaType.TEXT_PLAIN).build();
+		// add a horizontal line
+		s += "\n-------------------------"; // 26
+		for(int i = 0; i < diffInDays; i++) {
+			s += "----------"; // 10
+		}
 
-		return attachment;
+		s += "\n";
+
+		for (Person p : students) {
+			s += String.format("%-16s %-10s", p.getNameLast(), p.getmNumber());
+			for (Attendance a : attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(p, course)) {
+				s += String.format("%-10s", a.getAstatus());
+			}
+			s += "\n";
+		}
+
+		return s;
 	}
 
 
+	//Email Sending to admin from the teacher
 
-	public void sendEmailWithoutTemplate(Course course, String teacherName, String courseName,String adminEmail, String adminName) {
+	public void sendEmailWithoutTemplate(String teacherName, String courseName,String eBody,String adminEmail,String adminName) {
 
 		final Email email;
 		try {
@@ -528,9 +561,8 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 					.from(new InternetAddress("anyone@anywhere.net", teacherName))
 					.to(Lists.newArrayList(
 							new InternetAddress(adminEmail, adminName)))
-					.subject("Attendance For " + courseName)
-					.body("Student Attendance Details")
-					.attachment(getCsvForecastAttachment("Attendance", course))
+					.subject("Attendance For "+ courseName)
+					.body(eBody)
 					.encoding("UTF-8").build();
 
 			// conveniently, .send will put a nice INFO message in the console output when it sends
@@ -540,100 +572,10 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
 			e.printStackTrace();
 		}
+
+
+
 	}
 
-	// shows a drop down list of admins, teacher selects one to send an attendance email to
-	@GetMapping("/sendemails")
-	public String sendEmails(@RequestParam("id") long courseId, Model model) {
-		// first add a list of admins to the template
-		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
-		// add the course to the model, so we can show the name on the page
-		model.addAttribute("course", courseRepo.findOne(courseId));
-
-		return "sendemailforcourseeval";
-	}
-
-	@PostMapping("/sendemails")
-	public String sendEmailAdmin(@RequestParam("selectedAdminId") long adminId,
-								 @RequestParam("courseId") long courseId,
-								 Principal principal) {
-		// get the logged in person
-		Person teacher = personRepo.findByUsername(principal.getName());
-
-		// get the selected admin
-		Person admin = personRepo.findOne(adminId);
-
-		// get the course
-		Course course = courseRepo.findOne(courseId);
-
-		sendEmailWithoutTemplates(course,
-				teacher.getFullName(),	// teacher name
-				course.getName(),		// course name
-				admin.getEmail(),		// to email address
-				admin.getFullName());	// to email name
-
-		return "redirect:/mycoursesdetail";
-	}
-
-	private EmailAttachment getCsvForecastAttachments(String filename, Course course) {
-		String headers="Teacher Name,Course Content Rating,Instruction Quality Rating,Training Experience Rating,Text Book Rating,Classroom Environment,Equipment Rating,What Did You Like,What didnt You Like,What Improvements,What Other Classes,How Did You Find Out\n";
-		Iterable<Person> teachers = course.getPersons();
-		for (Person teach : teachers) {
-			String fullName = teach.getFullName();
-			Iterable<Evaluation> evaluations = teach.getEvaluations();
-			for (Evaluation evas : evaluations) {
-				String ccr=evas.getCourseContentRating();
-				String iqr=evas.getInstructionQualityRating();
-				String ter=evas.getTrainingExperienceRating();
-				String tbr=evas.getTextBookRating();
-				String cre=evas.getClassroomEnvironment();
-				String er=evas.getEquipmentRating();
-				String dy=evas.getWhatDidYouLike();
-				String dny=evas.getWhatDidntYouLike();
-				String  wi=evas.getWhatImprovements();
-				String woc=evas.getWhatOtherClasses();
-				String hdf=evas.getHowDidYouFindOut();
-
-				headers+=fullName + ","+ ccr + "," + iqr  + "," + ter +","
-						+ tbr +","+ cre + ","+ er + "," + dy
-						+ "," + dny + "," + wi + ","+ woc +"," + hdf +"\n";
-			}
-
-		}
-
-		DefaultEmailAttachment attachment = DefaultEmailAttachment.builder()
-				.attachmentName(filename + ".csv")
-				.attachmentData(headers.getBytes(Charset.forName("UTF-8")))
-				.mediaType(MediaType.TEXT_PLAIN).build();
-
-		return attachment;
-	}
-
-
-
-	public void sendEmailWithoutTemplates(Course course, String teacherName, String courseName,String adminEmail, String adminName) {
-
-		final Email email;
-		try {
-			email = DefaultEmail.builder()
-					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
-					// this may work depending on the email server config that is being used
-					// the from NAME does get used though
-					.from(new InternetAddress("anyone@anywhere.net", teacherName))
-					.to(Lists.newArrayList(
-							new InternetAddress(adminEmail, adminName)))
-					.subject("Evaluation For " + courseName)
-					.body("Teacher Evaluation Details")
-					.attachment(getCsvForecastAttachments("Evaluation", course))
-					.encoding("UTF-8").build();
-
-			// conveniently, .send will put a nice INFO message in the console output when it sends
-			emailService.send(email);
-
-		} catch (UnsupportedEncodingException e) {
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
-			e.printStackTrace();
-		}
-	}
 
 }
