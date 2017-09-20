@@ -14,6 +14,7 @@ public class Evaluation {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    // this is the teacher for the course
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     private Person person;
