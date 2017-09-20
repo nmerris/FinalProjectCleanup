@@ -24,13 +24,13 @@
                                     th:text="${item.name} + ' - CRN: ' + ${item.courseRegistrationNum}"></option>
                         </select>
                        <input type="hidden" th:field="*{courseRegistrationNum}"/>
-                        <!--<input type="hidden" th:field="*{name}"/>-->
+                        <input type="hidden" th:field="*{name}"/>
                     </div>
-                    <div class="form-group">
-                        <label class="section-heading" for="name">Name</label>
-                        <input id="name" class="form-control" type="text" th:field="*{name}"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label class="section-heading" for="name">Name</label>-->
+                        <!--<input id="name" class="form-control" type="text" th:field="*{name}"/>-->
+                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>

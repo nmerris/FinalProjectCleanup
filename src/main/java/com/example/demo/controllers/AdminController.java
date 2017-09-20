@@ -56,9 +56,9 @@ public class AdminController
 	// fires when adding new course OR updating existing course
 	@PostMapping("/addcourse")
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
-	                           Model model, @RequestParam(value = "selectedTeacher")long teacherId) {
+							   @RequestParam(value = "selectedTeacher")long teacherId, Model model) {
 
-		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
+//		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
 
 		if(result.hasErrors()) {
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));

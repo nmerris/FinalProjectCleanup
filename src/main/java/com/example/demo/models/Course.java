@@ -37,7 +37,9 @@ public class Course {
     // 0 = false, 1 = true
     private boolean deleted;
 
-    private long numEvaluationsCompleted;
+
+    // THIS DOES NOTHING, DO NOT USE THIS FIELD!!!
+//    private long numEvaluationsCompleted;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private Collection<RegistrationTimestamp> timeStamps;
@@ -74,6 +76,7 @@ public class Course {
         return deleted ? "YES" : "NO";
     }
 
+    // we are only allowing one teacher per course at this time, thus -1
     public long getNumStudents(){
         return persons.size()-1;
     }
@@ -82,7 +85,20 @@ public class Course {
         return courseInfoRequestLogs.size();
     }
 
+    // BE CAREFUL WITH THIS ONE - IT RETURNS ALL THE EVALUATIONS FOR THIS COURSE, FOR ALL TEACHERS
+    // which is what we want in admin course list, but NOT what we want in teacher course list
     public long getNumEvaluations(){return evaluations.size();}
+
+    // use this is teacher course list to get the number of evals for a single course for a single teacher
+    public long getNumEvalsByTeacherId(long teacherId) {
+        long count = 0;
+        for (Evaluation eval : evaluations) {
+            if(eval.getPerson().getId() == teacherId) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     // normal getter/setter methods ==================================================================================
 
@@ -135,13 +151,13 @@ public class Course {
         this.name = name;
     }
 
-    public long getNumEvaluationsCompleted() {
-        return numEvaluationsCompleted;
-    }
+//    public long getNumEvaluationsCompleted() {
+//        return numEvaluationsCompleted;
+//    }
 
-    public void setNumEvaluationsCompleted(long numEvaluationsCompleted) {
-        this.numEvaluationsCompleted = numEvaluationsCompleted;
-    }
+//    public void setNumEvaluationsCompleted(long numEvaluationsCompleted) {
+//        this.numEvaluationsCompleted = numEvaluationsCompleted;
+//    }
 
     public Collection<RegistrationTimestamp> getTimeStamps() {
         return timeStamps;

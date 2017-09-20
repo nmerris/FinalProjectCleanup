@@ -22,8 +22,8 @@
                             <th>CR Number</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Evals Completed</th>
-                            <th>Numbers of Students</th>
+                            <th># Evals</th>
+                            <th># Students</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -33,7 +33,7 @@
                             <td th:text="*{list.courseRegistrationNum}"></td>
                             <td th:text="*{list.dateStart}"></td>
                             <td th:text="*{list.dateEnd}"></td>
-                            <td><a th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.numEvaluationsCompleted}"></p></a></td>
+                            <td><a th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.getNumEvalsByTeacherId(__${teachercourse.id}__)}"></p></a></td>
                             <td><a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}"><p th:text="*{list.getNumStudents()}"></p></a></td>
 
                             <td>
