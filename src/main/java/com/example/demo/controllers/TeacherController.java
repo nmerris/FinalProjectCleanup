@@ -118,9 +118,8 @@ public class TeacherController {
 	// and contact num, email
 	@PostMapping("/addstudent/{id}")
 	public String addStudentToCourse(@PathVariable("id") long courseId,
-									 @Valid @ModelAttribute("newstudent") Person student,
-									 @RequestParam(value = "registerNew", required = false) String registerNew,
-									 BindingResult bindingResult, Model model) {
+									 @Valid @ModelAttribute("newstudent") Person student, BindingResult bindingResult,
+									 @RequestParam(value = "registerNew", required = false) String registerNew, Model model) {
 
 
 //		System.out.println("============================= in /addstudent POST, about to save a brand new student, registerNew: " + registerNew);
