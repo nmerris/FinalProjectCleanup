@@ -122,6 +122,10 @@ public class TeacherController {
 									 @RequestParam(value = "registerNew", required = false) String registerNew,
 									 BindingResult bindingResult, Model model) {
 
+
+//		System.out.println("============================= in /addstudent POST, about to save a brand new student, registerNew: " + registerNew);
+
+
 		Course course = courseRepo.findOne(courseId);
 		model.addAttribute("course", course);
 		model.addAttribute("existingStudent", new Person());
@@ -130,11 +134,8 @@ public class TeacherController {
 			return "addstudenttocourse";
 		}
 
-		// check to see if the student does not exists, if they don't create them and save
-		// also check to see if the student checked the 'existing student checkbox', if not also create a new student
-		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0 || registerNew.equals("true")) {
-
+		// 'existing student' box was checked, register them as a new student
+		if(registerNew != null) {
 			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
 			Person p = userService.saveStudent(student);
 			RegistrationTimestamp rt = new RegistrationTimestamp();
@@ -144,9 +145,59 @@ public class TeacherController {
 			registrationTimestampRepo.save(rt);
 			course.addPerson(p);
 			courseRepo.save(course);
-			// TODO nice to have an addstudent confirmation with button to register another student
-			return "redirect:/addstudent/" + courseId;
+
+			model.addAttribute("message", "Welcome to Montgomery College!  You have been registered for this course.  Make note of your new M-number.");
+			model.addAttribute("student", p);
+			model.addAttribute("course", course);
+
+			return "addstudenttocourseconfirmation";
+//			return "redirect:/addstudent/" + courseId;
 		}
+
+
+		// if 'existing student' box was checked, but can't find a match, display a msg
+		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
+			System.out.println("============================= in /addstudent POST, 'new student' box was NOT checked, but could not find a match");
+
+			model.addAttribute("message", "No existing student found that matches the info that was entered");
+			model.addAttribute("invalidStudent", true);
+			return "addstudenttocourseconfirmation";
+		}
+
+
+		// if 'existing student' was checked, and there was only one match, register them for this course if they're not already in it
+		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
+
+			System.out.println("============================= in /addstudent POST, about to register existing student, only found 1 match");
+			Person p = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
+					student.getNameLast(), student.getContactNum(), student.getEmail());
+			model.addAttribute("message", "Welcome back!  You have been registered for this course.");
+			model.addAttribute("student", p);
+			model.addAttribute("course", course);
+
+			if(p.getCourses().contains(course)) {
+				// student is already registered for this course, no problem, just don't save anything to dbs
+				return "addstudenttocourseconfirmation";
+//			return "redirect:/addstudent/" + courseId;
+			}
+
+			// register them for this course, and create a timestamp
+			RegistrationTimestamp rt = new RegistrationTimestamp();
+			rt.setCourse(course);
+			rt.setPerson(p);
+			rt.setTimestamp(new Date());
+			registrationTimestampRepo.save(rt);
+			course.addPerson(p);
+			courseRepo.save(course);
+
+			return "addstudenttocourseconfirmation";
+//			return "redirect:/addstudent/" + courseId;
+		}
+
+
+
 
 		// data entered matches a record in the db AND the 'existing student' box was checked, so now need to show
 		// a new page with a drop down of choices and Mnums for student to select.. themselves
@@ -172,11 +223,15 @@ public class TeacherController {
 
 		Person selectedStudent = personRepo.findOne(selectedStudentId);
 		Course course = courseRepo.findOne(courseId);
+
+		model.addAttribute("message", "Welcome back!  You have been registered for this course.");
+		model.addAttribute("student", selectedStudent);
+		model.addAttribute("course", course);
 		
 		if(selectedStudent.getCourses().contains(course)) {
 			// student is already registered for this course, no problem, just don't save anything to dbs
-			// TODO nice to have an addstudent confirmation with button to register another student
-			return "redirect:/addstudent/" + courseId;
+			return "addstudenttocourseconfirmation";
+//			return "redirect:/addstudent/" + courseId;
 		}
 
 		// at this point: existing student has been selected from drop down of choices and they are not already registered for this course
@@ -187,8 +242,9 @@ public class TeacherController {
 		registrationTimestampRepo.save(rt);
 		course.addPerson(selectedStudent);
 		courseRepo.save(course);
-		// TODO nice to have an addstudent confirmation with button to register another student
-		return "redirect:/addstudent/" + courseId;
+
+		return "addstudenttocourseconfirmation";
+//		return "redirect:/addstudent/" + courseId;
 
 	}
 

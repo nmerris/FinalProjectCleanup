@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base:: FinalHead"></head>
+<body>
+<th:block th:replace="base::FinalNavTeacher"></th:block>
+<div class="container">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default card card-3">
+            <div class="panel-body">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h4><b th:text="${message}"></b></h4></div>
+                    <ul th:if="!${invalidStudent}" class="list-group">
+                        <li class="list-group-item" th:text="${'Your M-number: ' + student.mNumber}"></li>
+                        <li class="list-group-item" th:text="${'Course Name: ' + course.name}"></li>
+                        <li class="list-group-item" th:text="${'Start Date: ' + course.dateStart}"></li>
+                        <li class="list-group-item" th:text="${'End Date: ' + course.dateEnd}"></li>
+                    </ul>
+                </div>
+                <a class="btn btn-primary bold-input" th:href="@{|/addstudent/${course.id}|}"><b>+ Register Another Student</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="base::Footer"></th:block>
+<th:block th:replace="base::FinalJS"></th:block>
+</body>
+</html>
