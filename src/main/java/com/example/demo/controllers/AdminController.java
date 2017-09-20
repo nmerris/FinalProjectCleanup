@@ -260,14 +260,15 @@ public class AdminController
 
 
 	// note: the course id is preserved through the form, so does not need to be set again here
-	@PostMapping("/loginforequest")
-	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
+	@PostMapping("/loginforequest/{id}")
+	public String logInfoRequestPost(@PathVariable("id") long courseId,
+									 @RequestParam("mnum") String enteredMnum,
 									 @Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
 									 BindingResult bindingResult, Model model) {
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
-
+			log.setCourse(courseRepo.findOne(courseId));
 			return "loginforequestform";
 		}
 
