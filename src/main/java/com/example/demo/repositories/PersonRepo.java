@@ -20,8 +20,9 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
     Set<Person> findByCoursesIsAndUsernameIsOrderByNameLastAsc(Course course, String username);
 
-    long countByMNumberIs(String mNumber);
+    long countByAuthoritiesIs(Authority authority);
 
+    long countByMNumberIs(String mNumber);
     //Added by Yun on 09/15,find person according to course id
     Set<Person> findByCoursesIs (Course course);
     Set<Person> findByCoursesIsAndAuthoritiesIs(Course course, Authority authority);

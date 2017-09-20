@@ -167,7 +167,7 @@ public class MainController
 
     	model.addAttribute("course", course);
 //    	model.addAttribute("course", new Course());
-
+        model.addAttribute("disSubmit", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER"))== 0);
     	model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
         return "evaluation";
     }

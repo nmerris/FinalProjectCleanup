@@ -38,7 +38,8 @@
                         <p class="alert alert-danger" th:if="${courseError}" th:text="'could not find a course with that CRN and start date'"></p>
                     </div>
                     <div class="clearfix"></div>
-                    <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
+                    <input th:disabled="${disSubmit}" class="btn btn-primary bold-input" type="submit" value="Submit">
+                    <!--<input class="btn btn-primary bold-input" type="submit" value="Submit"/>-->
                     <input type="reset" class="btn btn-warning" value="Reset"/>
                 </form>
             </div>
