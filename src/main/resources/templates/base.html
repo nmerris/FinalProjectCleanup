@@ -69,18 +69,19 @@
     </nav>
 </th:block>
 
+
+
+<th:block th:fragment="FinalJS">
+    <!-- jquery MUST come before boostrap here or modal won't work -->
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.js}"></script>
+</th:block>
 <th:block th:fragment="Footer">
     <!--Footer-->
     <footer>
         <br/>
         <p th:fragment="footer" class="footer">© Copyright by Nathan, Hiwot, Jesse, Yun and Orraymiosiris 2017</p>
     </footer>
-</th:block>
-
-<th:block th:fragment="FinalJS">
-    <!-- jquery MUST come before boostrap here or modal won't work -->
-    <script th:src="@{/js/jquery.min.js}"></script>
-    <script th:src="@{/js/bootstrap.js}"></script>
 </th:block>
 
 </body>
