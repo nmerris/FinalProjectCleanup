@@ -119,7 +119,7 @@ public class TeacherController {
 	@PostMapping("/addstudent/{id}")
 	public String addStudentToCourse(@PathVariable("id") long courseId,
 									 @Valid @ModelAttribute("newstudent") Person student,
-									 @RequestParam(value = "existingStudent", required = false) String existingStudent,
+									 @RequestParam(value = "registerNew", required = false) String registerNew,
 									 BindingResult bindingResult, Model model) {
 
 		Course course = courseRepo.findOne(courseId);
@@ -133,7 +133,7 @@ public class TeacherController {
 		// check to see if the student does not exists, if they don't create them and save
 		// also check to see if the student checked the 'existing student checkbox', if not also create a new student
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
-				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0 || existingStudent == null) {
+				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0 || registerNew.equals("true")) {
 
 			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
 			Person p = userService.saveStudent(student);
@@ -144,6 +144,7 @@ public class TeacherController {
 			registrationTimestampRepo.save(rt);
 			course.addPerson(p);
 			courseRepo.save(course);
+			// TODO nice to have an addstudent confirmation with button to register another student
 			return "redirect:/addstudent/" + courseId;
 		}
 
@@ -174,6 +175,7 @@ public class TeacherController {
 		
 		if(selectedStudent.getCourses().contains(course)) {
 			// student is already registered for this course, no problem, just don't save anything to dbs
+			// TODO nice to have an addstudent confirmation with button to register another student
 			return "redirect:/addstudent/" + courseId;
 		}
 
@@ -185,6 +187,7 @@ public class TeacherController {
 		registrationTimestampRepo.save(rt);
 		course.addPerson(selectedStudent);
 		courseRepo.save(course);
+		// TODO nice to have an addstudent confirmation with button to register another student
 		return "redirect:/addstudent/" + courseId;
 
 	}
