@@ -163,7 +163,7 @@ table {
 }
 
 th, td {
-    min-width: 80px;
+    min-width: 100px;
 }
 
 td a {
@@ -321,4 +321,8 @@ thead {
     bottom:0;
     width:100%;
     height:30px;   /* Height of the footer */
+}
+
+.commentcolumn{
+    min-width: 200px;
 }

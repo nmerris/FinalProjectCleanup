@@ -31,11 +31,11 @@
                             <th>Textbook</th>
                             <th>Class Env</th>
                             <th>Equipment</th>
-                            <th>What Did You Like About This Course</th>
-                            <th>What Didn't You Like About This Course</th>
-                            <th>What Improvement Would You Make</th>
-                            <th>What Other Classes Are You Taking</th>
-                            <th>How Did You Find Out</th>
+                            <th class="commentcolumn">What Did You Like About This Course</th>
+                            <th class="commentcolumn">What Didn't You Like About This Course</th>
+                            <th class="commentcolumn">What Improvement Would You Make</th>
+                            <th class="commentcolumn">What Other Classes Are You Taking</th>
+                            <th class="commentcolumn">How Did You Find Out</th>
                         </tr>
                         </thead>
 
@@ -52,11 +52,11 @@
                             <td th:text="*{item.textBookRating}"></td>
                             <td th:text="*{item.classroomEnvironment}"></td>
                             <td th:text="*{item.equipmentRating}"></td>
-                            <td th:text="*{item.whatDidYouLike}"></td>
-                            <td th:text="*{item.whatDidntYouLike}"></td>
-                            <td th:text="*{item.whatImprovements}"></td>
-                            <td th:text="*{item.whatOtherClasses}"></td>
-                            <td th:text="*{item.howDidYouFindOut}"></td>
+                            <td class="commentcolumn" th:text="*{item.whatDidYouLike}"></td>
+                            <td class="commentcolumn" th:text="*{item.whatDidntYouLike}"></td>
+                            <td class="commentcolumn" th:text="*{item.whatImprovements}"></td>
+                            <td class="commentcolumn" th:text="*{item.whatOtherClasses}"></td>
+                            <td class="commentcolumn" th:text="*{item.howDidYouFindOut}"></td>
                         </tr>
                         </tbody>
 
