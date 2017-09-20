@@ -73,22 +73,33 @@ public class AdminController
 			return "addcourse";
 		}
 
-		// I realized we have to allow admin to edit the course, because that's what the requirements state
-//		if(courseRepo.countByCourseRegistrationNumIs(course.getCourseRegistrationNum()) > 0) {
-//		    // admin enterd a CRN that already exists, so display an error msg
-//            model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
-//            model.addAttribute("crnExists", true);
-//            return "addcourse";
-//        }
 
-
-		// find out what Person was just selected (by the admin) from the drop down list for this course
+		// find out what teacher was just selected (by the admin) from the drop down list for this course
 		// and set them as the teacher to this course, then save the course
+		// FIX FOR BUG WHERE STUDENTS ARE DISASSOCIATED WITH A COURSE AFTER UPDATING....
+		// the problem was that the course coming into this route is a NEW course every time..
+		// we attach whatever teacher was just selected from the the drop down as usual
+		// but all the students that were in that course go away
+		// so need to reattach them here, no need to do this for teacher, because they are selected from the drop down
 
-			course.addPerson(personRepo.findOne(teacherId));
-			course.setDeleted(false);
-			courseRepo.save(course);
-			model.addAttribute("teacher", personRepo.findOne(teacherId));
+//		System.out.println("=============================== course.id before saving: " + course.getId());
+
+		// get the set of students for this course.. note this may be empty, which is ok
+		// note you only want to do this if the incoming course has an ID = 0, which means it's a new course being created
+		// and therefore can have no students.. also if you try to search by this course before you save it, it crashes
+		// note you need a hidden id field in the form, or it will be zero every time, and then you would loose all the students
+		if(course.getId() != 0) {
+			Set<Person> students = personRepo.findByCoursesIsAndAuthoritiesIs(course, authorityRepo.findByRole("STUDENT"));
+			course.addStudents(students);
+		}
+
+		course.addPerson(personRepo.findOne(teacherId));
+		course.setDeleted(false);
+		courseRepo.save(course);
+		model.addAttribute("teacher", personRepo.findOne(teacherId));
+
+//		System.out.println("=============================== course.id AFTER saving: " + course.getId());
+
 
 		return "courseconfirm";
 	}
@@ -213,40 +224,6 @@ public class AdminController
 	@GetMapping("/viewcourseevaluations/{id}")
 	public String viewEvalsForOneCourse(@PathVariable("id") long courseId, Model model) {
 
-		// dummy testing data is commented out, but you can use it if you want, just make sure you comment
-		// out the line - model.addAttribute("evaluations", evaluationRepo.findByCourseIs(course));
-
-//		// create some dummy data for testing ================================================================
-//		Set<Evaluation> testSet = new HashSet<>();
-//
-//		for(int i = 0; i < 30; i++) {
-//			Evaluation eval = new Evaluation();
-//			Course course = new Course();
-//			course.setName("Astro Physics 200");
-//			course.setDeleted(false);
-//			course.setCourseRegistrationNum(987934534);
-//			course.setDateStart(new Date());
-//			course.setDateEnd(new Date());
-//
-//			eval.setCourse(course);
-//			eval.setCourseContentRating("Above Average");
-//			eval.setInstructionQualityRating("Excellent");
-//			eval.setTrainingExperienceRating("Average");
-//			eval.setTextBookRating("Fair");
-//			eval.setClassroomEnvironment("Poor");
-//			eval.setEquipmentRating("Poor");
-//			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatOtherClasses("Internet/Website");
-//			testSet.add(eval);
-//		}
-//		model.addAttribute("evaluations", testSet);
-//		// end dummy data for testing ================================================================
-
-
-
 		Course course = courseRepo.findOne(courseId);
 		model.addAttribute("courseName", course.getName());
 
@@ -259,44 +236,6 @@ public class AdminController
 	// view all the evaluations for a single teacher in one gigantic table
 	@GetMapping("/viewteacherevaluations/{id}")
 	public String viewEvalsForOneTeacher(@PathVariable("id") long teacherId, Model model) {
-
-		// dummy testing data is commented out, but you can use it if you want, just make sure you comment
-		// out the line - model.addAttribute("evaluations", evaluationRepo.findByCourseIs(course));
-
-//		// create some dummy data for testing ================================================================
-//		Set<Evaluation> testSet = new HashSet<>();
-//
-//		for(int i = 0; i < 30; i++) {
-//			Evaluation eval = new Evaluation();
-//			Course course = new Course();
-//			course.setName("Astro Physics 200");
-//			course.setDeleted(false);
-//			course.setCourseRegistrationNum(987934534);
-//			course.setDateStart(new Date());
-//			course.setDateEnd(new Date());
-//
-//			eval.setCourse(course);
-//			eval.setCourseContentRating("Above Average");
-//			eval.setInstructionQualityRating("Excellent");
-//			eval.setTrainingExperienceRating("Average");
-//			eval.setTextBookRating("Fair");
-//			eval.setClassroomEnvironment("Poor");
-//			eval.setEquipmentRating("Poor");
-//			eval.setWhatDidYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatDidntYouLike("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatImprovements("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatOtherClasses("it was a lot of fun argle bargle lorem ipsum blarg blarck");
-//			eval.setWhatOtherClasses("Internet/Website");
-//			testSet.add(eval);
-//		}
-//		model.addAttribute("evaluations", testSet);
-//		// end dummy data for testing ================================================================
-
-
-
-
-//		model.addAttribute("evaluations", evaluationRepo.findByPersonIsOrderByCourseAsc(personRepo.findOne(teacherId)));
-
 
 		Person teacher = personRepo.findOne(teacherId);
 		model.addAttribute("teacherName", teacher.getFullName());

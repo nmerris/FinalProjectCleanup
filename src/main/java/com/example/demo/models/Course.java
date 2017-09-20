@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Course {
@@ -98,6 +99,11 @@ public class Course {
             }
         }
         return count;
+    }
+
+    // use this to add a bunch of students to this course... only being used in admin section when updating an existing course
+    public void addStudents(Set<Person> students) {
+        persons.addAll(students);
     }
 
     // normal getter/setter methods ==================================================================================
