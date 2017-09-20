@@ -4,8 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,8 +31,9 @@ public class Course {
     @NotEmpty
     private String name;
 
-    @Min(6)
-    private long courseRegistrationNum;
+    @NotEmpty
+    @Size(min=5,max =5 )
+    private String courseRegistrationNum;
 
     // 0 = false, 1 = true
     private boolean deleted;
@@ -141,11 +141,11 @@ public class Course {
         this.dateEnd = dateEnd;
     }
 
-    public long getCourseRegistrationNum() {
+    public String getCourseRegistrationNum() {
         return courseRegistrationNum;
     }
 
-    public void setCourseRegistrationNum(long courseRegistrationNum) {
+    public void setCourseRegistrationNum(String courseRegistrationNum) {
         this.courseRegistrationNum = courseRegistrationNum;
     }
 

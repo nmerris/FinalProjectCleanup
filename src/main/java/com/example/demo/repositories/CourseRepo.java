@@ -14,7 +14,7 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
 
     Set<Course> findByDeletedIs(boolean value);
 
-    long countByCourseRegistrationNumIs(long crn);
-    Course findFirstByCourseRegistrationNumAndDateStartAndDeleted(long crn, Date date, boolean value);
+    long countByCourseRegistrationNumIs(String crn);
+    Course findFirstByCourseRegistrationNumAndDateStartAndDeleted(String crn, Date date, boolean value);
 
 }
