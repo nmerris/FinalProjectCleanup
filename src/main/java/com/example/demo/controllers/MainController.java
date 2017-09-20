@@ -221,7 +221,7 @@ public class MainController
     public String submitEval(@RequestParam("howDidYouFindOut2")String other,
                              @RequestParam("courseId")long courseId,
                              @RequestParam("teacherId")long teacherId,
-                             @ModelAttribute("evaluation")Evaluation eval)
+                             @ModelAttribute("evaluation")Evaluation eval,Model model)
     {
         System.out.println("CourseId: " + courseId);
         System.out.println("TeacherId: " + teacherId);
@@ -237,7 +237,13 @@ public class MainController
         eval.setPerson(personRepo.findOne(teacherId));
         evaluationRepo.save(eval);
 
-        return "redirect:/";
+        model.addAttribute("message", "Course Evaluation Done ");
+        model.addAttribute("extraMessage", String.format("Course Evaluation: %s",
+                courseRepo.findOne(eval.getCourse().getId()).getName()));
+//        return "redirect:/";
+        return "evaluationconfirmation";
+
+//        return "redirect:/";
     }
 
     //Teacher and admin
