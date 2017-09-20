@@ -4,8 +4,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -31,7 +33,9 @@ public class Course {
     @NotEmpty
     private String name;
 
-    @Min(6)
+    @Min(100000)
+    @Max(999999)
+    @Pattern(regexp="^(0|[1-9][0-9]*)$")
     private long courseRegistrationNum;
 
     // 0 = false, 1 = true
