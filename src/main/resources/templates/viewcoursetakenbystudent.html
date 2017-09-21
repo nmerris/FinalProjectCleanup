@@ -22,6 +22,7 @@
                         <th>CR Number</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Is Deleted</th>
 
                     </tr>
                     </thead>
@@ -31,6 +32,7 @@
                         <td th:text="*{list.courseRegistrationNum}"></td>
                         <td th:text="*{#dates.format(list.dateStart, 'MMM dd, yyyy')}"></td>
                         <td th:text="*{#dates.format(list.dateEnd, 'MMM dd, yyyy')}"></td>
+                        <td th:text="*{list.getDeletedString()}"></td>
 
                     </tr>
                     </tbody>

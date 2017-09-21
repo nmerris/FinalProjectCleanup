@@ -21,8 +21,7 @@
                         <th>M-Number</th>
                         <th>Email Address</th>
                         <th>Emergency Contact Number</th>
-                        <th>Registered Courses</th>
-                        <!--<th>Action</th>-->
+                        <th>Courses History</th>
                     </tr>
                     </thead>
                     <tbody align="left">
@@ -32,7 +31,7 @@
                         <td th:text="*{item.mNumber}"></td>
                         <td th:text="*{item.email}"></td>
                         <td th:text="*{item.contactNum}"></td>
-                        <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}"><p th:text="*{item.getNumCourses()}"></p></a></td>
+                        <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}"><p th:text="*{item.courses.size()}"></p></a></td>
                     </tr>
                     </tbody>
                 </table>

@@ -248,9 +248,6 @@ public class TeacherController {
 	}
 
 
-
-
-
 	// each time we create a brand new set of Attendance objects to send to the form
 	// each student is a row, and each column is a single date
 	// all Attendances default to Presents, so teacher only has to change for late or absent

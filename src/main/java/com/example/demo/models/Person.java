@@ -129,7 +129,6 @@ public class Person {
         return counter;
     }
 
-
     // normal getters/setters ==================================================================================
 
 

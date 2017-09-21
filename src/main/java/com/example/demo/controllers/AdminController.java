@@ -214,10 +214,9 @@ public class AdminController
 	public String listStudentCourses(@PathVariable("id") long studentId,Model model) {
 		Person student = personRepo.findOne(studentId);
 		model.addAttribute("studentcourse", student);
-		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(student, false));
+		model.addAttribute("courselist", courseRepo.findByPersons(student));
 		return "viewcoursetakenbystudent";
 	}
-
 
 	// view all the teachers, admin can click on one to see that teachers evaluations
 	@GetMapping("/allteachers")

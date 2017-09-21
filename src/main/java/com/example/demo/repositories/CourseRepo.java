@@ -13,8 +13,10 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
     Set<Course> findByPersonsIsAndDeletedIs(Person person, boolean value);
 
     Set<Course> findByDeletedIs(boolean value);
+    Set<Course>findByPersons(Person person);
 
     long countByCourseRegistrationNumIs(String crn);
+
     Course findFirstByCourseRegistrationNumAndDateStartAndDeleted(String crn, Date date, boolean value);
 
 }
