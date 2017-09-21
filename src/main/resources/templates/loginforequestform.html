@@ -9,10 +9,10 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
             <div class="panel-body">
-                <form action="#" th:action="@{/loginforequest/{id}(id=${courseInfoLog.course.id})}" th:object="${courseInfoLog}" method="post">
+                <form action="#" th:action="@{/loginforequest}" th:object="${courseInfoLog}" method="post">
                     <div class="text-center feedback">
                         <h2>Please enter details about the information request</h2>
-                        <h3 th:text="'Course name: ' + ${courseInfoLog.course.name}"></h3>
+                        <!--<h3 th:text="'Course name: ' + ${courseInfoLog.course.name}"></h3>-->
                     </div>
 
                     <input type="hidden" th:field="*{id}" />

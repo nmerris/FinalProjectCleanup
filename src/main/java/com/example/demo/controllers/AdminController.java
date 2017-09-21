@@ -113,7 +113,7 @@ public class AdminController
 		Course cour=new Course();
 		// need dummy data for CRN and name or validation is problematic in post route, both these are set again in post route
 		// so it doesn't matter what you set them to here
-		cour.setCourseRegistrationNum("12345678");
+		cour.setCourseRegistrationNum("12345");
 		cour.setName("fakeName");
 
 //		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
@@ -259,16 +259,15 @@ public class AdminController
 	}
 
 
-	// note: the course id is preserved through the form, so does not need to be set again here
-	@PostMapping("/loginforequest/{id}")
-	public String logInfoRequestPost(@PathVariable("id") long courseId,
-									 @RequestParam("mnum") String enteredMnum,
+
+	@PostMapping("/loginforequest")
+	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
 									 @Valid @ModelAttribute("courseInfoLog") CourseInfoRequestLog log,
 									 BindingResult bindingResult, Model model) {
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
-			log.setCourse(courseRepo.findOne(courseId));
+//		    model.addAttribute("courseInfoLog", log);
 			return "loginforequestform";
 		}
 
@@ -289,7 +288,7 @@ public class AdminController
 				// found a match for that mnum, so save to db
 				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
 				courseInfoRequestLogRepo.save(log);
-				model.addAttribute("message", "New course info request log saved");
+				model.addAttribute("message", "Info request log saved");
 				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
 						courseRepo.findOne(log.getCourse().getId()).getName(),
 						personRepo.findByMNumberIs(enteredMnum).getFullName(),
@@ -301,7 +300,7 @@ public class AdminController
 
 		// at this point, we are saving a new request log, but not for an existing student
 		courseInfoRequestLogRepo.save(log);
-		model.addAttribute("message", "New course info request log saved");
+		model.addAttribute("message", "Info request log saved");
 		model.addAttribute("extraMessage", String.format("Course: %s",
 				courseRepo.findOne(log.getCourse().getId()).getName()));
 
@@ -309,7 +308,7 @@ public class AdminController
 	}
 
 
-	//List of log infor request for a particular course
+	//List of log info request for a particular course
 	@RequestMapping("/loginforequestdetail/{id}")
 	public String listCourseInfoReq(@PathVariable("id") long courseId,Model model) {
 		Course course = courseRepo.findOne(courseId);
@@ -328,10 +327,10 @@ public class AdminController
 
 	//delete log info request
 	@RequestMapping("/deleteloginforequest/{id}")
-	public String delCourseInfoReq(@PathVariable("id") long id)
+	public String delCourseInfoReq(@PathVariable("id") long infoRequestId)
 	{
-		courseInfoRequestLogRepo.delete(id);
-		return "redirect:/allcourses";
+		courseInfoRequestLogRepo.delete(infoRequestId);
+        return "redirect:/allcourses";
 	}
 
 
