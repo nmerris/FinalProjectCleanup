@@ -28,8 +28,8 @@
                         <tr  th:each="singlecourse:${allcourses}">
                             <td th:text="${singlecourse.courseRegistrationNum}"></td>
                             <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.name}"></p></a></td>
-                            <td th:text="${singlecourse.dateStart}"></td>
-                            <td th:text="${singlecourse.dateEnd}"></td>
+                            <td th:text="${#dates.format(singlecourse.dateStart, 'MMM dd, yyyy')}"></td>
+                            <td th:text="${#dates.format(singlecourse.dateEnd, 'MMM dd, yyyy')}"></td>
                             <td><a th:href="@{/viewregisteredstudent/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumStudents()}"></p></a></td>
                             <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumEvaluations()}"></p></a></td>
                             <td><a th:href="@{/loginforequestdetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumInfoReq()}"></p></a></td>

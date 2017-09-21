@@ -47,6 +47,7 @@ public class AdminController
 	@GetMapping("/addcourse")
 	public String addCourse(Model model)
 	{
+		model.addAttribute("noTeachers", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER")) == 0);
 		model.addAttribute("course", new Course());
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addcourse";
@@ -60,6 +61,8 @@ public class AdminController
 
 //		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
 
+		model.addAttribute("noTeachers", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER")) == 0);
+
 		if(result.hasErrors()) {
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
@@ -67,7 +70,7 @@ public class AdminController
 
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
-			System.out.println("========================= in /addcourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+//			System.out.println("========================= in /addcourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
 			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
@@ -145,7 +148,7 @@ public class AdminController
 
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
-			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+//			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
 			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addduplicatecourse";

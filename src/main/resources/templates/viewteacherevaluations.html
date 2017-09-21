@@ -40,10 +40,10 @@
                             <th>Textbook</th>
                             <th>Class Env</th>
                             <th>Equipment</th>
-                            <th class="commentcolumn">What Did You Like About This Course</th>
-                            <th class="commentcolumn">What Didn't You Like About This Course</th>
-                            <th class="commentcolumn">What Improvement Would You Make</th>
-                            <th class="commentcolumn">What Other Classes Are You Taking</th>
+                            <th class="commentcolumn">Did Like</th>
+                            <th class="commentcolumn">Didn't Like</th>
+                            <th class="commentcolumn">Improvements</th>
+                            <th class="commentcolumn">Other Classes Taking</th>
                             <th class="commentcolumn">How Did You Find Out</th>
                         </tr>
                     </thead>
@@ -53,8 +53,8 @@
                             <td th:text="*{item.course.name}"></td>
                             <td th:text="*{item.course.getDeletedString()}"></td>
                             <td th:text="*{item.course.courseRegistrationNum}"></td>
-                            <td th:text="*{#dates.format(item.course.dateStart, 'MM-dd-yy')}"></td>
-                            <td th:text="*{#dates.format(item.course.dateEnd, 'MM-dd-yy')}"></td>
+                            <td th:text="*{#dates.format(item.course.dateStart, 'MMM dd, yyyy')}"></td>
+                            <td th:text="*{#dates.format(item.course.dateEnd, 'MMM dd, yyyy')}"></td>
                             <td th:text="*{item.courseContentRating}"></td>
                             <td th:text="*{item.instructionQualityRating}"></td>
                             <td th:text="*{item.trainingExperienceRating}"></td>

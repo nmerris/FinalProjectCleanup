@@ -12,8 +12,8 @@
                 <form action="#" th:action="@{/addduplicatecourse}" th:object="${course}" method="post">
                     <div class="text-center feedback">
                         <h2>Choose an existing or deleted course to copy</h2>
-                        <h4>The dates, teacher, and name may be different</h4>
-                        <h4>The CRN will be the same</h4>
+                        <h4>The dates and teacher may be different</h4>
+                        <h4>The CRN and name will be the same</h4>
                     </div>
                     <input type="hidden" th:field="*{id}" />
                     <div class="form-group">

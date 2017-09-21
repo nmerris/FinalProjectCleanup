@@ -31,8 +31,8 @@
                         <tr th:each="list: ${courselist}">
                             <td th:text="*{list.name}"></td>
                             <td th:text="*{list.courseRegistrationNum}"></td>
-                            <td th:text="*{list.dateStart}"></td>
-                            <td th:text="*{list.dateEnd}"></td>
+                            <td th:text="*{#dates.format(list.dateStart, 'MMM dd, yyyy')}"></td>
+                            <td th:text="*{#dates.format(list.dateEnd, 'MMM dd, yyyy')}"></td>
                             <td><a th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.getNumEvalsByTeacherId(__${teachercourse.id}__)}"></p></a></td>
                             <td><a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}"><p th:text="*{list.getNumStudents()}"></p></a></td>
 

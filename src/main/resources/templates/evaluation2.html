@@ -25,7 +25,7 @@
                         <br />
                         2. Course Name: <span th:text="${course.name}"></span>
                         <br />
-                        3. Start Date: <span th:text="${course.dateStart}"></span>
+                        3. Start Date: <span th:text="${#dates.format(course.dateStart, 'MMM dd, yyyy')}"></span>
                         <br />
                         4. Instructor's Name: <span th:text="${teacher.getFullName()}"></span>
                         <br />

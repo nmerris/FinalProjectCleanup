@@ -95,9 +95,11 @@ public class MainController
         if(principal != null) {
             switch (personRepo.findByUsername(principal.getName()).getAuthority()) {
                 case "ADMIN":
-                    return "welcomeAdmin";
+                    return "redirect:/allcourses";
+//                    return "welcomeAdmin";
                 case "TEACHER":
-                    return "welcomeTeach";
+                    return "redirect:/mycoursesdetail";
+//                    return "welcomeTeach";
             }
         }
 
