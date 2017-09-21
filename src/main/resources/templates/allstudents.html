@@ -12,7 +12,7 @@
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
-                <caption> <h4><b>All Student</b></h4></caption>
+                <caption> <h2><b>All Students</b></h2></caption>
                 <table class="table table-striped" class="table table-hover">
                     <thead>
                     <tr>
@@ -21,7 +21,7 @@
                         <th>M-Number</th>
                         <th>Email Address</th>
                         <th>Emergency Contact Number</th>
-                        <th>Courses History</th>
+                        <th># Courses Taken</th>
                     </tr>
                     </thead>
                     <tbody align="left">
@@ -31,7 +31,7 @@
                         <td th:text="*{item.mNumber}"></td>
                         <td th:text="*{item.email}"></td>
                         <td th:text="*{item.contactNum}"></td>
-                        <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}"><p th:text="*{item.courses.size()}"></p></a></td>
+                        <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}"><p class="txtCenter" th:text="*{item.courses.size()}"></p></a></td>
                     </tr>
                     </tbody>
                 </table>

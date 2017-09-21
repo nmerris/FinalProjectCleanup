@@ -12,7 +12,7 @@
         <div class="panel panel-default card card-3">
             <div class="panel-body">
 
-                <caption> <h4><b>All current teachers</b></h4></caption>
+                <caption> <h2><b>All current teachers</b></h2></caption>
                 <table class="table table-striped" class="table table-hover">
                     <thead>
                         <tr>
@@ -20,7 +20,6 @@
                             <th>Last Name</th>
                             <th>M-Number</th>
                             <th>Evals on Record</th>
-                            <!--<th>Action</th>-->
                         </tr>
                     </thead>
                     <tbody align="left">
@@ -28,7 +27,7 @@
                             <td th:text="*{item.nameFirst}"></td>
                             <td th:text="*{item.nameLast}"></td>
                             <td th:text="*{item.mNumber}"></td>
-                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}"><p th:text="*{item.evaluations.size()}"></p></a></td>
+                            <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}"><p class="txtCenter" th:text="*{item.evaluations.size()}"></p></a></td>
                         </tr>
                     </tbody>
                 </table>

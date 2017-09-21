@@ -8,25 +8,28 @@
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading">
+                <div class="text-center feedback">
+                    <h2>Please enter course info</h2>
+                </div>
+            </div>
             <div class="panel-body">
                 <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
 
                     <input type="hidden" value="${course.id}">
 
-                    <div class="text-center feedback">
-                        <h2>Please enter course info</h2>
-                    </div>
+
                     <div class="feedback">
-                        <h4>If you want to copy an EXISTING course, click Copy Existing Course in the navbar</h4>
-                        <h4>This form is for adding a new course, or editing an existing course</h4>
+                        <h4>This form is for adding a new course, or editing an existing course.</h4>
+                        <h4>If you want to copy an EXISTING course, click <a href="/addduplicatecourse">here</a>.</h4>
                     </div>
 
                     <input type="hidden" th:field="*{id}" />
                     <div class="form-group">
-                        <label class="section-heading" for="courseRegistrationN">CRN</label>
+                        <label class="section-heading" for="courseRegistrationN">CRN#</label>
                         <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('courseRegistrationNum')}" th:errors="*{courseRegistrationNum}"></p>
-                        <p class="alert alert-danger" th:if="${crnExists}" th:text="'that CRN already exists, please click Copy Existing Course if you want to reuse a CRN'"></p>
+                        <p class="alert alert-danger" th:if="${crnExists}" th:text="'That CRN# already exists, please click Copy Existing Course if you want to reuse a CRN#.'"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="name">Name</label>
@@ -35,14 +38,14 @@
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>
-                        <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'please enter a day, month, and year'"></p>
-                        <p class="alert alert-danger" th:if="${negativeDayCount}" th:text="'please enter a start date before or equal to an end date'"></p>
+                        <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 2017'"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'Please enter a day, month (first three letters), and year'"></p>
                     </div>
                     <div class="form-group">
                     <label class="section-heading" for="dateEnd">End Date</label>
-                    <input id="dateEnd" class="form-control" type="text" th:field="*{dateEnd}" th:placeholder="'Jul 4, 1976'"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateEnd')}" th:errors="*{dateEnd}" th:text="'please enter a day, month, and year'"></p>
+                    <input id="dateEnd" class="form-control" type="text" th:field="*{dateEnd}" th:placeholder="'Sep 8, 2017'"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateEnd')}" th:errors="*{dateEnd}" th:text="'Please enter a day, month (first three letters), and year.'"></p>
+                        <p class="alert alert-danger" th:if="${negativeDayCount}" th:text="'Please enter an end date after or the same as the start date'"></p>
                     </div>
 
                     <!-- select a teacher drop down -->
