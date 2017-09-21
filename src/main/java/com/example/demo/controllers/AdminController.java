@@ -119,11 +119,13 @@ public class AdminController
 //		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
 //		System.out.println("============================================================ courseSet.size: " + courseSet.size());
 
-
+		// need to disable the submit button if there are not courses yet
+		model.addAttribute("disSubmit", courseRepo.count() == 0);
 
 		// TODO it shows multiple listings of same course name, not what we want here.. doesn't matter for project specs
 		// this is a "nice to do" thing, don't spend time on this until we finish all requirements
 		model.addAttribute("courses", courseRepo.findByDeletedIs(false));
+		model.addAttribute("courses", courseRepo.findAll());
 //		model.addAttribute("courses", courseRepo.findDistinctFirstByCourseRegistrationNumAndDeletedIs(crns,false));
 		model.addAttribute("course",cour);
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
@@ -135,7 +137,8 @@ public class AdminController
 										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
 										Model model) {
 		if(bindingResult.hasErrors()){
-			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
+			model.addAttribute("courses", courseRepo.findAll());
+//			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
 		}

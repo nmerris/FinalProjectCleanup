@@ -42,7 +42,7 @@
             <li><a href= "/mycoursesdetail">My Classes</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-text">Hello, <div th:text="${#authentication.name}"/></li>
+            <!--<li class="navbar-text">Hello, <div th:text="${#authentication.name}"/></li>-->
             <li><a href="/logout"><span class="glyphicon glyphicon-user"></span>Logout</a></li>
         </ul>
     </div>
@@ -62,7 +62,7 @@
                 <li><a href="/addduplicatecourse">Copy Existing Course</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="navbar-text">Hello, <div th:text="${#authentication.name}"/></li>
+                <!--<li class="navbar-text">Hello, <div th:text="${#authentication.name}"/></li>-->
                 <li><a href="/logout"><span class="glyphicon glyphicon-user"></span>Logout</a></li>
             </ul>
         </div>
@@ -76,6 +76,7 @@
     <script th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/js/bootstrap.js}"></script>
 </th:block>
+
 <th:block th:fragment="Footer">
     <!--Footer-->
     <footer>
