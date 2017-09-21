@@ -6,12 +6,13 @@
 <body>
 <th:block th:replace="base::FinalNav"></th:block>
 <div class="container">
-    <div class="col-lg-4 col-lg-offset-4">
+    <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading text-center feedback">
+                <h2>Sign up for a new account</h2>
+            </div>
             <div class="panel-body">
-                <div class="text-center feedback">
-                    <h2>Sign up for a new account</h2>
-                </div>
+
 
                 <form autocomplete="off" class="well form-horizontal" th:action="@{/signup}" th:object="${newPerson}" method="post">
 
@@ -44,14 +45,13 @@
                         <label class="section-heading" for="username">Username</label>
                         <input id="username" class="form-control" type="text" th:field="*{username}"/>
                         <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>-->
-                        <p class="alert alert-danger" th:if="${usernameAlreadyExists}" th:text="${'that username already exists'}"></p>
-                        <p class="alert alert-danger" th:if="${usernameWasNull}" th:text="${'Please enter your username or try another'}"></p>
+                        <p class="alert alert-danger" th:if="${usernameAlreadyExists}" th:text="${'That username already exists'}"></p>
+                        <p class="alert alert-danger" th:if="${usernameWasNull}" th:text="${'Please enter a username'}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="password">Password</label>
                         <input id="password" class="form-control" type=password th:field="*{password}"/>
-                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>-->
-                        <p class="alert alert-danger" th:if="${passwordWasNull}" th:text="${'Please enter your Password'}"></p>
+                        <p class="alert alert-danger" th:if="${passwordWasNull}" th:text="${'Please enter your password'}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading">Account Type</label>
@@ -62,8 +62,8 @@
                             </th:block>
                         </select>
                     </div>
-                    <input class="btn btn-primary bold-input" type="submit" value="SignUp"/>
-                    <input type="reset" class="btn btn-warning bold-input" value="Reset"/>
+                    <input class="btn btn-lg btn-primary bold-input" type="submit" value="Sign up"/>
+                    <input class="btn btn-lg btn-primary bold-input" type="reset" value="Reset"/>
                 </form>
 
             </div>

@@ -11,18 +11,18 @@
 <div class="container">
     <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading text-center feedback">
+                <h2 th:text="'Course list for: ' + ${teachercourse.getFullName()}"></h2>
+            </div>
             <div class="panel-body">
-
-
-                    <caption> <h4><b th:text="'Course list for: ' + ${teachercourse.getFullName()}"></b></h4></caption>
                     <table class="table table-striped" class="table table-hover">
                         <thead>
                         <tr>
                             <th>Course Name</th>
-                            <th>CR Number</th>
+                            <th>CRN#</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th># Evals</th>
+                            <th class="txtCenter"># Evals</th>
                             <th># Students</th>
                             <th>Action</th>
                         </tr>
@@ -33,8 +33,8 @@
                             <td th:text="*{list.courseRegistrationNum}"></td>
                             <td th:text="*{#dates.format(list.dateStart, 'MMM dd, yyyy')}"></td>
                             <td th:text="*{#dates.format(list.dateEnd, 'MMM dd, yyyy')}"></td>
-                            <td><a th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.getNumEvalsByTeacherId(__${teachercourse.id}__)}"></p></a></td>
-                            <td><a th:href="@{/viewregisteredstudent/{id}(id=${list.id})}"><p th:text="*{list.getNumStudents()}"></p></a></td>
+                            <td><a class="txtCenter" th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.getNumEvalsByTeacherId(__${teachercourse.id}__)}"></p></a></td>
+                            <td><a class="txtCenter" th:href="@{/viewregisteredstudent/{id}(id=${list.id})}"><p th:text="*{list.getNumStudents()}"></p></a></td>
 
                             <td>
                                 <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student(s)</a>

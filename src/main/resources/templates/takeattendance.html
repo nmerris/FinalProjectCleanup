@@ -9,9 +9,11 @@
 <div class="container">
     <div class="col-lg-8 col-lg-offset-2">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading text-center feedback">
+                <h2 th:text="'Course: ' + ${courseName}"></h2>
+            </div>
             <div class="panel-body">
 
-                <h3 th:text="'Course: ' + ${courseName}"></h3>
 
                 <form action="#" th:action="@{~/takeattendance/{id}(id=${courseId})}" th:object="${attendanceWrapper}" method="post">
                     <div class="table-responsive">
@@ -55,7 +57,7 @@
                         </table>
 
                     <br/>
-                    <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
+                    <input class="btn btn-lg btn-primary bold-input" type="submit" value="Submit"/>
                     </div>
                 </form>
             </div>
