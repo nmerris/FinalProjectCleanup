@@ -11,8 +11,10 @@
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading section-heading">
+                <h2 th:text="'Course name: ' + ${course.name}"></h2>
+            </div>
             <div class="panel-body">
-                <h4 class="section-heading" th:text="'Course name: ' + ${course.name}"></h4>
 
                 <!-- form to select an admin to send an email to -->
                 <!--returns the admin id of the selected admin, as a request param -->
@@ -29,7 +31,7 @@
                         </select>
                     </div>
 
-                    <button class="btn btn-lg btn-primary text-center" type="submit">Send Email</button>
+                    <button class="btn btn-lg btn-primary bold-input text-center" type="submit">Send Email</button>
                 </form>
 
             </div>

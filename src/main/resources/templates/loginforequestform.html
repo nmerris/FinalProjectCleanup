@@ -8,37 +8,36 @@
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading">
+                <h2>Please enter details about the information request</h2>
+            </div>
             <div class="panel-body">
                 <form action="#" th:action="@{/loginforequest}" th:object="${courseInfoLog}" method="post">
-                    <div class="text-center feedback">
-                        <h2>Please enter details about the information request</h2>
-                        <!--<h3 th:text="'Course name: ' + ${courseInfoLog.course.name}"></h3>-->
-                    </div>
 
                     <input type="hidden" th:field="*{id}" />
                     <input type="hidden" th:field="*{course.id}" />
 
                     <div class="form-group">
-                        <label class="section-heading" for="courseRegistrationN">Description of info request</label>
+                        <label class="section-heading" for="courseRegistrationN">Request</label>
                         <textarea id="courseRegistrationN" rows="4" cols="75" class="form-control" type="text" th:field="*{description}" autofocus> </textarea>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="name">Contact Number</label>
                         <input id="name" class="form-control" type="text" th:field="*{contactNum}" placeholder="123-456-7890"/>
-                        <p class="alert alert-danger" th:if="${noEmailAndNoContactNum}" th:text="'please enter a contact number and/or an email'"></p>
+                        <p class="alert alert-danger" th:if="${noEmailAndNoContactNum}" th:text="'Please enter a contact number or an email.'"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Email</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{email}"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-                        <p class="alert alert-danger" th:if="${noEmailAndNoContactNum}" th:text="'please enter a contact number and/or an email'"></p>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" placeholder="name@email.com"></p>
+                        <p class="alert alert-danger" th:if="${noEmailAndNoContactNum}" th:text="'Please enter a contact number or an email.'"></p>
                     </div>
                     <!-- mnum will be available as a request param in the post route, ok to be empty -->
                     <div class="form-group">
                         <label class="section-heading" for="mnum">If request came from existing MC student, enter their M-Number</label>
                         <input id="mnum" class="form-control" type="text" name="mnum" placeholder="M1234567"/>
-                        <p class="alert alert-danger" th:if="${badMnum}" th:text="'no student found with that M-Number'"></p>
+                        <p class="alert alert-danger" th:if="${badMnum}" th:text="'No student found with that M-Number.'"></p>
                     </div>
 
                     <div class="clearfix"></div>

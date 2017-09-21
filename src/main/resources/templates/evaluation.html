@@ -10,8 +10,9 @@
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
+
             <div class="panel-heading">
-                <p class="panel-title">Please enter the following information:</p>
+                <h2>Please enter the following information:</h2>
             </div>
             <div class="panel-body">
 
@@ -21,14 +22,14 @@
                     <input type="hidden" th:field="*{name}">
 
                     <div class="form-group">
-                        <label class="section-heading" for="courseRegistrationN">CRN</label>
+                        <label class="section-heading" for="courseRegistrationN">CRN#</label>
                         <input id="courseRegistrationN" class="form-control" type="text" th:field="*{courseRegistrationNum}" autofocus/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('courseRegistrationNum')}" th:errors="*{courseRegistrationNum}"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>
-                        <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 1976'"/>
-                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'please enter a day, month, and year'"></p>
+                        <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 2017'"/>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('dateStart')}" th:errors="*{dateStart}" th:text="'Please enter a day, month (first three letters), and year.'"></p>
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="selectaTeacher">Select a Teacher</label>
@@ -37,8 +38,8 @@
                                     th:value="${item.id}"
                                     th:text="${item.nameFirst} + ' ' + ${item.nameLast}"></option>
                         </select>
-                        <p class="alert alert-danger" th:if="${teacherError}" th:text="'that teacher does not teach that course for that start date'"></p>
-                        <p class="alert alert-danger" th:if="${courseError}" th:text="'could not find a course with that CRN and start date'"></p>
+                        <p class="alert alert-danger" th:if="${teacherError}" th:text="'That teacher does not teach that course for that start date.'"></p>
+                        <p class="alert alert-danger" th:if="${courseError}" th:text="'No course with that CRN# and start date.'"></p>
                     </div>
                     <div class="clearfix"></div>
                     <input th:disabled="${disSubmit}" class="btn btn-primary bold-input" type="submit" value="Submit">

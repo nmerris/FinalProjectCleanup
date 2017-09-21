@@ -20,18 +20,20 @@
 <div class="container">
     <div class="col-lg-12">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading">
+                <h2 th:text="'Evaluations for: ' + ${teacherName}"></h2>
+            </div>
             <div class="panel-body">
 
                 <!-- this table shows all evals for a teacher, including for deleted courses -->
                 <!-- the reason is that you might want to go back and review evals after deleting a course -->
-                <caption> <h4><b th:text="'Evaluations for: ' + ${teacherName}"></b></h4></caption>
                 <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Course Name</th>
                             <th>Deleted</th>
-                            <th>CRN</th>
+                            <th>CRN#</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Content</th>
@@ -43,7 +45,7 @@
                             <th class="commentcolumn">Did Like</th>
                             <th class="commentcolumn">Didn't Like</th>
                             <th class="commentcolumn">Improvements</th>
-                            <th class="commentcolumn">Other Classes Taking</th>
+                            <th class="commentcolumn">Wanted Classes</th>
                             <th class="commentcolumn">How Did You Find Out</th>
                         </tr>
                     </thead>
