@@ -21,6 +21,7 @@
                         <thead>
                         <tr>
                             <th>Course Name</th>
+                            <th>Teacher</th>
                             <th>Deleted</th>
                             <th>CRN</th>
                             <th>Start Date</th>
@@ -42,6 +43,7 @@
                         <tbody align="left">
                         <tr th:each="item : ${evaluations}">
                             <td th:text="*{item.course.name}"></td>
+                            <td th:text="*{item.person.getFullName()}"></td>
                             <td th:text="*{item.course.getDeletedString()}"></td>
                             <td th:text="*{item.course.courseRegistrationNum}"></td>
                             <td th:text="*{#dates.format(item.course.dateStart, 'MMM dd, yyyy')}"></td>

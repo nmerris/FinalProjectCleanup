@@ -135,7 +135,7 @@ public class TeacherController {
 
 		// 'existing student' box was checked, register them as a new student
 		if(registerNew != null) {
-			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
+//			System.out.println("============================= in /addstudent POST, about to save a brand new student, no existing matches were found");
 			Person p = userService.saveStudent(student);
 			RegistrationTimestamp rt = new RegistrationTimestamp();
 			rt.setCourse(course);
@@ -157,7 +157,7 @@ public class TeacherController {
 		// if 'existing student' box was checked, but can't find a match, display a msg
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 				student.getNameLast(), student.getContactNum(), student.getEmail()) == 0) {
-			System.out.println("============================= in /addstudent POST, 'new student' box was NOT checked, but could not find a match");
+//			System.out.println("============================= in /addstudent POST, 'new student' box was NOT checked, but could not find a match");
 
 			model.addAttribute("message", "No existing student found that matches the info that was entered");
 			model.addAttribute("invalidStudent", true);
@@ -169,7 +169,7 @@ public class TeacherController {
 		if(personRepo.countByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 				student.getNameLast(), student.getContactNum(), student.getEmail()) == 1) {
 
-			System.out.println("============================= in /addstudent POST, about to register existing student, only found 1 match");
+//			System.out.println("============================= in /addstudent POST, about to register existing student, only found 1 match");
 			Person p = personRepo.findFirstByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
 					student.getNameLast(), student.getContactNum(), student.getEmail());
 			model.addAttribute("message", "Welcome back!  You have been registered for this course.");
@@ -200,7 +200,7 @@ public class TeacherController {
 
 		// data entered matches a record in the db AND the 'existing student' box was checked, so now need to show
 		// a new page with a drop down of choices and Mnums for student to select.. themselves
-		System.out.println("============================= in /addstudent POST, 1 or more matching student was found");
+//		System.out.println("============================= in /addstudent POST, 1 or more matching student was found");
 		// if there is more than one match found based on the form data that was just entered,
 		// we'll display a new page with a drop down list of possible students and ask them to select one, or not
 		Set<Person> potentials = personRepo.findByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(student.getNameFirst(),
@@ -275,8 +275,8 @@ public class TeacherController {
 
 
 		// get the difference in days between course start and end dates
-		System.out.printf("======================= Difference between course start and end dates: %d day(s)\n", diffInDays);
-		System.out.println("======================= dates.size: " + dates.size());
+//		System.out.printf("======================= Difference between course start and end dates: %d day(s)\n", diffInDays);
+//		System.out.println("======================= dates.size: " + dates.size());
 
 		// need this to be able to process a list of objects in a single form
 		AttendanceWrapper wrapper = new AttendanceWrapper();
@@ -316,16 +316,16 @@ public class TeacherController {
 			@RequestParam("selectedDate") Date selectedDate,
 			@PathVariable("courseid") long courseId) {
 
-		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
-		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
-		System.out.println("=================== selectedDate: " + selectedDate);
+//		System.out.println("================================================ in /takeattendance POST, incoming courseId: " + courseId);
+//		System.out.println("=================== attWrapper.getStringList.size: " + attWrapper.getAttendanceList().size());
+//		System.out.println("=================== selectedDate: " + selectedDate);
 
 		Course course = courseRepo.findOne(courseId);
 		LinkedHashSet<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course, authorityRepo.findByRole("STUDENT"));
 
         // set the date on each Attendance that we just got back from the form
         for (Attendance att : attWrapper.getAttendanceList()) {
-            System.out.println("============================ in /takeattendance POST, att.getPerson.getId: " + att.getPerson().getId());
+//            System.out.println("============================ in /takeattendance POST, att.getPerson.getId: " + att.getPerson().getId());
             att.setDate(selectedDate);
         }
 
@@ -390,7 +390,7 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 		Iterable<Person> students = course.getPersons();
 		for (Person stud : students) {
 			String fullName = stud.getFullName();
-			String studentId = String.valueOf(stud.getId());
+//			String studentId = String.valueOf(stud.getId());
 			String mNUM = String.valueOf(stud.getmNumber());
 			Iterable<Attendance> attendances = stud.getAttendances();
 			for (Attendance att : attendances) {
@@ -431,7 +431,7 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 			emailService.send(email);
 
 		} catch (UnsupportedEncodingException e) {
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
+//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
 			e.printStackTrace();
 		}
 	}
@@ -525,7 +525,7 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 			emailService.send(email);
 
 		} catch (UnsupportedEncodingException e) {
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
+//			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!! caught an unsupported encoding exception");
 			e.printStackTrace();
 		}
 	}
