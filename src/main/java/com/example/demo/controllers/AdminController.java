@@ -113,11 +113,13 @@ public class AdminController
 		Course cour=new Course();
 		// need dummy data for CRN and name or validation is problematic in post route, both these are set again in post route
 		// so it doesn't matter what you set them to here
-		cour.setCourseRegistrationNum("12345");
+		cour.setCourseRegistrationNum("12345"); // must be 5 digits
 		cour.setName("fakeName");
 
 //		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
 //		System.out.println("============================================================ courseSet.size: " + courseSet.size());
+
+
 
 		// TODO it shows multiple listings of same course name, not what we want here.. doesn't matter for project specs
 		// this is a "nice to do" thing, don't spend time on this until we finish all requirements
