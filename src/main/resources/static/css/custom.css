@@ -28,12 +28,21 @@ footer {
     background-color: #5778db;
 }
 
+.navbar-default .navbar-brand {
+    font-weight: bold;
+    color: black;
+    -webkit-tap-highlight-color: black;
+}
+
 .subtitle {
     font-style: italic;
 }
+
 .evalItem {
     font-weight: bold;
 }
+
+
 .welcome-module {
     background: url("../img/07final-panel.jpg") no-repeat center center;
     min-height: 100%;
@@ -306,10 +315,6 @@ thead {
     }
 }
 */
-
-/*.evalcolum {*/
-/*width: 90px;*/
-/*}*/
 
 
 
