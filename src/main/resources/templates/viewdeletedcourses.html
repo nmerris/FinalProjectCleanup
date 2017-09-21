@@ -25,8 +25,8 @@
                         <tr  th:each="singlecourse:${allcourses}">
                             <td th:text="${singlecourse.courseRegistrationNum}"></td>
                             <td th:text="${singlecourse.name}"></td>
-                            <td th:text="${singlecourse.dateStart}"></td>
-                            <td th:text="${singlecourse.dateEnd}"></td>
+                            <td th:text="${#dates.format(singlecourse.dateStart, 'MMM dd, yyyy')}"></td>
+                            <td th:text="${#dates.format(singlecourse.dateEnd, 'MMM dd, yyyy')}"></td>
                             <!--<td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><b>View Details</b></a></td>-->
                         </tr>
                         </tbody>
