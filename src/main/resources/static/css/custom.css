@@ -162,6 +162,10 @@ input[type="radio"] {
     margin-top: 50px;
 }
 
+.btn-warning {
+    margin-top: 50px;
+}
+
 .table-responsive {
     max-height:100vh;
 }
