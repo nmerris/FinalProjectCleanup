@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head th:replace="base:: FinalHead"></head>
 <body class="teacher-module">
 <th:block th:replace="base::FinalNavAdmin"></th:block>
@@ -9,11 +9,11 @@
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <caption><h3><b>Course List</b></h3></caption>
+                        <caption><h2><b>Course List</b></h2></caption>
                         <thead>
                         <tr>
 
-                            <td>CRN Number</td>
+                            <td>CRN#</td>
                             <td>Name</td>
                             <td>Start Date</td>
                             <td>End Date</td>
@@ -30,9 +30,9 @@
                             <td><a th:href="@{/coursedetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.name}"></p></a></td>
                             <td th:text="${#dates.format(singlecourse.dateStart, 'MMM dd, yyyy')}"></td>
                             <td th:text="${#dates.format(singlecourse.dateEnd, 'MMM dd, yyyy')}"></td>
-                            <td><a th:href="@{/viewregisteredstudent/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumStudents()}"></p></a></td>
-                            <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumEvaluations()}"></p></a></td>
-                            <td><a th:href="@{/loginforequestdetail/{id}(id=${singlecourse.id})}"><p th:text="${singlecourse.getNumInfoReq()}"></p></a></td>
+                            <td><a th:href="@{/viewregisteredstudent/{id}(id=${singlecourse.id})}"><p class="txtCenter" th:text="${singlecourse.getNumStudents()}"></p></a></td>
+                            <td><a th:href="@{/viewcourseevaluations/{id}(id=${singlecourse.id})}"><p class="txtCenter" th:text="${singlecourse.getNumEvaluations()}"></p></a></td>
+                            <td><a th:href="@{/loginforequestdetail/{id}(id=${singlecourse.id})}"><p class="txtCenter" th:text="${singlecourse.getNumInfoReq()}"></p></a></td>
 
                             <!--<td><a th:href="@{/editcourse/{id}(id=${singlecourse.id})}"><b>Edit Details</b></a></td>-->
                             <td><a th:href="@{/loginforequest/{id}(id=${singlecourse.id})}"><b>Log Info Request</b></a></td>

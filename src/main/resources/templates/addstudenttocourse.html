@@ -12,19 +12,21 @@
 <div class="container">
     <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading">
+                <h2 th:text="'Course Name: ' + ${course.name}"></h2>
+            </div>
             <div class="panel-body">
 
                 <!-- new student registers for this course in this form -->
                 <form action="#" th:action="@{/addstudent/{cid}(cid=${course.id})}" th:object="${newstudent}" method="post">
                     <div class="text-center feedback">
-                        <h2 th:text="'Course Name: ' + ${course.name}"></h2>
                         <!--<h2>Register as a New Student if you have no M-number</h2>-->
                     </div>
                     <div class="row justify-content-center">
 
                         <input type="hidden" th:field="*{id}"/>
 
-                        <p class="alert alert-danger" th:if="${alreadyRegistered}" th:text="'you are already registered for this course'"></p>
+                        <p class="alert alert-danger" th:if="${alreadyRegistered}" th:text="'You are already registered for this course.'"></p>
 
                         <div class="col col-sm-6 form-group">
                             <label for="firstName">First name</label>
@@ -57,7 +59,7 @@
 
                         <div class="col col-sm-6 form-group">
                             <input type="checkbox" name="registerNew" id="expertId" value="true"/>
-                            <label class="section-heading" for="expertId">Check if you are a NEW student registering for the first time</label>
+                            <label class="section-heading" for="expertId">Check if you are a NEW student registering for the first time.</label>
                         </div>
 
 
