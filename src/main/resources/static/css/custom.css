@@ -36,7 +36,7 @@ footer {
 }
 .navbar-default .navbar-nav > li > a {
     color: white;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .btn-primary {
@@ -177,6 +177,10 @@ input[type="radio"] {
 }
 
 .btn-info {
+    margin-top: 50px;
+}
+
+.btn-warning {
     margin-top: 50px;
 }
 

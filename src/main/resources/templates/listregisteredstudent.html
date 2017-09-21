@@ -37,7 +37,7 @@
                             <td th:text="*{student.nameLast}"></td>
                             <td th:text="*{student.email}"></td>
                             <td th:text="*{student.contactNum}"></td>
-                            <td th:text="${student.getTimeStampByCourseId(__${id}__)}"></td>
+                            <td th:text="${#dates.format(student.getTimeStampByCourseId(__${id}__), 'MMM dd, yyyy - h:mm a')}"></td>
                         </tr>
                         </tbody>
                     </table>
