@@ -11,13 +11,16 @@
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-default card card-3">
+            <div class="panel-heading txtCenter">
+                <h2>Please log in</h2>
+            </div>
             <div class="panel-body">
                 <h4 class="section-heading" th:text="${message}"></h4>
 
                 <!-- '?error' is appended automatically by spring if there is a login problem.. cool! -->
                 <form autocomplete="off" class="form-signin" th:action="@{/login}" method="post">
                     <div class="inner-addon left-addon">
-                        <i class="glyphicon glyphicon-user"></i>
+                        <i class="glyphicon glyphicon-user loginglyph"></i>
                         <input type="text" name="username" class="form-control" placeholder="username" autofocus>
                     </div>
                     <br/>
@@ -34,7 +37,8 @@
                     <br/>
                     <br/>
                     <input class="btn btn-lg btn-primary bold-input" type="submit" value="Sign In"/>
-                    <a class="btn btn-lg btn-success text-center" th:href="@{~/signup}">Sign Up Now!</a>
+                    <a th:href="@{~/signup}" class="btn btn-lg btn-primary bold-input" role="button">Sign Up</a>
+                    <!--<a class="btn btn-lg bold-input text-center" th:href="@{~/signup}">Sign Up Now!</a>-->
                 </form>
 
             </div>
