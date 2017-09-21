@@ -20,7 +20,7 @@
 
                     <div class="form-group">
                         <label class="section-heading" for="courseRegistrationN">Description of info request</label>
-                        <input id="courseRegistrationN" class="form-control" type="text" th:field="*{description}" autofocus/>
+                        <textarea id="courseRegistrationN" rows="4" cols="75" class="form-control" type="text" th:field="*{description}" autofocus> </textarea>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
                     </div>
                     <div class="form-group">
