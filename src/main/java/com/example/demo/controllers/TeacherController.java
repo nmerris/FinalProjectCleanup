@@ -389,7 +389,7 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 			String fullName = stud.getFullName();
 //			String studentId = String.valueOf(stud.getId());
 			String mNUM = String.valueOf(stud.getmNumber());
-			Iterable<Attendance> attendances = stud.getAttendances();
+			Iterable<Attendance> attendances = stud.getAttendancesByCourse(course);
 			for (Attendance att : attendances) {
 				String dates = String.valueOf(att.getDate());
 				String status = att.getAstatus();
@@ -471,7 +471,7 @@ public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
 		Iterable<Person> teachers = course.getPersons();
 		for (Person teach : teachers) {
 			String fullName = teach.getFullName();
-			Iterable<Evaluation> evaluations = teach.getEvaluations();
+			Iterable<Evaluation> evaluations = teach.getEvaluationsByCourse(course);
 			for (Evaluation evas : evaluations) {
 				String ccr=evas.getCourseContentRating();
 				String iqr=evas.getInstructionQualityRating();

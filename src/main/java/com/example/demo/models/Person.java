@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Person {
@@ -128,6 +129,26 @@ public class Person {
            }
         }
         return counter;
+    }
+
+    public Set<Attendance> getAttendancesByCourse(Course course) {
+        Set<Attendance> toReturn = new HashSet<>();
+        for (Attendance att : attendances) {
+            if(att.getCourse().getId() == course.getId()) {
+                toReturn.add(att);
+            }
+        }
+        return toReturn;
+    }
+
+    public Set<Evaluation> getEvaluationsByCourse(Course course) {
+        Set<Evaluation> toReturn = new HashSet<>();
+        for (Evaluation eval : evaluations) {
+            if(eval.getCourse().getId() == course.getId()) {
+                toReturn.add(eval);
+            }
+        }
+        return toReturn;
     }
 
     // normal getters/setters ==================================================================================
