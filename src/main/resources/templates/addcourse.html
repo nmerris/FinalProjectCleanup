@@ -10,6 +10,9 @@
         <div class="panel panel-default card card-3">
             <div class="panel-body">
                 <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
+
+                    <input type="hidden" value="${course.id}">
+
                     <div class="text-center feedback">
                         <h2>Please enter course info</h2>
                     </div>
