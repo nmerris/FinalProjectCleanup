@@ -6,7 +6,7 @@ html {
 
 body {
     /*padding-top: 70px;*/
-    background: url("../img/07final-panel.jpg") no-repeat center center;
+    /*background: url("../img/07final-panel.jpg") no-repeat center center;*/
     min-height: 100%;
     background-size: cover;
     /* Margin bottom by footer height */
@@ -25,14 +25,27 @@ footer {
 }
 
 .navbar {
-    background-color: #5778db;
+    background-color: #51237f;
+    color: white;
 }
 
 .navbar-default .navbar-brand {
     font-weight: bold;
-    color: black;
-    -webkit-tap-highlight-color: black;
+    color: white;
+    -webkit-tap-highlight-color: white;
 }
+.navbar-default .navbar-nav > li > a {
+    color: white;
+    font-size: 16px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #51237f;
+    border-color: #51237f;
+}
+
+
 
 .subtitle {
     font-style: italic;
@@ -41,10 +54,17 @@ footer {
 .evalItem {
     font-weight: bold;
 }
-
+.panel-primary {
+    border-color: #51237f;
+}
+.panel-primary > .panel-heading {
+    color: #fff;
+    background-color: #51237f;
+    border-color: #51237f;
+}
 
 .welcome-module {
-    background: url("../img/07final-panel.jpg") no-repeat center center;
+    /*background: url("../img/07final-panel.jpg") no-repeat center center;*/
     min-height: 100%;
     background-size: cover;
 }
@@ -55,7 +75,7 @@ footer {
 }
 
 .final-panel {
-    background: url("../img/07final-panel.jpg") repeat center center;
+    /*background: url("../img/07final-panel.jpg") repeat center center;*/
     padding-left: 40px;
     padding-right:40px;
 }
@@ -116,9 +136,12 @@ footer {
 }
 
 .glyphicon-user {
-    color: #080808;
+    color: white;
     padding-left: 10px;
     padding-right: 10px;
+}
+.loginglyph {
+    color: #080808;
 }
 
 .glyphicon-lock {
@@ -179,7 +202,7 @@ td a {
 
 thead {
     color: white;
-    background-color: #428bca;
+    background-color: #51237f;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 0px;
