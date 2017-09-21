@@ -8,14 +8,20 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col col-sm-10">
-            <div align="center">
+            <div class="panel panel-default card card-3">
+
+                <div class="panel-heading">
+                    <h2>Please enter the following information for <span th:text="${course.name}">.</span> </h2>
+                </div>
+                <div class="panel-body">
+            <!--<div align="center">-->
                 <form action="#" th:action="@{/evaluation2}" th:object="${evaluation}" method="post">
 
                     <input type="hidden" name="courseId" th:value="${course.id}" />
                     <input type="hidden" name="teacherId" th:value="${teacher.id}" />
 
-                    <table width="90%"><tr><td align="left">
-                        <a name="section1"></a>
+                    <table>
+
                         <div class="subtitle">Section I: Course Information</div>
                         <span class="evalItem">1. CRN# </span><span th:text="${course.courseRegistrationNum}"></span><br />
                         <span class="evalItem">2. Course Name:  </span><span th:text="${course.name}"></span><br />
@@ -71,11 +77,11 @@
                         <br />
                         6. How would you rate the classroom computer equipment? <br />
                         <div class="radio">
-                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Excellent" checked />Excellent</label>
-                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Above Average" />Above Average</label>
-                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Average" />Average</label>
-                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Fair" />Fair</label>
-                            <label><input class="radio-inline" type="radio" name="equipmentRating" value="Poor" />Poor</label>
+                            <label class="radio-inline"><input type="radio" name="equipmentRating" value="Excellent" checked />Excellent</label>
+                            <label class="radio-inline"><input type="radio" name="equipmentRating" value="Above Average" />Above Average</label>
+                            <label class="radio-inline"><input type="radio" name="equipmentRating" value="Average" />Average</label>
+                            <label class="radio-inline"><input type="radio" name="equipmentRating" value="Fair" />Fair</label>
+                            <label class="radio-inline"><input type="radio" name="equipmentRating" value="Poor" />Poor</label>
                         </div>
                         <br />
 
@@ -102,12 +108,14 @@
                         <br />
                         <div class="row justify-content-left">
                             <div class="col col-sm-12">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                                <button type="reset" class="btn btn-primary">Reset</button>
+                                <input class="btn btn-primary bold-input" type="submit" value="Submit"/>
+                                <input type="reset" class="btn btn-warning bold-input" value="Reset"/>
                             </div>
                         </div>
                     </td></tr></table>
                 </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

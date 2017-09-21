@@ -14,6 +14,9 @@
                 </div>
             </div>
             <div class="panel-body">
+                <div th:if="${course.id}!=0" class="alert alert-warning">
+                    <strong>Warning! </strong>Changing CRN# and/or Course Name may be confusing to students, especially when they are filling out course evals!  Note that if you edit an existing course, the changes will only be applied to this instance of that course.  If there are other courses with the same CRN#, they will NOT be changed.
+                </div>
                 <form action="#" th:action="@{/addcourse}" th:object="${course}" method="post">
 
                     <input type="hidden" value="${course.id}">
@@ -51,7 +54,7 @@
                     <!-- select a teacher drop down -->
                     <div class="form-group">
                         <label class="section-heading" for="selectaTeacher">Select a Teacher</label>
-                        <select id="selectaTeacher" class="form-control" name="selectedTeacher">
+                        <select id="selectaTeacher" class="form-control" name="selectedTeacher" >
                             <option th:each="item : ${teachers}"
                                     th:value="${item.id}"
                                     th:text="${item.getFullName()}"></option>

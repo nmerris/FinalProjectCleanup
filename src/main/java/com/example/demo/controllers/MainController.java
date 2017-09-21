@@ -188,7 +188,6 @@ public class MainController
         Person teacher = personRepo.findOne(teacherId);
         if(specificCourse==null)
         {
-            System.out.println("No Such Course");
             // TODO show an error msg
             model.addAttribute("courseError", true);
             model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
@@ -196,7 +195,6 @@ public class MainController
         }
         if(!specificCourse.getPersons().contains(teacher))
         {
-            System.out.println("That teacher doesn't teach that course");
             // TODO show an error msg
             model.addAttribute("teacherError", true);
             model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
@@ -222,8 +220,6 @@ public class MainController
                              @RequestParam("teacherId")long teacherId,
                              @ModelAttribute("evaluation")Evaluation eval,Model model)
     {
-        System.out.println("CourseId: " + courseId);
-        System.out.println("TeacherId: " + teacherId);
 
         // if student chose 'other', set it on the eval object
         if(!eval.getHowDidYouFindOut().isEmpty() && eval.getHowDidYouFindOut().equalsIgnoreCase("Other"))
