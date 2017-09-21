@@ -164,10 +164,8 @@ public class MainController
         Course course = new Course();
         course.setDateEnd(new Date()); // dummy date never to be saved
         course.setName("fake name never to be saved");
-
     	model.addAttribute("course", course);
-//    	model.addAttribute("course", new Course());
-
+        model.addAttribute("disSubmit", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER"))== 0);
     	model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
         return "evaluation";
     }
@@ -180,7 +178,6 @@ public class MainController
     {
 
         if(bindingResult.hasErrors()) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!! in /evaluation POST, bindingResult had errors");
             model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
             return "evaluation";
         }
