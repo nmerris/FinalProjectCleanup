@@ -120,7 +120,13 @@ public class Person {
     }
 
     public long getNumCourses(){
-        return courses.size();
+        int counter=0;
+        for (Course c:courses) {
+           if(!c.isDeleted()){
+               counter++;
+           }
+        }
+        return counter;
     }
 
 
