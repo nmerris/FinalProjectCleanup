@@ -1,29 +1,95 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="base:: FinalHead"></head>
+<meta charset="utf-8">
+<title>Welcome Page</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
 
-<body class="welcome-module">
+<!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
+<meta property="og:title" content="">
+<meta property="og:image" content="">
+<meta property="og:url" content="">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="">
 
+<!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="">
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="">
 
-<th:block th:replace="base::FinalNav"></th:block>
+<!--&lt;!&ndash; Favicon &ndash;&gt;-->
+<!--<link href="img/favicon.ico" rel="icon">-->
 
-<div class="container">
-    <div class="col-lg-10 col-lg-offset-1">
-        <div class="panel panel-default card card-3">
-            <div class="panel-body">
-                <h1 class="text-center">Welcome to Montgomery College!</h1>
-                <h2>If you are a student, you can fill out a <a href="evaluation">Course Evaluation</a>.</h2>
-                <h2>Administrators and Teachers can <a href="login">log in </a>or <a href="/signup">sign up </a>to create a new account.</h2>
-            </div>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:400,900" rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- Main Stylesheet File -->
+<link href="/css/style.css" rel="stylesheet">
+
+<!-- =======================================================
+  Theme Name: Bell
+  Theme URL: https://bootstrapmade.com/bell-free-bootstrap-4-template/
+  Author: BootstrapMade.com
+  Author URL: https://bootstrapmade.com
+======================================================= -->
+</head>
+
+<body>
+<section class="hero">
+    <div class="container text-center">
+        <div class="row">
+        <div class="col-md-12">
+        <a class="hero-brand"><img  src="img/newLogo.png"></a>
+        </div>
+        </div>
+
+        <div class="col-md-16">
+            <h1><strong>
+                Welcome to Montgomery College
+            </strong> </h1>
+            <p class="tagline">
+            <h2>To create a new account <a class="btn btn-full" href="/signup">Sign Up </a></h2>
+            </p>
+            <p class="tagline">
+            <h2>Administrators and Teachers can <a class="btn btn-full"  href="login">Sign In </a></h2>
+            </p>
+            <p class="tagline">
+                <h2>If you are a student, you can fill out a <a class="btn btn-full" href="evaluation">Course Evaluation</a></h2>
+            </p>
+
+            <!--<a class="btn btn-full" href="addStudent">Click On</a>-->
         </div>
     </div>
-</div><!-- container -->
 
+</section>
+<!-- Required JavaScript Libraries -->
+<script src="lib/jquery/jquery.min.js"></script>
+<script src="lib/superfish/hoverIntent.js"></script>
+<script src="lib/superfish/superfish.min.js"></script>
+<script src="lib/tether/js/tether.min.js"></script>
+<script src="lib/stellar/stellar.min.js"></script>
+<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="lib/counterup/counterup.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/easing/easing.js"></script>
+<script src="lib/stickyjs/sticky.js"></script>
+<script src="lib/parallax/parallax.js"></script>
+<script src="lib/lockfixed/lockfixed.min.js"></script>
 
-<th:block th:replace="base::Footer"></th:block>
-<th:block th:replace="base::FinalJS"></th:block>
+<!-- Template Specisifc Custom Javascript File -->
+<script src="/js/custom.js"></script>
 
+<!--<script src="contactform/contactform.js"></script>-->
 
 </body>
 </html>
