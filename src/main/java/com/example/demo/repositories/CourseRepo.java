@@ -3,6 +3,7 @@ package com.example.demo.repositories;
 import com.example.demo.models.Course;
 import com.example.demo.models.Person;
 import org.springframework.data.repository.CrudRepository;
+import sun.awt.image.ImageWatched;
 
 import java.util.*;
 
@@ -20,5 +21,7 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
     Course findFirstByCourseRegistrationNumIs(String crn);
 
     LinkedHashSet<Course> findByDeletedIsOrderByCourseRegistrationNumAsc(boolean value);
+
+    LinkedHashSet<Course> findByPersonsIsAndDeletedIsOrderByCourseRegistrationNumAsc(Person person, boolean value);
 
 }

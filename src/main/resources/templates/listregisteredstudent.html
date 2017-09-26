@@ -17,7 +17,7 @@
 
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <caption><h2><b>Registered Student List</b></h2></caption>
+                        <caption><h3><b th:text="'Registered Students for ' + ${courseName} + ' - CRN ' + ${courseCrn}"></b></h3></caption>
 
                         <thead>
                         <tr>
@@ -26,7 +26,6 @@
                             <th>Email</th>
                             <th>Contact Number</th>
                             <th>Time Arrived</th>
-
                         </tr>
                         </thead>
                         <tbody>

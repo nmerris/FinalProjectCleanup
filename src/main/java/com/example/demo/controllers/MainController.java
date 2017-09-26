@@ -232,8 +232,8 @@ public class MainController
         eval.setPerson(personRepo.findOne(teacherId));
         evaluationRepo.save(eval);
 
-        model.addAttribute("message", "Course Evaluation Done ");
-        model.addAttribute("extraMessage", String.format("Course Evaluation: %s",
+        model.addAttribute("message", "Course Evaluation Submitted");
+        model.addAttribute("extraMessage", String.format("Course: %s",
                 courseRepo.findOne(eval.getCourse().getId()).getName()));
 //        return "redirect:/";
         return "evaluationconfirmation";

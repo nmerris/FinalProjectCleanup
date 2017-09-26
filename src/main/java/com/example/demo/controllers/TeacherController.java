@@ -55,26 +55,26 @@ public class TeacherController {
 	public String listTeacherCourses(Principal principal, Model model) {
 		Person teacher = personRepo.findByUsername(principal.getName());
 		model.addAttribute("teachercourse", teacher);
-		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIs(teacher, false));
+		model.addAttribute("courselist", courseRepo.findByPersonsIsAndDeletedIsOrderByCourseRegistrationNumAsc(teacher, false));
 		return "teachercoursedetail";
 	}
 
 
 	//List of Students for a particular Course
 	// path variable is the course id
-	@RequestMapping("/viewregisteredstudent/{id}")
-	public String listRegisteredStud(@PathVariable("id") long id, Model model, Principal principal) {
+	@GetMapping("/viewregisteredstudent/{id}")
+	public String listRegisteredStud(@PathVariable("id") long courseId, Model model) {
 		model.addAttribute("liststudent",
-				personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(courseRepo.findOne(id),
+				personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(courseRepo.findOne(courseId),
 						authorityRepo.findByRole("STUDENT")));
 
-		model.addAttribute("courseId", id);
+		model.addAttribute("courseName", courseRepo.findOne(courseId).getName());
+		model.addAttribute("courseCrn", courseRepo.findOne(courseId).getCourseRegistrationNum());
 		return "listregisteredstudent";
 	}
 
 
 	//Display course evealuations for a single course for a single teacher, the teacher is logged in at this point
-	// TODO WAITING FOR JESSE, template is ready to go, and this route should be done
 	@GetMapping("/dispevaluation/{id}")
 	public String dipCourseEvaluation(@PathVariable("id") long courseId, Model model, Principal principal) {
 		model.addAttribute("evaluations", evaluationRepo.findByPersonIsAndCourseIs(personRepo.findByUsername(principal.getName()),

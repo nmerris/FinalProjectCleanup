@@ -11,15 +11,15 @@
 <div class="container">
     <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-default card card-3">
-            <div class="panel-heading text-center feedback">
-                <h2 th:text="'Course list for: ' + ${teachercourse.getFullName()}"></h2>
-            </div>
             <div class="panel-body">
+
                     <table class="table table-striped" class="table table-hover">
+                        <caption><h2><b th:text="'Active course list for ' + ${teachercourse.getFullName()}"></b></h2></caption>
+
                         <thead>
                         <tr>
-                            <th>Course Name</th>
                             <th>CRN#</th>
+                            <th>Course Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th class="txtCenter"># Evals</th>
@@ -29,8 +29,8 @@
                         </thead>
                         <tbody align="left">
                         <tr th:each="list: ${courselist}">
-                            <td th:text="*{list.name}"></td>
                             <td th:text="*{list.courseRegistrationNum}"></td>
+                            <td th:text="*{list.name}"></td>
                             <td th:text="*{#dates.format(list.dateStart, 'MMM dd, yyyy')}"></td>
                             <td th:text="*{#dates.format(list.dateEnd, 'MMM dd, yyyy')}"></td>
                             <td><a class="txtCenter" th:href="@{/dispevaluation/{id}(id=${list.id})}"><p th:text="*{list.getNumEvalsByTeacherId(__${teachercourse.id}__)}"></p></a></td>
@@ -41,7 +41,6 @@
                                 <a th:href="@{/takeattendance/{id}(id=${list.id})}">Take Attendance</a>
                                 <a th:href="@{/sendemail(id=${list.id})}">Send Attendance Details</a>
                                 <a th:href="@{/sendemails(id=${list.id})}">Send Evaluation Details</a>
-
                             </td>
                         </tr>
                         </tbody>
