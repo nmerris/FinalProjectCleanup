@@ -306,6 +306,9 @@ public class AdminController
 				// found a match for that mnum, so save to db
 				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
 				courseInfoRequestLogRepo.save(log);
+				model.addAttribute("newLog", log);
+
+
 				model.addAttribute("message", "Info request log saved");
 				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
 						courseRepo.findOne(log.getCourse().getId()).getName(),
@@ -317,10 +320,10 @@ public class AdminController
 		}
 
 		// at this point, we are saving a new request log, but not for an existing student
-		courseInfoRequestLogRepo.save(log);
-		model.addAttribute("message", "Info request log saved");
-		model.addAttribute("extraMessage", String.format("Course: %s",
-				courseRepo.findOne(log.getCourse().getId()).getName()));
+		// note that the course ID was passed through the form via a hidden input field
+		log.setCourse(courseRepo.findOne(log.getCourse().getId()));
+		model.addAttribute("newLog", log);
+		model.addAttribute("existingStudent", false);
 
 		return "loginforequestconfirmation";
 	}

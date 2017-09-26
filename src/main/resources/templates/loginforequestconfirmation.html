@@ -7,16 +7,51 @@
 <th:block th:replace="base::FinalNavAdmin"></th:block>
 <div class="container">
     <div class="col-lg-6 col-lg-offset-3">
+
         <div class="panel panel-default card card-3">
-            <div class="panel-heading">
-                <h2 th:text="${message}"></h2>
-            </div>
             <div class="panel-body">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h2><b>Info Request Log Saved</b></h2></div>
+                    <ul class="list-group">
+                        <li class="list-group-item" th:text="${'Course: ' + newLog.course.name}"></li>
+                        <li class="list-group-item" th:text="${'CRN#: ' + newLog.course.courseRegistrationNum}"></li>
+                        <li class="list-group-item" th:text="${'Start Date: ' + newLog.course.dateStart}"></li>
+                        <li class="list-group-item" th:text="${'End Date: ' + newLog.course.dateEnd}"></li>
+                        <li class="list-group-item" th:text="${'Log Content:  ' + newLog.description}"></li>
+                        <li class="list-group-item" th:text="${'Provided Contact Num:  ' + newLog.contactNum}"></li>
+                        <li class="list-group-item" th:text="${'Provided Email:  ' + newLog.email}"></li>
+                        <li class="list-group-item" th:text="${existingStudent} ? 'Existing Student:  Yes' : 'Existing Student:  No'"></li>
+                        <!--<li class="list-group-item" th:text="${'Found Existing Student?  ' + (${existingStudent} ? 'Yes' : 'No')}"></li>-->
 
-                <h4 th:text="${extraMessage}"></h4>
-
+                        <!-- if an existing student was found, display some of their info -->
+                    </ul>
+                </div>
+                <a class="btn btn-primary bold-input" th:href="@{|/loginforequest/${newLog.course.id}|}"><b>+ Enter another log for this course</b></a>
             </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--<div class="panel panel-default card card-3">-->
+            <!--<div class="panel-heading">-->
+                <!--<h2 th:text="${message}"></h2>-->
+            <!--</div>-->
+            <!--<div class="panel-body">-->
+
+                <!--<h4 th:text="${extraMessage}"></h4>-->
+
+            <!--</div>-->
+        <!--</div>-->
     </div>
 </div><!-- container -->
 
