@@ -11,7 +11,7 @@ public class Utilities {
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.DATE, numDays); //minus number would decrement the days
+        cal.add(Calendar.DATE, numDays); //  negative number would decrement the days
         return cal.getTime();
     }
 
@@ -20,7 +20,6 @@ public class Utilities {
     // this method is designed to return the diff in days inclusive: so if you enter the same start and end dates
     // it will return 1... ie the one day that you just entered as start and end date
     public static int getDiffInDays(Date startDate, Date endDate) {
-//        int dayInSeconds = 1000 * 60 * 60 * 24;
         int diffInDays = (int) ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
         if(diffInDays > 0) {

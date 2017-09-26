@@ -9,8 +9,6 @@ import java.util.Set;
 public interface AuthorityRepo extends CrudRepository<Authority, Long> {
     Authority findByRole(String role);
 
-    Set<Authority> findByRoleIsOrRoleIs(String role1, String role2);
-
     ArrayList<Authority>findByRoleIsOrRoleIsOrderByRoleDesc(String role1, String role2);
 
 }
