@@ -114,7 +114,8 @@ a:hover {
 .hero {
   display: table;
   position: relative;
-  background-image: url(../img/welcome.jpg);
+  background-image: url(../img/03education.jpg);
+  /*background-image: url(../img/welcome.jpg);*/
   background-size: cover;
   padding: 150px 0;
   color: #fff;

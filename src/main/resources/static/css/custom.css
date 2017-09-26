@@ -30,7 +30,8 @@ footer {
 }
 
 .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-    color: gray;
+    color: white;
+    text-decoration: underline;
     background-color: transparent;
 }
 
@@ -39,6 +40,14 @@ footer {
     color: white;
     -webkit-tap-highlight-color: white;
 }
+
+.navbar-default .navbar-brand a {
+    font-weight: bold;
+    color: white;
+    -webkit-tap-highlight-color: white;
+    text-decoration: none;
+}
+
 .navbar-default .navbar-nav > li > a {
     color: white;
     font-size: 18px;
