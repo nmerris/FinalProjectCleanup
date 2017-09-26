@@ -200,7 +200,8 @@ public class AdminController
 	@RequestMapping("/allcourses")
 	public String allCourses(Model model)
 	{
-		model.addAttribute("allcourses", courseRepo.findByDeletedIs(false));
+		model.addAttribute("allcourses", courseRepo.findByDeletedIsOrderByCourseRegistrationNumAsc(false));
+//		model.addAttribute("allcourses", courseRepo.findByDeletedIs(false));
 		return "allcourses";
 	}
 
@@ -218,7 +219,7 @@ public class AdminController
 	public String allStudents(Model model) {
 		// TODO implement this... HIWOT CAN YOU TAKE CARE OF THIS?
 		// TODO need to make another route that will show the courses that the student is registered in, ie what student was clicked from this routes table of students
-		model.addAttribute("students", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("STUDENT")));
+		model.addAttribute("students", personRepo.findByAuthoritiesIsOrderByMNumberAsc(authorityRepo.findByRole("STUDENT")));
 		return "allstudents";
 	}
 	//List of courses for a particular Student

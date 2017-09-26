@@ -14,7 +14,7 @@
             <div class="panel-body">
 
 
-                <form autocomplete="off" class="well form-horizontal" th:action="@{/signup}" th:object="${newPerson}" method="post">
+                <form th:action="@{/signup}" th:object="${newPerson}" method="post">
 
                     <input type="hidden" th:field="*{id}" />
 
@@ -37,7 +37,7 @@
                     </div>
                     <div class="form-group">
                         <label class="section-heading" for="contactNum">Contact Number</label>
-                        <input id="contactNum" class="form-control" type="text" th:field="*{contactNum}"/>
+                        <input id="contactNum" class="form-control" type="text" th:field="*{contactNum}" placeholder="555-678-1234"/>
                         <p class="alert alert-danger" th:if="${#fields.hasErrors('contactNum')}" th:errors="*{contactNum}"></p>
                     </div>
 
@@ -63,7 +63,7 @@
                         </select>
                     </div>
                     <input class="btn btn-lg btn-primary bold-input" type="submit" value="Sign up"/>
-                    <input class="btn btn-lg btn-primary bold-input" type="reset" value="Reset"/>
+                    <!--<input class="btn btn-lg btn-primary bold-input" type="reset" value="Reset"/>-->
                 </form>
 
             </div>

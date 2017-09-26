@@ -19,4 +19,6 @@ public interface CourseRepo extends CrudRepository<Course, Long> {
     LinkedHashSet<Course> findAll();
     Course findFirstByCourseRegistrationNumIs(String crn);
 
+    LinkedHashSet<Course> findByDeletedIsOrderByCourseRegistrationNumAsc(boolean value);
+
 }

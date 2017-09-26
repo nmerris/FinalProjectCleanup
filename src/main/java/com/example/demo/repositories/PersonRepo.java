@@ -56,6 +56,6 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
     // call this if you think more than one student will have identical fn, ln, contact num, and email
     Set<Person> findByNameFirstIsAndNameLastIsAndContactNumIsAndEmailIs(String firstName, String lastName, String contactNum, String email);
 
-
+    LinkedHashSet<Person> findByAuthoritiesIsOrderByMNumberAsc(Authority authority);
 
 }

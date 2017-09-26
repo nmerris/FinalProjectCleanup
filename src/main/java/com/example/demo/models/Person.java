@@ -31,7 +31,8 @@ public class Person {
     @Email
     @Size(max = 50)
     private String email;
-    @NotEmpty
+
+//    @NotEmpty
     @Pattern(regexp="\\(?\\d+\\)?[-.\\s]?\\d+[-.\\s]?\\d+")
     @Size(min=10, max=15)
     private String contactNum;
