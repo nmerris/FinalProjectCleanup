@@ -32,6 +32,18 @@ public class CourseInfoRequestLog {
     private String contactNum;
 
 
+    // call this to remove this log from the person and course that are associated with it, then you can delete it
+    public void removeAssociations() {
+
+        course.getCourseInfoRequestLogs().remove(this);
+        try {
+            person.getCourseInfoRequestLogs().remove(this);
+        } catch (Exception e) {
+            // need to catch null pointer exception here, in case this log has no student associated with it
+        }
+    }
+
+
     public long getId() {
         return id;
     }

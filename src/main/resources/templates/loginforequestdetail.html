@@ -35,8 +35,8 @@
                         <td th:text="*{list.email}"></td>
                         <td><p th:if="!*{list.person==null}" th:text="*{list.person.getFullName()}"></p></td>
                         <td><p th:if="!*{list.person==null}" th:text="*{list.person.getmNumber()}"></p></td>
-                        <td><a th:href="@{/editloginforequest/{id}(id=${list.id})}">Edit Info Request</a></td>
-                        <td><a th:href="@{/deleteloginforequest/{id}(id=${list.id})}">Delete Info Request</a></td>
+                        <td><a th:href="@{/editloginforequest/{id}(id=${list.id})}">Edit</a></td>
+                        <td><a th:href="@{/deleteloginforequest/{id}(id=${list.id})}">Delete</a></td>
                     </tr>
                     </tbody>
                 </table>

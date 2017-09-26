@@ -320,13 +320,14 @@ public class AdminController
 		log.setCourse(courseRepo.findOne(log.getCourse().getId()));
 		model.addAttribute("newLog", log);
 		model.addAttribute("existingStudent", false);
+		courseInfoRequestLogRepo.save(log);
 
 		return "loginforequestconfirmation";
 	}
 
 
 	//List of log info request for a particular course
-	@RequestMapping("/loginforequestdetail/{id}")
+	@GetMapping("/loginforequestdetail/{id}")
 	public String listCourseInfoReq(@PathVariable("id") long courseId,Model model) {
 		Course course = courseRepo.findOne(courseId);
 		model.addAttribute("courseinforeq", course);
@@ -335,7 +336,7 @@ public class AdminController
 	}
 
 	//edit log info request
-	@RequestMapping("/editloginforequest/{inforeqid}")
+	@GetMapping("/editloginforequest/{inforeqid}")
 	public String editCourseInfoReq(@PathVariable ("inforeqid") long id, Model model)
 	{
 		model.addAttribute("courseInfoLog", courseInfoRequestLogRepo.findOne(id));
@@ -343,9 +344,11 @@ public class AdminController
 	}
 
 	//delete log info request
-	@RequestMapping("/deleteloginforequest/{id}")
+	@GetMapping("/deleteloginforequest/{id}")
 	public String delCourseInfoReq(@PathVariable("id") long infoRequestId)
 	{
+		// remove this log's associations, then delete it
+		courseInfoRequestLogRepo.findOne(infoRequestId).removeAssociations();
 		courseInfoRequestLogRepo.delete(infoRequestId);
         return "redirect:/allcourses";
 	}
