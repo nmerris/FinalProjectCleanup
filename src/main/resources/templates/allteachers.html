@@ -16,17 +16,17 @@
                     <caption><h2><b>All current teachers</b></h2></caption>
                     <thead>
                         <tr>
+                            <th>M-Number</th>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>M-Number</th>
                             <th class="txtCenter">Evals on Record</th>
                         </tr>
                     </thead>
                     <tbody align="left">
                         <tr th:each="item : ${teachers}">
+                            <td th:text="*{item.mNumber}"></td>
                             <td th:text="*{item.nameFirst}"></td>
                             <td th:text="*{item.nameLast}"></td>
-                            <td th:text="*{item.mNumber}"></td>
                             <td><a th:href="@{/viewteacherevaluations/{id}(id=${item.id})}"><p class="txtCenter" th:text="*{item.evaluations.size()}"></p></a></td>
                         </tr>
                     </tbody>

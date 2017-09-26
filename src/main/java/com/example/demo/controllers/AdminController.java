@@ -235,7 +235,7 @@ public class AdminController
 	@GetMapping("/allteachers")
 	public String allTeachers(Model model) {
 
-		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
+		model.addAttribute("teachers", personRepo.findByAuthoritiesIsOrderByMNumberAsc(authorityRepo.findByRole("TEACHER")));
 		return "allteachers";
 	}
 
@@ -268,10 +268,8 @@ public class AdminController
 //	// this is where the admin can log information requests about a course
 	@GetMapping("/loginforequest/{id}")
 	public String logInfoRequestGet(@PathVariable("id") long courseId, Model model) {
-
 		// note that CourseInfoRequestLog has info about person and course
 
-//		model.addAttribute("course", courseRepo.findOne(courseId));
 		CourseInfoRequestLog logObject = new CourseInfoRequestLog();
 		logObject.setCourse(courseRepo.findOne(courseId));
 		model.addAttribute("courseInfoLog", logObject);

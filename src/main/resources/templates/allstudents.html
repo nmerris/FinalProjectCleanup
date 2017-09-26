@@ -16,9 +16,9 @@
 
                     <thead>
                     <tr>
+                        <th>M-Number</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>M-Number</th>
                         <th>Email Address</th>
                         <th>Emergency Contact Number</th>
                         <th># Courses Taken</th>
@@ -26,9 +26,9 @@
                     </thead>
                     <tbody align="left">
                     <tr th:each="item : ${students}">
+                        <td th:text="*{item.mNumber}"></td>
                         <td th:text="*{item.nameFirst}"></td>
                         <td th:text="*{item.nameLast}"></td>
-                        <td th:text="*{item.mNumber}"></td>
                         <td th:text="*{item.email}"></td>
                         <td th:text="*{item.contactNum}"></td>
                         <td><a th:href="@{/viewcoursetakenbystudent/{id}(id=${item.id})}"><p class="txtCenter" th:text="*{item.courses.size()}"></p></a></td>
