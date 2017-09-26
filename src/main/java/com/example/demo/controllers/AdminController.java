@@ -2,28 +2,15 @@ package com.example.demo.controllers;
 
 import com.example.demo.models.*;
 import com.example.demo.repositories.*;
-import com.google.common.collect.Lists;
-import it.ozimov.springboot.mail.model.Email;
-import it.ozimov.springboot.mail.model.EmailAttachment;
-import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
 import com.example.demo.Utilities;
-import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
-import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.security.Principal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class AdminController
@@ -116,6 +103,7 @@ public class AdminController
 		Course cour=new Course();
 		// need dummy data for CRN and name or validation is problematic in post route, both these are set again in post route
 		// so it doesn't matter what you set them to here
+		// TODO use validation groups, using dummy data is definitely not the best way to do this...
 		cour.setCourseRegistrationNum("12345"); // must be 5 digits
 		cour.setName("fakeName");
 
@@ -125,12 +113,36 @@ public class AdminController
 		// need to disable the submit button if there are not courses yet
 		model.addAttribute("disSubmit", courseRepo.count() == 0);
 
-		// TODO it shows multiple listings of same course name, not what we want here.. doesn't matter for project specs
-		// this is a "nice to do" thing, don't spend time on this until we finish all requirements
-		model.addAttribute("courses", courseRepo.findAll());
+
+		// add the nicely sorted list of courses (now with only one course per CRN) to the model
+		model.addAttribute("courses", getSortedCoursesOnlyOnePerCrn());
+
 		model.addAttribute("course",cour);
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addduplicatecourse";
+	}
+
+
+	// returns a list of sorted Courses, only the first instance of each course per CRN is returned
+	// this is used in the Copy Existing Course feature, because you only want one instance of each CRN for that drop down
+	private LinkedHashSet<Course> getSortedCoursesOnlyOnePerCrn() {
+		// NOTE: LinkedHashSet preserves the order in which elements are added
+		// NOTE: TreeSet automatically orders it's elements based on natural ordering (ie alphabetical if it contains Strings)
+		LinkedHashSet<Course> sortedCourses = courseRepo.findAll();
+
+		// build a sorted set of just the CRN's.. we only want one CRN per course instance for our drop down
+		// it doesnt matter which course we use for each CRN because we are creating new courses in post route
+		TreeSet<String> sortedCrns = new TreeSet<>();
+		for (Course c : sortedCourses) {
+			sortedCrns.add(c.getCourseRegistrationNum());
+		}
+		// rebuild a list of sorted courses, now with only one instance per CRN
+		sortedCourses.clear();
+		for (String s : sortedCrns) {
+			sortedCourses.add(courseRepo.findFirstByCourseRegistrationNumIs(s));
+		}
+
+		return sortedCourses;
 	}
 
 	@PostMapping("/addduplicatecourse")
@@ -138,7 +150,8 @@ public class AdminController
 										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
 										Model model) {
 		if(bindingResult.hasErrors()){
-			model.addAttribute("courses", courseRepo.findAll());
+//			model.addAttribute("courses", courseRepo.findAll());
+			model.addAttribute("courses", getSortedCoursesOnlyOnePerCrn());
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
 		}
@@ -146,7 +159,8 @@ public class AdminController
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
 //			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
-			model.addAttribute("courses", courseRepo.findAll());
+//			model.addAttribute("courses", courseRepo.findAll());
+			model.addAttribute("courses", getSortedCoursesOnlyOnePerCrn());
 			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addduplicatecourse";

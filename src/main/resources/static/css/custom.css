@@ -5,7 +5,7 @@ html {
 }
 
 body {
-    /*padding-top: 70px;*/
+    padding-top: 70px;
     /*background: url("../img/07final-panel.jpg") no-repeat center center;*/
     min-height: 100%;
     background-size: cover;
@@ -41,7 +41,7 @@ footer {
 }
 .navbar-default .navbar-nav > li > a {
     color: white;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .btn-primary {

@@ -16,7 +16,7 @@
             <div class="panel-body">
                 <form action="#" th:action="@{/addduplicatecourse}" th:object="${course}" method="post">
                     <div class="text-center feedback">
-                        <h4>The dates and teacher may be different, but the CRN# and name must be the same.</h4>
+                        <h4>The dates and teacher may be different, but the CRN# and name will be the same.</h4>
                     </div>
                     <input type="hidden" th:field="*{id}" />
                     <div class="form-group">
@@ -24,16 +24,12 @@
                         <select id="selectCourse" class="form-control" name="selectCourse">
                             <option th:each="item : ${courses}"
                                     th:value="${item.id}"
-                                    th:text="${item.name} + ' - CRN: ' + ${item.courseRegistrationNum}"></option>
+                                    th:text="'CRN: ' + ${item.courseRegistrationNum} + ' - ' + ${item.name}"></option>
                         </select>
                        <input type="hidden" th:field="*{courseRegistrationNum}"/>
                         <input type="hidden" th:field="*{name}"/>
                     </div>
-                    <!--<div class="form-group">-->
-                        <!--<label class="section-heading" for="name">Name</label>-->
-                        <!--<input id="name" class="form-control" type="text" th:field="*{name}"/>-->
-                        <!--<p class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>-->
-                    <!--</div>-->
+
                     <div class="form-group">
                         <label class="section-heading" for="dateStart">Start Date</label>
                         <input id="dateStart" class="form-control" type="text" th:field="*{dateStart}" th:placeholder="'Jul 4, 2017'"/>
