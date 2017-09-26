@@ -127,9 +127,7 @@ public class AdminController
 
 		// TODO it shows multiple listings of same course name, not what we want here.. doesn't matter for project specs
 		// this is a "nice to do" thing, don't spend time on this until we finish all requirements
-		model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 		model.addAttribute("courses", courseRepo.findAll());
-//		model.addAttribute("courses", courseRepo.findDistinctFirstByCourseRegistrationNumAndDeletedIs(crns,false));
 		model.addAttribute("course",cour);
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 		return "addduplicatecourse";
@@ -141,7 +139,6 @@ public class AdminController
 										Model model) {
 		if(bindingResult.hasErrors()){
 			model.addAttribute("courses", courseRepo.findAll());
-//			model.addAttribute("courses", courseRepo.findByDeletedIs(false));
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
 		}
@@ -149,6 +146,7 @@ public class AdminController
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
 //			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
+			model.addAttribute("courses", courseRepo.findAll());
 			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addduplicatecourse";

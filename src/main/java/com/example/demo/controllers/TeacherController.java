@@ -73,20 +73,6 @@ public class TeacherController {
 	}
 
 
-	//List of Student attendance for a particular course
-	// TODO I DO NOT THINK THIS ROUTE EVEN NEEDS TO EXIST!!!
-	// requirements state that teacher should be able to EMAIL attendance details to the admin
-	// there is actually nothing in requirements that state that a teacher or admin should be able to
-	// VIEW the attendance in any way, other than via email
-//	@RequestMapping("/viewattendance/{id}")
-//	public String listStudAttendance(@PathVariable("id") long courseId, Model model, Principal principal) {
-//		model.addAttribute("listattendance", attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(personRepo.
-//				findByUsername(principal.getName()), courseRepo.findOne(courseId)));
-//
-//		return "viewstudentattendance";
-//	}
-
-
 	//Display course evealuations for a single course for a single teacher, the teacher is logged in at this point
 	// TODO WAITING FOR JESSE, template is ready to go, and this route should be done
 	@GetMapping("/dispevaluation/{id}")

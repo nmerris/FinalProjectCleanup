@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/","/signup","/css/**","/js/**", "/img/**", "/fonts/**","/welcome",
-                        "/evaluation", "/evaluation2").permitAll()
+                        "/evaluation", "/evaluation2", "/lib/**", "/scss/**").permitAll()
                 .antMatchers("viewregisteredstudent/**").access("hasAuthority('ADMIN' or 'TEACHER')")
                 .antMatchers( "/welcomeAdmin","/addcourse",
                         "/addduplicatecourse","/editcourse/**","/deletecourse/**","/viewdeletedcourses",
@@ -51,19 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/addstudenttocourseconfirmation","/addstudenttocoursePRIOR",
                         "/listregisteredstudent","/sendemail","/sendemails",
                         "/takeattendance/**","/teachercoursedetail","/viewstudentattendance").access("hasAuthority('TEACHER')")
-//
-//                .antMatchers( "/welcomeAdmin","/addcourse",
-//                        "/addduplicatecourse","/editcourse/**","/deletecourse/**","/viewdeletedcourses",
-//                        "/allcourses","/allstudents","/allevaluations","/allteachers",
-//                        "/courseconfirm","/coursedetail","/viewcoursetakenbystudent",
-//                        "/loginforequest/**","/loginforequestdetail/**","/editloginforequest/**",
-//                        "/deleteloginforequest/**","/viewcourseevaluations/**",
-//                        "/viewteacherevaluations/**","/coursedetail/**","viewregisteredstudent/**").access("hasAuthority('ADMIN')")
-//                .antMatchers("/mycoursesdetail","/viewregisteredstudent/**","/dispevaluation",
-//                        "/addstudent/**","/addstudentmultiplechoices/**",
-//                        "/addstudenttocourseconfirmation","/addstudenttocoursePRIOR",
-//                        "/listregisteredstudent","/sendemail","/sendemails",
-//                        "/takeattendance/**","/teachercoursedetail","/viewstudentattendance").access("hasAuthority('TEACHER')")
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
