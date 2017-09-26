@@ -21,9 +21,14 @@
                         <li class="list-group-item" th:text="${'Provided Contact Num:  ' + newLog.contactNum}"></li>
                         <li class="list-group-item" th:text="${'Provided Email:  ' + newLog.email}"></li>
                         <li class="list-group-item" th:text="${existingStudent} ? 'Existing Student:  Yes' : 'Existing Student:  No'"></li>
-                        <!--<li class="list-group-item" th:text="${'Found Existing Student?  ' + (${existingStudent} ? 'Yes' : 'No')}"></li>-->
 
-                        <!-- if an existing student was found, display some of their info -->
+                        <!-- if an existing student was found, display some info about them -->
+                        <th:block th:if="${existingStudent}">
+                            <li class="list-group-item" th:text="'Student M-Number:  ' + ${newLog.person.mNumber}"></li>
+                            <li class="list-group-item" th:text="'Student Name:  ' + ${newLog.person.getFullName()}"></li>
+                            <li class="list-group-item" th:text="'Existing Contact Number:  ' + ${newLog.person.contactNum}"></li>
+                            <li class="list-group-item" th:text="'Existing Email:  ' + ${newLog.person.email}"></li>
+                        </th:block>
                     </ul>
                 </div>
                 <a class="btn btn-primary bold-input" th:href="@{|/loginforequest/${newLog.course.id}|}"><b>+ Enter another log for this course</b></a>

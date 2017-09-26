@@ -305,16 +305,12 @@ public class AdminController
 			else {
 				// found a match for that mnum, so save to db
 				log.setPerson(personRepo.findByMNumberIs(enteredMnum));
+				log.setCourse(courseRepo.findOne(log.getCourse().getId()));
 				courseInfoRequestLogRepo.save(log);
+
 				model.addAttribute("newLog", log);
+				model.addAttribute("existingStudent", true);
 
-
-				model.addAttribute("message", "Info request log saved");
-				model.addAttribute("extraMessage", String.format("Course: %s - Existing student: %s",
-						courseRepo.findOne(log.getCourse().getId()).getName(),
-						personRepo.findByMNumberIs(enteredMnum).getFullName(),
-						personRepo.findByMNumberIs(enteredMnum).getEmail(),
-				personRepo.findByMNumberIs(enteredMnum).getContactNum()));
 				return "loginforequestconfirmation";
 			}
 		}
