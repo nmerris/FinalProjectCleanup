@@ -31,6 +31,7 @@ public class AdminController
 	CourseInfoRequestLogRepo courseInfoRequestLogRepo;
 
 
+	// add a new course to the system, must pick an existing teacher to create the course
 	@GetMapping("/addcourse")
 	public String addCourse(Model model)
 	{
@@ -46,8 +47,6 @@ public class AdminController
 	public String submitCourse(@Valid @ModelAttribute("course") Course course, BindingResult result,
 							   @RequestParam(value = "selectedTeacher")long teacherId, Model model) {
 
-//		System.out.println("========================= in /addcourse POST, getDiffInDays(startDate, endDate): " + Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()));
-
 		model.addAttribute("noTeachers", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER")) == 0);
 
 		if(result.hasErrors()) {
@@ -57,7 +56,6 @@ public class AdminController
 
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
-//			System.out.println("========================= in /addcourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
 			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return "addcourse";
@@ -71,8 +69,6 @@ public class AdminController
 		// we attach whatever teacher was just selected from the the drop down as usual
 		// but all the students that were in that course go away
 		// so need to reattach them here, no need to do this for teacher, because they are selected from the drop down
-
-//		System.out.println("=============================== course.id before saving: " + course.getId());
 
 		// get the set of students for this course.. note this may be empty, which is ok
 		// note you only want to do this if the incoming course has an ID = 0, which means it's a new course being created
@@ -88,15 +84,12 @@ public class AdminController
 		courseRepo.save(course);
 		model.addAttribute("teacher", personRepo.findOne(teacherId));
 
-//		System.out.println("=============================== course.id AFTER saving: " + course.getId());
-
-
 		return "courseconfirm";
 	}
 
 
 	// a course can have the same CRN number, but on different dates
-	// this page allows the admin to duplicate a course, it's like adding a new one, but the CRN number stays the same
+	// this page allows the admin to duplicate a course, it's like adding a new one, but the CRN number and name stays the same
 	@GetMapping("/addduplicatecourse")
 	public String addDuplicateCourse(Model model)
 	{
@@ -106,9 +99,6 @@ public class AdminController
 		// TODO use validation groups, using dummy data is definitely not the best way to do this...
 		cour.setCourseRegistrationNum("12345"); // must be 5 digits
 		cour.setName("fakeName");
-
-//		Set<Course> courseSet = courseRepo.findByDeletedIs(0);
-//		System.out.println("============================================================ courseSet.size: " + courseSet.size());
 
 		// need to disable the submit button if there are not courses yet
 		model.addAttribute("disSubmit", courseRepo.count() == 0);
@@ -150,7 +140,6 @@ public class AdminController
 										@RequestParam(value = "selectCourse")long courseId, @RequestParam(value = "selectedTeacher")long teacherId,
 										Model model) {
 		if(bindingResult.hasErrors()){
-//			model.addAttribute("courses", courseRepo.findAll());
 			model.addAttribute("courses", getSortedCoursesOnlyOnePerCrn());
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
 			return"addduplicatecourse";
@@ -158,8 +147,6 @@ public class AdminController
 
 		if(Utilities.getDiffInDays(course.getDateStart(), course.getDateEnd()) < 0) {
 			// do not allow a course to be added if start date is after end date
-//			System.out.println("========================= in /addduplicatecourse POST, NEGATIVE NUMBER OF DAYS DETECTED!!!: ");
-//			model.addAttribute("courses", courseRepo.findAll());
 			model.addAttribute("courses", getSortedCoursesOnlyOnePerCrn());
 			model.addAttribute("negativeDayCount", true);
 			model.addAttribute("teachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
@@ -187,11 +174,9 @@ public class AdminController
 	@RequestMapping("/deletecourse/{courseid}")
 	public String deleteCourse(@PathVariable ("courseid") long id)
 	{
-		// not tested yet!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Course course = courseRepo.findOne(id);
 		course.setDeleted(true);
 		courseRepo.save(course);
-
 		return "redirect:/allcourses";
 	}
 
@@ -201,7 +186,6 @@ public class AdminController
 	public String allCourses(Model model)
 	{
 		model.addAttribute("allcourses", courseRepo.findByDeletedIsOrderByCourseRegistrationNumAsc(false));
-//		model.addAttribute("allcourses", courseRepo.findByDeletedIs(false));
 		return "allcourses";
 	}
 
@@ -212,7 +196,6 @@ public class AdminController
 		return "viewdeletedcourses";
 	}
 
-
 	// view all the students, admin can click on one to see the courses that particular student is registered in
 	// this route shows the list of students only
 	@GetMapping("/allstudents")
@@ -222,6 +205,7 @@ public class AdminController
 		model.addAttribute("students", personRepo.findByAuthoritiesIsOrderByMNumberAsc(authorityRepo.findByRole("STUDENT")));
 		return "allstudents";
 	}
+
 	//List of courses for a particular Student
 	@RequestMapping("/viewcoursetakenbystudent/{id}")
 	public String listStudentCourses(@PathVariable("id") long studentId,Model model) {
@@ -234,11 +218,9 @@ public class AdminController
 	// view all the teachers, admin can click on one to see that teachers evaluations
 	@GetMapping("/allteachers")
 	public String allTeachers(Model model) {
-
 		model.addAttribute("teachers", personRepo.findByAuthoritiesIsOrderByMNumberAsc(authorityRepo.findByRole("TEACHER")));
 		return "allteachers";
 	}
-
 
 	// view all the evaluations for a single course
 	@GetMapping("/viewcourseevaluations/{id}")
@@ -252,31 +234,25 @@ public class AdminController
 		return "viewcourseevaluations";
 	}
 
-
 	// view all the evaluations for a single teacher in one gigantic table
 	@GetMapping("/viewteacherevaluations/{id}")
 	public String viewEvalsForOneTeacher(@PathVariable("id") long teacherId, Model model) {
-
 		Person teacher = personRepo.findOne(teacherId);
 		model.addAttribute("teacherName", teacher.getFullName());
 		model.addAttribute("evaluations", evaluationRepo.findByPersonIs(teacher));
-
 		return "viewteacherevaluations";
 	}
 
-
-//	// this is where the admin can log information requests about a course
+	// this is where the admin can log information requests about a course
 	@GetMapping("/loginforequest/{id}")
 	public String logInfoRequestGet(@PathVariable("id") long courseId, Model model) {
-		// note that CourseInfoRequestLog has info about person and course
+		// note that CourseInfoRequestLog has associated info about person and course
 
 		CourseInfoRequestLog logObject = new CourseInfoRequestLog();
 		logObject.setCourse(courseRepo.findOne(courseId));
 		model.addAttribute("courseInfoLog", logObject);
 		return "loginforequestform";
 	}
-
-
 
 	@PostMapping("/loginforequest")
 	public String logInfoRequestPost(@RequestParam("mnum") String enteredMnum,
@@ -285,7 +261,6 @@ public class AdminController
 
 		// validates email field (if anything entered), validates description for not empty
 		if(bindingResult.hasErrors()) {
-//		    model.addAttribute("courseInfoLog", log);
 			return "loginforequestform";
 		}
 
@@ -325,8 +300,7 @@ public class AdminController
 		return "loginforequestconfirmation";
 	}
 
-
-	//List of log info request for a particular course
+	//List of log info requests for a particular course
 	@GetMapping("/loginforequestdetail/{id}")
 	public String listCourseInfoReq(@PathVariable("id") long courseId,Model model) {
 		Course course = courseRepo.findOne(courseId);
@@ -352,7 +326,6 @@ public class AdminController
 		courseInfoRequestLogRepo.delete(infoRequestId);
         return "redirect:/allcourses";
 	}
-
 
 
 }

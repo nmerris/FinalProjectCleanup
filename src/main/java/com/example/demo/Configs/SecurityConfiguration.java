@@ -18,9 +18,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private SSUserDetailsService userDetailsSerevice;
-
-    @Autowired
     private PersonRepo personRepo;
 
     @Override
@@ -28,9 +25,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new SSUserDetailsService(personRepo);
     }
 
-
-    // TODO hiwot updated this sunday afternoon, but it will need a bit more touch up after everything is done, because I will prob
-    // need to add a few more routes as I work through the evaluations and students lists in admin section
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 

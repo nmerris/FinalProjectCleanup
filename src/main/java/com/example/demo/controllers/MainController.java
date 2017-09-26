@@ -89,17 +89,15 @@ public class MainController
     // this route only fires after a user logs in
     @GetMapping("/welcome")
     public String showHomePage(Principal principal) {
-
-        // display a welcome page depending on if teacher, admin, or student
         // just to be safe, check for null, so if user logs out and clicks back button, app won't crash
         if(principal != null) {
             switch (personRepo.findByUsername(principal.getName()).getAuthority()) {
                 case "ADMIN":
+                    // take admin directly to the list of courses
                     return "redirect:/allcourses";
-//                    return "welcomeAdmin";
                 case "TEACHER":
+                    // take teachers directly to their list of courses
                     return "redirect:/mycoursesdetail";
-//                    return "welcomeTeach";
             }
         }
 
@@ -115,6 +113,7 @@ public class MainController
     }
 
 
+    // form for folks to sign up with a new account: either admin or teacher at this time
     @RequestMapping("/signup")
     public String addUserInfo(Model model) {
         model.addAttribute("newPerson", new Person());
@@ -126,17 +125,18 @@ public class MainController
     public String addUserInfo(@Valid @ModelAttribute("newPerson") Person person, BindingResult bindingResult,Model model){
         model.addAttribute("listRoles", authorityRepo.findByRoleIsOrRoleIsOrderByRoleDesc("TEACHER","ADMIN"));
         if(bindingResult.hasErrors()) {
-           return "signup";
-       }
+            return "signup";
+        }
 
 
-       // manually validate for username is null and also make sure it is unique
-       if(person.getUsername().isEmpty() || personRepo.countByUsername(person.getUsername()) > 0) {
-           model.addAttribute("usernameWasNull",true);
-           return "signup";
+        // manually validate for username is null and also make sure it is unique
+        if(person.getUsername().isEmpty() || personRepo.countByUsername(person.getUsername()) > 0) {
+            model.addAttribute("usernameWasNull",true);
+            return "signup";
 
-       }
-       // manually check to make sure password was not null
+        }
+
+        // manually check to make sure password was not null
         if(person.getPassword().isEmpty()){
             model.addAttribute("passwordWasNull",true);
             return "signup";
@@ -144,16 +144,19 @@ public class MainController
         }
 
         // NOTE: username uniqueness is enforced by Unique annotation in Person model, and a validation
-        // error msg is display bia binding result as usual, so no need to check here
-        if(person.getSelectVal().equalsIgnoreCase("TEACHER")  )      {
+        // error msg is display via binding result as usual, so no need to check here
+        if(person.getSelectVal().equalsIgnoreCase("TEACHER")) {
+            // save a new teacher Person
             userService.saveTeacher(person);
             model.addAttribute("message", "Teacher Account Successfully Created");
         }
         else{
+            // save a new admin Person
             userService.saveAdmin(person);
             model.addAttribute("message","Admin Account Successfully Created");
         }
 
+        // go back to login page after signing up
         return "redirect:/login";
     }
 
@@ -161,13 +164,13 @@ public class MainController
     @GetMapping("/evaluation")
     public String eval(Model model)
     {
-
         // create a course and add some dummy data to send to form, need it to have data in validated fields, doesn't matter because we are not going to save it
+        // TODO need to use validation groups.. this is ugly!
         Course course = new Course();
         course.setDateEnd(new Date()); // dummy date never to be saved
         course.setName("fake name never to be saved");
     	model.addAttribute("course", course);
-        model.addAttribute("disSubmit", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER"))== 0);
+        model.addAttribute("disSubmit", personRepo.countByAuthoritiesIs(authorityRepo.findByRole("TEACHER")) == 0);
     	model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
         return "evaluation";
     }
@@ -176,9 +179,8 @@ public class MainController
     // this requires some dummy data in the get route, which doesn't matter because the course is never actually saved here
     @PostMapping("/evaluation")
     public String getCourseInfoForEval(@Valid @ModelAttribute("course") Course course, BindingResult bindingResult,
-                                       @RequestParam(value = "selectedTeacher")long teacherId, Model model)
+                                       @RequestParam(value = "selectedTeacher") long teacherId, Model model)
     {
-
         if(bindingResult.hasErrors()) {
             model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
             return "evaluation";
@@ -186,39 +188,34 @@ public class MainController
 
         Course specificCourse = courseRepo.findFirstByCourseRegistrationNumAndDateStartAndDeleted(course.getCourseRegistrationNum(), course.getDateStart(),false);
         Person teacher = personRepo.findOne(teacherId);
-        if(specificCourse==null)
+
+        if(specificCourse == null)
         {
-            // TODO show an error msg
             model.addAttribute("courseError", true);
             model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
             return "evaluation";
         }
+
         if(!specificCourse.getPersons().contains(teacher))
         {
-            // TODO show an error msg
             model.addAttribute("teacherError", true);
             model.addAttribute("allTeachers", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("TEACHER")));
             return "evaluation";
         }
+
         model.addAttribute("course", specificCourse);
         model.addAttribute("teacher", teacher);
         model.addAttribute("evaluation", new Evaluation());
         return "evaluation2";
     }
 
-    // not normally called, but may be called if user types in /evaluation2 as a URL, or goes 'back'
-    @GetMapping("/evaluation2")
-    public String showEval(Model model)
-    {
-        return "evaluation2";
-    }
 
     // this is the big form with all the evaluation data
     @PostMapping("/evaluation2")
-    public String submitEval(@RequestParam("howDidYouFindOut2")String other,
-                             @RequestParam("courseId")long courseId,
-                             @RequestParam("teacherId")long teacherId,
-                             @ModelAttribute("evaluation")Evaluation eval,Model model)
+    public String submitEval(@RequestParam("howDidYouFindOut2") String other,
+                             @RequestParam("courseId") long courseId,
+                             @RequestParam("teacherId") long teacherId,
+                             @ModelAttribute("evaluation") Evaluation eval, Model model)
     {
 
         // if student chose 'other', set it on the eval object
@@ -235,23 +232,18 @@ public class MainController
         model.addAttribute("message", "Course Evaluation Submitted");
         model.addAttribute("extraMessage", String.format("Course: %s",
                 courseRepo.findOne(eval.getCourse().getId()).getName()));
-//        return "redirect:/";
-        return "evaluationconfirmation";
 
-//        return "redirect:/";
+        return "evaluationconfirmation";
     }
 
-    //Teacher and admin
+    //Teacher and admin both use this route to view individual course details
     @RequestMapping("/coursedetail/{courseid}")
     public String courseDetail(@PathVariable ("courseid") long id, Model model)
     {
         Course course = courseRepo.findOne(id);
-
         model.addAttribute("numStudents", personRepo.countByCoursesIsAndAuthoritiesIs(course, authorityRepo.findByRole("STUDENT")));
         model.addAttribute("course", course);
-//        System.out.println("course after coursedetail:"+courseRepo.findOne(id));
         model.addAttribute("teachers", personRepo.findByCoursesIsAndAuthoritiesIs(course,authorityRepo.findByRole("TEACHER")));
-//        System.out.println("teacher after coursedetail---: "+personRepo.findByCoursesIs(courseRepo.findOne(id)));
         return "coursedetail";
     }
 
