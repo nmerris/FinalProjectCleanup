@@ -12,14 +12,16 @@ public class RegistrationTimestamp {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-//    @NotNull
+    // the exact instant a student registers for a course for the FIRST time
+    // if they come back and accidentally register again, the timestamp will not be updated
     private Date timestamp;
-//    private Date timestamp;
 
+    // the student who is registering for a course
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
 
+    // the course the student is registering for
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;

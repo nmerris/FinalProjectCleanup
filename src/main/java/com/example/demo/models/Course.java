@@ -31,16 +31,13 @@ public class Course {
     @NotEmpty
     private String name;
 
+    // CRN is not unique, same course may have same CRN, but different teachers and/or date spans
     @NotEmpty
     @Size(min=5,max =5 )
     private String courseRegistrationNum;
 
-    // 0 = false, 1 = true
+    // deleted true means course in not active, false means course is active/current
     private boolean deleted;
-
-
-    // THIS DOES NOTHING, DO NOT USE THIS FIELD!!!
-//    private long numEvaluationsCompleted;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private Collection<RegistrationTimestamp> timeStamps;
@@ -106,8 +103,9 @@ public class Course {
         persons.addAll(students);
     }
 
-    // normal getter/setter methods ==================================================================================
 
+
+    // normal getter/setter methods ==================================================================================
 
     public boolean isDeleted() {
         return deleted;
@@ -156,14 +154,6 @@ public class Course {
     public void setName(String name) {
         this.name = name;
     }
-
-//    public long getNumEvaluationsCompleted() {
-//        return numEvaluationsCompleted;
-//    }
-
-//    public void setNumEvaluationsCompleted(long numEvaluationsCompleted) {
-//        this.numEvaluationsCompleted = numEvaluationsCompleted;
-//    }
 
     public Collection<RegistrationTimestamp> getTimeStamps() {
         return timeStamps;

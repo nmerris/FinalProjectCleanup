@@ -32,18 +32,14 @@ public class Person {
     @Size(max = 50)
     private String email;
 
-//    @NotEmpty
     @Pattern(regexp="\\(?\\d+\\)?[-.\\s]?\\d+[-.\\s]?\\d+")
     @Size(min=10, max=15)
     private String contactNum;
 
-//    @NotEmpty
     private String selectVal;
 
-//    @NotEmpty
     private String password;
 
-//    @NotEmpty
     @Column(unique = true)
     private String username;
 
@@ -84,6 +80,7 @@ public class Person {
     }
 
     // helper methods ==================================================================================
+
     public void addAuthority(Authority authority) {
         authorities.add(authority);
     }
@@ -122,6 +119,7 @@ public class Person {
         return "STUDENT";
     }
 
+    // returns the number of courses that are NOT deleted/inactive
     public long getNumCourses(){
         int counter=0;
         for (Course c:courses) {
@@ -132,6 +130,7 @@ public class Person {
         return counter;
     }
 
+    // returns all the Attendance objects associated with course
     public Set<Attendance> getAttendancesByCourse(Course course) {
         Set<Attendance> toReturn = new HashSet<>();
         for (Attendance att : attendances) {
@@ -142,6 +141,7 @@ public class Person {
         return toReturn;
     }
 
+    // returns all the Evaluation objects associated with this course
     public Set<Evaluation> getEvaluationsByCourse(Course course) {
         Set<Evaluation> toReturn = new HashSet<>();
         for (Evaluation eval : evaluations) {
@@ -152,8 +152,9 @@ public class Person {
         return toReturn;
     }
 
-    // normal getters/setters ==================================================================================
 
+
+    // normal getters/setters ==================================================================================
 
     public String getmNumber() {
         return mNumber;

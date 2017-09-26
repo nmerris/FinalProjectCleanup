@@ -12,20 +12,24 @@ public class CourseInfoRequestLog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    // IF a log is attached to a current student (ie Person), this will should point to that student
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
 
+    // a log will always be associated with a particular course, although this does not need to be so
+    // TODO allow logs to be entered that do not tie to a specific course
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "course_id")
     private Course course;
 
+    // this is what the person making the information request was asking about, like "Who is teaching Physics 101?"
     @NotEmpty
     private String description;
 
-    // anyone can inquire about a course, they may or many not be current student
-    // if they are (ie if their contact num matches a current students contact num)
-    // we will set the Person, so the association is made, otherwise it will be null
+    // a log has it's own email and contact fields.. these should be filled in with whatever the caller/emailer used
+    // note that this may be different than an existing students contact number/email
+    // only an email OR a contact number are required, not both, this is enforced in AdminController
     @Email
     private String email;
 

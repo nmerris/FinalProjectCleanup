@@ -16,11 +16,13 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    // the date of this attendance
     @NotNull
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "MMM d, yyyy")
     private Date date;
 
+    // Present, Late, or Absent
     @NotEmpty
     private String astatus;
 
@@ -31,7 +33,6 @@ public class Attendance {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
-
 
 
     public long getId() {

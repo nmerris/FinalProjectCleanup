@@ -10,6 +10,7 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    // ties this evaluation to a specific course
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private Course course;
