@@ -39,8 +39,8 @@
                             <td>
                                 <a th:href="@{/addstudent/{id}(id=${list.id})}">Register New Student(s)</a>
                                 <a th:href="@{/takeattendance/{id}(id=${list.id})}">Take Attendance</a>
-                                <a th:href="@{/sendemail(id=${list.id})}">Send Attendance Details</a>
-                                <a th:href="@{/sendemails(id=${list.id})}">Send Evaluation Details</a>
+                                <a th:href="@{|/sendemail/${list.id}?type=att|}">Send Attendance Details</a>
+                                <a th:href="@{|/sendemail/${list.id}?type=eval|}">Send Evaluation Details</a>
                             </td>
                         </tr>
                         </tbody>

@@ -23,6 +23,8 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -309,9 +311,8 @@ public class TeacherController {
 
 	// process the email sending
 	@PostMapping("/sendemail")
-	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
-								@RequestParam("courseId") long courseId,
-								Principal principal) {
+	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId, @RequestParam("type") String emailType,
+								@PathVariable("id") long courseId, Principal principal) {
 		// get the logged in person
 		Person teacher = personRepo.findByUsername(principal.getName());
 
@@ -322,7 +323,7 @@ public class TeacherController {
 		Course course = courseRepo.findOne(courseId);
 
 		// set the email type: true for attendance, false for evaluations
-		boolean isAttendanceEmail =
+		boolean isAttendanceEmail = emailType.equals("att");
 
 		sendEmailWithoutTemplate(course,
 				teacher.getFullName(),	// teacher name
@@ -419,8 +420,13 @@ public class TeacherController {
 	// builds an attendance email CSV attachment
 	private EmailAttachment buildAttendanceEmailCsvAttachment(Course course) {
 		StringBuilder headers = new StringBuilder("M-Number,Last Name,First Name,Date,Status\n");
+
+		// get all the students in this course
 		Iterable<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course,
 				authorityRepo.findByRole("STUDENT"));
+
+		// make the dates look nice
+		DateFormat df = new SimpleDateFormat(("MMM dd, yyyy"));
 
 		for (Person stud : students) {
 			String nameLast = stud.getNameLast();
@@ -428,8 +434,10 @@ public class TeacherController {
 			String mNUM = String.valueOf(stud.getmNumber());
 			LinkedHashSet<Attendance> attendances = attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(stud, course);
 
+			// iterate through all attendances (in ascending order by date) for each student
+			// append to the CSV String as we go
 			for (Attendance att : attendances) {
-				String date = String.valueOf(att.getDate());
+				String date = df.format(att.getDate());
 				String status = att.getAstatus();
 				headers.append(mNUM).append(",").append(nameLast).append(",").append(nameFirst).append(",").append(date).append(",").append(status).append("\n");
 			}
