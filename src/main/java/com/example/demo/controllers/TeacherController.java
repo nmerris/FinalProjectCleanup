@@ -321,51 +321,18 @@ public class TeacherController {
 		// get the course
 		Course course = courseRepo.findOne(courseId);
 
+		// set the email type: true for attendance, false for evaluations
+		boolean isAttendanceEmail =
+
 		sendEmailWithoutTemplate(course,
 				teacher.getFullName(),	// teacher name
 				course.getName(),		// course name
 				admin.getEmail(),		// to email address
-				admin.getFullName());	// to email name
+				admin.getFullName(),	// to email name
+				isAttendanceEmail);	// email will be an attendance email
 
 		return "redirect:/mycoursesdetail";
 	}
-
-//
-//	// shows a drop down list of admins, teacher selects one to send an attendance email to
-//	@GetMapping("/sendemails")
-//	public String sendEmails(@RequestParam("id") long courseId, Model model) {
-//		// first add a list of admins to the template
-//		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
-//		// add the course to the model, so we can show the name on the page
-//		model.addAttribute("course", courseRepo.findOne(courseId));
-//
-//		return "sendemailforcourseeval";
-//	}
-//
-//
-//	// this route fires after the teacher selects an admin from the drop down list
-//	@PostMapping("/sendemails")
-//	public String sendEmailAdmin(@RequestParam("selectedAdminId") long adminId,
-//								 @RequestParam("courseId") long courseId,
-//								 Principal principal) {
-//		// get the logged in person
-//		Person teacher = personRepo.findByUsername(principal.getName());
-//
-//		// get the selected admin
-//		Person admin = personRepo.findOne(adminId);
-//
-//		// get the course
-//		Course course = courseRepo.findOne(courseId);
-//
-//		sendEmailWithoutTemplates(course,
-//				teacher.getFullName(),	// teacher name
-//				course.getName(),		// course name
-//				admin.getEmail(),		// to email address
-//				admin.getFullName());	// to email name
-//
-//		return "redirect:/mycoursesdetail";
-//	}
-
 
 
 	// sends an email, the content depends on isAttendanceEmail or not
@@ -451,27 +418,28 @@ public class TeacherController {
 
 	// builds an attendance email CSV attachment
 	private EmailAttachment buildAttendanceEmailCsvAttachment(Course course) {
-		String headers="M-Number,Student Name,Date,Status\n";
-		Iterable<Person> students = course.getPersons();
+		StringBuilder headers = new StringBuilder("M-Number,Last Name,First Name,Date,Status\n");
+		Iterable<Person> students = personRepo.findByCoursesIsAndAuthoritiesIsOrderByNameLastAsc(course,
+				authorityRepo.findByRole("STUDENT"));
 
 		for (Person stud : students) {
-			String fullName = stud.getFullName();
+			String nameLast = stud.getNameLast();
+			String nameFirst = stud.getFullName();
 			String mNUM = String.valueOf(stud.getmNumber());
-			Iterable<Attendance> attendances = stud.getAttendancesByCourse(course);
+			LinkedHashSet<Attendance> attendances = attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(stud, course);
 
 			for (Attendance att : attendances) {
-				String dates = String.valueOf(att.getDate());
+				String date = String.valueOf(att.getDate());
 				String status = att.getAstatus();
-				headers += mNUM + "," + fullName  + "," + dates + "," + status + "\n";
+				headers.append(mNUM).append(",").append(nameLast).append(",").append(nameFirst).append(",").append(date).append(",").append(status).append("\n");
 			}
 		}
 
-		DefaultEmailAttachment attachment = DefaultEmailAttachment.builder()
+		return DefaultEmailAttachment.builder()
 				.attachmentName("attendance" + ".csv")
-				.attachmentData(headers.getBytes(Charset.forName("UTF-8")))
+				.attachmentData(headers.toString().getBytes(Charset.forName("UTF-8")))
 				.mediaType(MediaType.TEXT_PLAIN).build();
 
-		return attachment;
 	}
 
 
