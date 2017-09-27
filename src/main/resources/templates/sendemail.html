@@ -18,7 +18,7 @@
 
                 <!-- form to select an admin to send an email to -->
                 <!--returns the admin id of the selected admin, as a request param -->
-                <form class="form-signin" th:action="@{/sendemail}" method="post">
+                <form class="form-signin" th:action="@{|/sendemail?type=${emailType}|}" method="post">
 
                     <!-- pass the course id through, because we need to know which course to send the attendance info for -->
                     <label class="section-heading">Select an admin to send attendance details to</label>

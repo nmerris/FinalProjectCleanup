@@ -297,13 +297,15 @@ public class TeacherController {
 
 
 	// shows a drop down list of admins, teacher selects one to send an attendance email to
-	@GetMapping("/sendemail")
-	public String sendEmailGet(@RequestParam("id") long courseId, Model model) {
+	@GetMapping("/sendemail/{id}")
+	public String sendEmailGet(@PathVariable("id") long courseId, @RequestParam("type") String emailType, Model model) {
 		// first add a list of admins to the template
 		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
 
 		// add the course to the model, so we can show the name on the page
 		model.addAttribute("course", courseRepo.findOne(courseId));
+
+		model.addAttribute("emailType", emailType);
 
 		return "sendemail";
 	}
@@ -312,7 +314,7 @@ public class TeacherController {
 	// process the email sending
 	@PostMapping("/sendemail")
 	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId, @RequestParam("type") String emailType,
-								@PathVariable("id") long courseId, Principal principal) {
+								@RequestParam("courseId") long courseId, Principal principal) {
 		// get the logged in person
 		Person teacher = personRepo.findByUsername(principal.getName());
 
@@ -403,7 +405,7 @@ public class TeacherController {
 			String woc=eval.getWhatOtherClasses();
 			String hdf=eval.getHowDidYouFindOut();
 
-			headers.append(",").append(ccr).append(",").append(iqr).append(",").append(ter)
+			headers.append(ccr).append(",").append(iqr).append(",").append(ter)
 				    .append(",").append(tbr).append(",").append(cre).append(",").append(er)
 					.append(",").append(dy).append(",").append(dny).append(",").append(wi)
 					.append(",").append(woc).append(",").append(hdf).append("\n");
@@ -426,11 +428,11 @@ public class TeacherController {
 				authorityRepo.findByRole("STUDENT"));
 
 		// make the dates look nice
-		DateFormat df = new SimpleDateFormat(("MMM dd, yyyy"));
+		DateFormat df = new SimpleDateFormat(("MMM-dd-yyyy"));
 
 		for (Person stud : students) {
 			String nameLast = stud.getNameLast();
-			String nameFirst = stud.getFullName();
+			String nameFirst = stud.getNameFirst();
 			String mNUM = String.valueOf(stud.getmNumber());
 			LinkedHashSet<Attendance> attendances = attendanceRepo.findByPersonIsAndCourseIsOrderByDateAsc(stud, course);
 

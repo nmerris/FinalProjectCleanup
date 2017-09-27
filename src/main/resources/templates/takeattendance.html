@@ -26,7 +26,7 @@
                             <select id="selectaDate" class="form-control" name="selectedDate">
                                 <option th:each="item : ${dates}"
                                         th:value="${item}"
-                                        th:text="${#dates.format(item, 'MMM-dd-yyyy')}">
+                                        th:text="${#dates.format(item, 'MMM dd, yyyy')}">
                                 </option>
                             </select>
                         </div>
