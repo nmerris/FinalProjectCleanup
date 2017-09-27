@@ -98,6 +98,8 @@ public class Course {
         return count;
     }
 
+
+
     // use this to add a bunch of students to this course... only being used in admin section when updating an existing course
     public void addStudents(Set<Person> students) {
         persons.addAll(students);

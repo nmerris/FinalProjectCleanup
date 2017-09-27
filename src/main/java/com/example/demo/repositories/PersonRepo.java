@@ -44,4 +44,7 @@ public interface PersonRepo extends CrudRepository<Person, Long> {
 
     LinkedHashSet<Person> findByAuthoritiesIsOrderByMNumberAsc(Authority authority);
 
+    // find the single teacher for a given course, pass in TEACHER as the authority
+    Person findFirstByCoursesIsAndAuthoritiesIs(Course course, Authority authority);
+
 }

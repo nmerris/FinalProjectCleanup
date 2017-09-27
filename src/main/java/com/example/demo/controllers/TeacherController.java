@@ -13,20 +13,16 @@ import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmailAttachment;
 import it.ozimov.springboot.mail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.Principal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -300,7 +296,7 @@ public class TeacherController {
 
 	// shows a drop down list of admins, teacher selects one to send an attendance email to
 	@GetMapping("/sendemail")
-	public String sendEmail (@RequestParam("id") long courseId, Model model) {
+	public String sendEmailGet(@RequestParam("id") long courseId, Model model) {
 		// first add a list of admins to the template
 		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
 
@@ -311,8 +307,9 @@ public class TeacherController {
 	}
 
 
+	// process the email sending
 	@PostMapping("/sendemail")
-	public String sendEmailPosts(@RequestParam("selectedAdminId") long adminId,
+	public String sendEmailPost(@RequestParam("selectedAdminId") long adminId,
 								@RequestParam("courseId") long courseId,
 								Principal principal) {
 		// get the logged in person
@@ -333,8 +330,127 @@ public class TeacherController {
 		return "redirect:/mycoursesdetail";
 	}
 
+//
+//	// shows a drop down list of admins, teacher selects one to send an attendance email to
+//	@GetMapping("/sendemails")
+//	public String sendEmails(@RequestParam("id") long courseId, Model model) {
+//		// first add a list of admins to the template
+//		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
+//		// add the course to the model, so we can show the name on the page
+//		model.addAttribute("course", courseRepo.findOne(courseId));
+//
+//		return "sendemailforcourseeval";
+//	}
+//
+//
+//	// this route fires after the teacher selects an admin from the drop down list
+//	@PostMapping("/sendemails")
+//	public String sendEmailAdmin(@RequestParam("selectedAdminId") long adminId,
+//								 @RequestParam("courseId") long courseId,
+//								 Principal principal) {
+//		// get the logged in person
+//		Person teacher = personRepo.findByUsername(principal.getName());
+//
+//		// get the selected admin
+//		Person admin = personRepo.findOne(adminId);
+//
+//		// get the course
+//		Course course = courseRepo.findOne(courseId);
+//
+//		sendEmailWithoutTemplates(course,
+//				teacher.getFullName(),	// teacher name
+//				course.getName(),		// course name
+//				admin.getEmail(),		// to email address
+//				admin.getFullName());	// to email name
+//
+//		return "redirect:/mycoursesdetail";
+//	}
 
-	private EmailAttachment getCsvForecastAttachment(String filename, Course course) {
+
+
+	// sends an email, the content depends on isAttendanceEmail or not
+	private void sendEmailWithoutTemplate(Course course, String teacherName, String courseName, String adminEmail,
+										  String adminName, boolean isAttendanceEmail) {
+
+		// we are only sending two types of emails from this app
+		// create the appropriate Strings depending on the type of email being sent
+		String subjectText = isAttendanceEmail ? String.format("Attendance for Course: %s - Teacher: %s", courseName, teacherName) :
+												 String.format("Evaluations for Course: %s - Teacher: %s", courseName, teacherName);
+
+		String bodyHeader = isAttendanceEmail ? "Student attendance details for all recorded dates attached as a CSV file" :
+												"Teacher evaluations attached as a CSV file";
+
+		// build an attachment depending on isAttendanceEmail
+		EmailAttachment attachment;
+		if(isAttendanceEmail) {
+			attachment = buildAttendanceEmailCsvAttachment(course);
+		}
+		else {
+			attachment = buildEvaluationEmailCsvAttachment(course);
+		}
+
+		final Email email;
+		try {
+			email = DefaultEmail.builder()
+					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
+					// this may work depending on the email server config that is being used
+					// the from NAME does get used though
+					.from(new InternetAddress("anyone@anywhere.net", teacherName))
+					.to(Lists.newArrayList(new InternetAddress(adminEmail, adminName)))
+					.subject(subjectText)
+					.body(bodyHeader)
+					.attachment(attachment)
+					.encoding("UTF-8").build();
+
+			// conveniently, .send will put a nice INFO message in the console output when it sends
+			emailService.send(email);
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	// builds a course evaluation email attachment for one course for one teacher
+	// in this app, there can only be one teacher per course, so the teacher is determined based on the course passed in
+	private EmailAttachment buildEvaluationEmailCsvAttachment(Course course) {
+		StringBuilder headers= new StringBuilder("Course Content Rating,Instruction Quality Rating,Training Experience Rating,Text Book Rating,Classroom Environment,Equipment Rating,What Did You Like,What didnt You Like,What Improvements,What Other Classes,How Did You Find Out\n");
+
+		// get the teacher for the course in question
+		Person teach = personRepo.findFirstByCoursesIsAndAuthoritiesIs(course, authorityRepo.findByRole("TEACHER"));
+
+		// get all the evaluations for this teacher for this course
+		Iterable<Evaluation> evaluations = evaluationRepo.findByPersonIsAndCourseIs(teach, course);
+
+		for (Evaluation eval : evaluations) {
+			String ccr=eval.getCourseContentRating();
+			String iqr=eval.getInstructionQualityRating();
+			String ter=eval.getTrainingExperienceRating();
+			String tbr=eval.getTextBookRating();
+			String cre=eval.getClassroomEnvironment();
+			String er=eval.getEquipmentRating();
+			String dy=eval.getWhatDidYouLike();
+			String dny=eval.getWhatDidntYouLike();
+			String wi=eval.getWhatImprovements();
+			String woc=eval.getWhatOtherClasses();
+			String hdf=eval.getHowDidYouFindOut();
+
+			headers.append(",").append(ccr).append(",").append(iqr).append(",").append(ter)
+				    .append(",").append(tbr).append(",").append(cre).append(",").append(er)
+					.append(",").append(dy).append(",").append(dny).append(",").append(wi)
+					.append(",").append(woc).append(",").append(hdf).append("\n");
+		}
+
+		return DefaultEmailAttachment.builder()
+				.attachmentName("evaluations" + ".csv")
+				.attachmentData(headers.toString().getBytes(Charset.forName("UTF-8")))
+				.mediaType(MediaType.TEXT_PLAIN).build();
+
+	}
+
+
+	// builds an attendance email CSV attachment
+	private EmailAttachment buildAttendanceEmailCsvAttachment(Course course) {
 		String headers="M-Number,Student Name,Date,Status\n";
 		Iterable<Person> students = course.getPersons();
 
@@ -346,135 +462,17 @@ public class TeacherController {
 			for (Attendance att : attendances) {
 				String dates = String.valueOf(att.getDate());
 				String status = att.getAstatus();
-				headers+= mNUM + "," + fullName  + "," + dates + "," + status + "\n";
+				headers += mNUM + "," + fullName  + "," + dates + "," + status + "\n";
 			}
 		}
 
 		DefaultEmailAttachment attachment = DefaultEmailAttachment.builder()
-				.attachmentName(filename + ".csv")
+				.attachmentName("attendance" + ".csv")
 				.attachmentData(headers.getBytes(Charset.forName("UTF-8")))
 				.mediaType(MediaType.TEXT_PLAIN).build();
 
 		return attachment;
 	}
 
-
-	private void sendEmailWithoutTemplate(Course course, String teacherName, String courseName,String adminEmail, String adminName) {
-
-		final Email email;
-		try {
-			email = DefaultEmail.builder()
-					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
-					// this may work depending on the email server config that is being used
-					// the from NAME does get used though
-					.from(new InternetAddress("anyone@anywhere.net", teacherName))
-					.to(Lists.newArrayList(
-							new InternetAddress(adminEmail, adminName)))
-					.subject("Attendance For " + courseName)
-					.body("Student Attendance Details")
-					.attachment(getCsvForecastAttachment("Attendance", course))
-					.encoding("UTF-8").build();
-
-			// conveniently, .send will put a nice INFO message in the console output when it sends
-			emailService.send(email);
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// shows a drop down list of admins, teacher selects one to send an attendance email to
-	@GetMapping("/sendemails")
-	public String sendEmails(@RequestParam("id") long courseId, Model model) {
-		// first add a list of admins to the template
-		model.addAttribute("adminList", personRepo.findByAuthoritiesIs(authorityRepo.findByRole("ADMIN")));
-		// add the course to the model, so we can show the name on the page
-		model.addAttribute("course", courseRepo.findOne(courseId));
-
-		return "sendemailforcourseeval";
-	}
-
-	@PostMapping("/sendemails")
-	public String sendEmailAdmin(@RequestParam("selectedAdminId") long adminId,
-								 @RequestParam("courseId") long courseId,
-								 Principal principal) {
-		// get the logged in person
-		Person teacher = personRepo.findByUsername(principal.getName());
-
-		// get the selected admin
-		Person admin = personRepo.findOne(adminId);
-
-		// get the course
-		Course course = courseRepo.findOne(courseId);
-
-		sendEmailWithoutTemplates(course,
-				teacher.getFullName(),	// teacher name
-				course.getName(),		// course name
-				admin.getEmail(),		// to email address
-				admin.getFullName());	// to email name
-
-		return "redirect:/mycoursesdetail";
-	}
-
-	private EmailAttachment getCsvForecastAttachments(String filename, Course course) {
-		String headers="Teacher Name,Course Content Rating,Instruction Quality Rating,Training Experience Rating,Text Book Rating,Classroom Environment,Equipment Rating,What Did You Like,What didnt You Like,What Improvements,What Other Classes,How Did You Find Out\n";
-		Iterable<Person> teachers = course.getPersons();
-
-		for (Person teach : teachers) {
-			String fullName = teach.getFullName();
-			Iterable<Evaluation> evaluations = teach.getEvaluationsByCourse(course);
-
-			for (Evaluation evas : evaluations) {
-				String ccr=evas.getCourseContentRating();
-				String iqr=evas.getInstructionQualityRating();
-				String ter=evas.getTrainingExperienceRating();
-				String tbr=evas.getTextBookRating();
-				String cre=evas.getClassroomEnvironment();
-				String er=evas.getEquipmentRating();
-				String dy=evas.getWhatDidYouLike();
-				String dny=evas.getWhatDidntYouLike();
-				String  wi=evas.getWhatImprovements();
-				String woc=evas.getWhatOtherClasses();
-				String hdf=evas.getHowDidYouFindOut();
-
-				headers += fullName + ","+ ccr + "," + iqr  + "," + ter +","
-						+ tbr +","+ cre + ","+ er + "," + dy
-						+ "," + dny + "," + wi + ","+ woc +"," + hdf +"\n";
-			}
-		}
-
-		DefaultEmailAttachment attachment = DefaultEmailAttachment.builder()
-				.attachmentName(filename + ".csv")
-				.attachmentData(headers.getBytes(Charset.forName("UTF-8")))
-				.mediaType(MediaType.TEXT_PLAIN).build();
-
-		return attachment;
-	}
-
-
-
-	private void sendEmailWithoutTemplates(Course course, String teacherName, String courseName,String adminEmail, String adminName) {
-
-		final Email email;
-		try {
-			email = DefaultEmail.builder()
-					// DOES NOT MATTER what you put in .from address.. it ignores it and uses what is in properties file
-					// this may work depending on the email server config that is being used
-					// the from NAME does get used though
-					.from(new InternetAddress("anyone@anywhere.net", teacherName))
-					.to(Lists.newArrayList(
-							new InternetAddress(adminEmail, adminName)))
-					.subject("Evaluation For " + courseName)
-					.body("Teacher Evaluation Details")
-					.attachment(getCsvForecastAttachments("Evaluation", course))
-					.encoding("UTF-8").build();
-
-			// conveniently, .send will put a nice INFO message in the console output when it sends
-			emailService.send(email);
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
 
 }
