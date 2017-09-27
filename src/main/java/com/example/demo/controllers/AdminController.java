@@ -300,7 +300,7 @@ public class AdminController
 		return "loginforequestconfirmation";
 	}
 
-	//List of log info requests for a particular course
+	// List of log info requests for a particular course
 	@GetMapping("/loginforequestdetail/{id}")
 	public String listCourseInfoReq(@PathVariable("id") long courseId,Model model) {
 		Course course = courseRepo.findOne(courseId);
@@ -317,12 +317,10 @@ public class AdminController
 		return "loginforequestform";
 	}
 
-	//delete log info request
+	// delete log info request
 	@GetMapping("/deleteloginforequest/{id}")
 	public String delCourseInfoReq(@PathVariable("id") long infoRequestId)
 	{
-		// remove this log's associations, then delete it
-		courseInfoRequestLogRepo.findOne(infoRequestId).removeAssociations();
 		courseInfoRequestLogRepo.delete(infoRequestId);
         return "redirect:/allcourses";
 	}

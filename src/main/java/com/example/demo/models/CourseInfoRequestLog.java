@@ -19,7 +19,7 @@ public class CourseInfoRequestLog {
 
     // a log will always be associated with a particular course, although this does not need to be so
     // TODO allow logs to be entered that do not tie to a specific course
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
@@ -34,18 +34,6 @@ public class CourseInfoRequestLog {
     private String email;
 
     private String contactNum;
-
-
-    // call this to remove this log from the person and course that are associated with it, then you can delete it
-    public void removeAssociations() {
-
-        course.getCourseInfoRequestLogs().remove(this);
-        try {
-            person.getCourseInfoRequestLogs().remove(this);
-        } catch (Exception e) {
-            // need to catch null pointer exception here, in case this log has no student associated with it
-        }
-    }
 
 
     public long getId() {
