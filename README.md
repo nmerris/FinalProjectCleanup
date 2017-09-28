@@ -14,7 +14,7 @@ _Please note that Heroku can sometimes have an exceedingly slow response time at
 * you must set the heroku server timezone or timestamps will be off
 
 1. log in to Heroku, go to settings for app, got to Environment Variables
-1. add TZ   America/New_York
+  - add TZ   America/New_York
   
 2. do it straight from the command line
   - log in to heroku
