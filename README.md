@@ -1,24 +1,18 @@
-# Student Bot 5K
+## [Please see my github wiki for this web app!](https://github.com/nmerris/Student-Bot-5K/wiki)
+#### [Or go straight to the app live on Heroku](https://student-bot-5000.herokuapp.com/)
 
-description goes here
-
-This readme is under construction!
-
-To see the app live on heroku:
-
-put heroku url here
-
-TO LOG IN:
-admin: FILL ME IN
-student: create your own or log in with FILL ME IN
-teacher: create your own or log in with FILL ME IN
+_Please note that Heroku can sometimes have an exceedingly slow response time at first, so if the welcome page doesn't load on the first try, it should on the second try.  After it 'wakes up' the pages should respond well._
 
 
 
 
-!!!! IMPORTANT !!!!
-MUST SET THE HEROKU SERVER TIMEZONE - OR TIMESTAMPS WILL BE OFF
-two ways to do this:
+#### Note to anyone deploying this app to Heroku
+
+* you must create a postgresql database before pushing to heroku
+* and you must change the pom and properties files to use postgresql instead of mysql
+* you will need to modify the properties file to use a valid email account, password is empty here
+* you must set the heroku server timezone
+
 1. log in to Heroku, go to settings for app, got to Environment Variables
   - add TZ   America/New_York
   
@@ -27,8 +21,3 @@ two ways to do this:
 2. do it straight from the command line
   - log in
   - type heroku config:add TZ="America/New_York"
-
--- authorites (these are automatically generated every time the app runs)
-INSERT INTO role VALUES(1, 'ADMIN');
-INSERT INTO role VALUES(2, 'STUDENT');
-INSERT INTO role VALUES(3, 'TEACHER');
