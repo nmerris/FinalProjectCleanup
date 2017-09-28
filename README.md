@@ -11,13 +11,11 @@ _Please note that Heroku can sometimes have an exceedingly slow response time at
 * you must create a postgresql database before pushing to heroku
 * and you must change the pom and properties files to use postgresql instead of mysql
 * you will need to modify the properties file to use a valid email account, password is empty here
-* you must set the heroku server timezone
+* you must set the heroku server timezone or timestamps will be off
 
 1. log in to Heroku, go to settings for app, got to Environment Variables
   - add TZ   America/New_York
   
-  OR
-  
 2. do it straight from the command line
-  - log in
+  - log in to heroku
   - type heroku config:add TZ="America/New_York"
