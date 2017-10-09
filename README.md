@@ -1,5 +1,6 @@
 ## [Please see my github wiki for this web app!](https://github.com/nmerris/Student-Bot-5K/wiki)
 #### [Or go straight to the app live on Heroku](https://student-bot-5000.herokuapp.com/)
+You are welcome to sign up as a new admin or teacher, or you can log in as admin/pass or teacher/pass.
 
 
 
